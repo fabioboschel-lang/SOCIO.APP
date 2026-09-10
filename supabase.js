@@ -1,6 +1,63 @@
-import { createClient } from 'https://cdn.jsdelivr.net/npm/@supabase/supabase-js/+esm'
+import {
+  createClient
+} from "https://cdn.jsdelivr.net/npm/@supabase/supabase-js/+esm"
 
-const supabaseUrl = "https://qexgbswdbwlpydolpcll.supabase.co"
-const supabaseKey = "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6InFleGdic3dkYndscHlkb2xwY2xsIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NzMxMjM4OTIsImV4cCI6MjA4ODY5OTg5Mn0.9VuIgA28S47iBKacaKMA8plq82uoP_1XcCAUI1znhBQ"
 
-export const supabase = createClient(supabaseUrl, supabaseKey)
+const supabaseUrl =
+  "https://qexgbswdbwlpydolpcll.supabase.co"
+
+const supabaseKey =
+  "sb_publishable_3Vo6VOuDzVbN5355c9HeDA_1YwQPR6l"
+
+
+export const supabase =
+  createClient(
+    supabaseUrl,
+    supabaseKey,
+    {
+      auth: {
+        flowType:
+          "pkce",
+
+        persistSession:
+          true,
+
+        detectSessionInUrl:
+          true
+      }
+    }
+  )
+
+
+export const authInicializada =
+  new Promise(
+    (resolve) => {
+
+      const {
+        data: {
+          subscription
+        }
+      } =
+        supabase.auth.onAuthStateChange(
+          (
+            event,
+            session
+          ) => {
+
+            if (
+              event ===
+              "INITIAL_SESSION"
+            ) {
+
+              subscription.unsubscribe()
+
+              resolve(
+                session
+              )
+
+            }
+          }
+        )
+
+    }
+  )
