@@ -5,7 +5,7 @@ import {
   procesarAutorizacionMercadoPago
 } from "./mpoauthvalidate.js";
 
-import { Sesion } from "./sesion.js";
+import { Sesion } from "./AUTENTICACION/sesion.js";
 import { Home } from "./home.js";
 import { Create } from "./create.js";
 
