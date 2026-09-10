@@ -1,3 +1,6 @@
+import { supabase, authInicializada } from "./supabase.js";
+
+
 import {
   procesarAutorizacionMercadoPago
 } from "./mpoauthvalidate.js";
@@ -5,7 +8,7 @@ import {
 import { Sesion } from "./sesion.js";
 import { Home } from "./home.js";
 import { Create } from "./create.js";
-import { supabase } from "./supabase.js";
+
 import { MercadoPago } from "./mercadopago.js";
 
 const app =
@@ -97,7 +100,10 @@ function obtenerUsuarioLocal() {
    ========================= */
 
 async function iniciarApp() {
+  
+await authInicializada;
 
+  
   const userId =
     obtenerUsuarioLocal();
 
