@@ -25,15 +25,15 @@ export function NavigateUX(app) {
      ========================= */
 
   const home =
-    NavigateHome();
+    NavigateHome(navigate);
 
 
   const create =
-    NavigateCreate();
+    NavigateCreate(navigate);
 
 
   const mercadopago =
-    NavigateMercadoPago();
+    NavigateMercadoPago(navigate);
 
 
   /* =========================
