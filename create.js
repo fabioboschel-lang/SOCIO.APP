@@ -1,3 +1,6 @@
+import { NavigateUX } from "./NAVIGATEUX/navigateUX.js";
+
+
 import { KiteEditor } from "./kiteditor.js";
 import { navigate } from "./navigate.js";
 import { supabase } from "./supabase.js";
