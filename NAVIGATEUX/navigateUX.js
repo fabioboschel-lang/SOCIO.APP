@@ -1,4 +1,4 @@
-import { supabase } from "../supabase.js";
+import { navigate } from "../navigate.js";
 
 import { NavigateHome } from "./navigateHome.js";
 import { NavigateCreate } from "./navigateCreate.js";
