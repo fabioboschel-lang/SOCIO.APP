@@ -93,6 +93,8 @@ export function Create(app) {
 
     </div>
   `;
+  
+  NavigateUX(app);
 
 
   /*
