@@ -1,7 +1,7 @@
 
 
 
-export function NavigateMercadoPago() {
+export function NavigateMercadoPago(navigate) {
 
   const mercadopago =
     document.createElement("div");
