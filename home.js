@@ -1,5 +1,6 @@
 import { supabase } from "./supabase.js";
 
+import { NavigateUX } from "./NAVIGATEUX/navigateUX";
 
 export function Home(app) {
 
