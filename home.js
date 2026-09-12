@@ -15,7 +15,7 @@ export function Home(app) {
       <section class="event-link-container">
 
         <h1 class="event-link-title">
-          Enlace lm
+          Enlace lmdd
         </h1>
 
         <p
