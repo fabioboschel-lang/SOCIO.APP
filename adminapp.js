@@ -1,5 +1,3 @@
-console.log("hola")
-
 import {
   supabase,
   authInicializada
