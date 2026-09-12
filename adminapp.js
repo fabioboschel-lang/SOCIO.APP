@@ -1,53 +1,5 @@
 import { supabase, authInicializada } from "./supabase.js";
-
-
-import {
-  procesarAutorizacionMercadoPago
-} from "./mpoauthvalidate.js";
-
-import { Sesion } from "./AUTENTICACION/sesion.js";
-import { Home } from "./home.js";
-import { Create } from "./create.js";
-
-import { MercadoPago } from "./mercadopago.js";
-
-const app =
-  document.getElementById("app");
-
-
-const routes = {
-
-  sesion: Sesion,
-
-  home: Home,
-
-  create: Create,
-
-  mercadopago: MercadoPago
-  
-
-};
-
-
-export function navigate(route) {
-
-  const screen =
-    routes[route];
-
-  if (!screen) {
-
-    console.error(
-      "Ruta inexistente:",
-      route
-    );
-
-    return;
-
-  }
-
-  screen(app);
-
-}
+import { navigate } from "./navigate.js";
 
 
 /* =========================
@@ -58,6 +10,7 @@ function obtenerUsuarioLocal() {
 
   const key =
     "sb-qexgbswdbwlpydolpcll-auth-token";
+
 
   const storedSession =
     localStorage.getItem(key);
@@ -100,20 +53,17 @@ function obtenerUsuarioLocal() {
    ========================= */
 
 async function iniciarApp() {
-  
-await authInicializada;
 
-  
+  await authInicializada;
+
+
   const userId =
     obtenerUsuarioLocal();
 
 
-  /*
-   * PRIMER SÍ:
-   *
-   * ¿Existe un ID de usuario
-   * en Local Storage?
-   */
+  /* =========================
+     NO HAY USUARIO
+     ========================= */
 
   if (!userId) {
 
@@ -124,12 +74,9 @@ await authInicializada;
   }
 
 
-  /*
-   * SEGUNDO SÍ:
-   *
-   * ¿Existe un evento creado
-   * por este usuario?
-   */
+  /* =========================
+     COMPROBAR EVENTO
+     ========================= */
 
   const {
     data: evento,
@@ -157,9 +104,9 @@ await authInicializada;
   }
 
 
-  /*
-   * NO TIENE EVENTO
-   */
+  /* =========================
+     NO TIENE EVENTO
+     ========================= */
 
   if (
     !evento ||
@@ -173,9 +120,9 @@ await authInicializada;
   }
 
 
-  /*
-   * TIENE EVENTO
-   */
+  /* =========================
+     TIENE EVENTO
+     ========================= */
 
   navigate("home");
 
@@ -187,36 +134,6 @@ await authInicializada;
    ========================= */
 
 async function arrancarAplicacion() {
-
-  /*
-   * Primero comprobamos si
-   * estamos regresando de
-   * Mercado Pago.
-   */
-
-  const mercadoPagoProcesado =
-    await procesarAutorizacionMercadoPago();
-
-
-  /*
-   * Si procesamos correctamente
-   * una autorización, ya podemos
-   * continuar con la aplicación.
-   */
-
-  if (mercadoPagoProcesado) {
-
-    console.log(
-      "Autorización de Mercado Pago procesada."
-    );
-
-  }
-
-
-  /*
-   * Después iniciamos el
-   * funcionamiento normal.
-   */
 
   await iniciarApp();
 
