@@ -1,3 +1,5 @@
+import { supabase } from "../supabase.js";
+
 import { NavigateHome } from "./navigateHome.js";
 import { NavigateCreate } from "./navigateCreate.js";
 import { NavigateMercadoPago } from "./navigateMercadoPago.js";
