@@ -1,7 +1,7 @@
 
 
 
-export function NavigateHome() {
+export function NavigateHome(navigate) {
 
   const home =
     document.createElement("div");
