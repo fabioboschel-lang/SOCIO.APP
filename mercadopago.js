@@ -1,3 +1,5 @@
+import { NavigateUX } from "./NAVIGATEUX/navigateUX.js";
+
 export function MercadoPago(app) {
 
   app.innerHTML = `
@@ -22,6 +24,7 @@ export function MercadoPago(app) {
     </div>
 
   `;
+  NavigateUX(app);
 
   document
     .getElementById("mercadopagoBtn")
