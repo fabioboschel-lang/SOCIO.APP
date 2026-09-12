@@ -71,7 +71,7 @@ export function Home(app) {
 
 
   cargarHome();
-  navigateUX(app);
+  NavigateUX(app);
 
 }
 
