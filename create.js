@@ -1,5 +1,5 @@
 import { KiteEditor } from "./kiteditor.js";
-import { navigate } from "./adminapp.js";
+import { navigate } from "./navigate.js";
 import { supabase } from "./supabase.js";
 
 
