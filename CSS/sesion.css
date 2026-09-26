@@ -1,13 +1,10 @@
-```css
 html,
 body {
 
   margin: 0;
-
   padding: 0;
 
   width: 100%;
-
   min-height: 100%;
 
   font-family:
@@ -27,13 +24,11 @@ body {
   width: 100%;
 
   min-height: 100vh;
-
   min-height: 100dvh;
 
   display: flex;
 
   justify-content: center;
-
   align-items: center;
 
   box-sizing: border-box;
@@ -97,7 +92,7 @@ body {
 
 .session-brand {
 
-  margin-bottom: 35px;
+  margin-bottom: 32px;
 
   color: #ffffff;
 
@@ -105,7 +100,7 @@ body {
 
   font-weight: 800;
 
-  letter-spacing: 5px;
+  letter-spacing: 4px;
 
   opacity: 0.85;
 
@@ -121,14 +116,14 @@ body {
   color: #ffffff;
 
   font-size: clamp(
-    38px,
-    8vw,
-    62px
+    34px,
+    7vw,
+    52px
   );
 
-  line-height: 1.04;
+  line-height: 1.06;
 
-  letter-spacing: -2.5px;
+  letter-spacing: -2px;
 
   font-weight: 800;
 
@@ -139,29 +134,69 @@ body {
 }
 
 
-/* DESCRIPCION */
+/* BENEFICIOS */
 
-.session-description {
+.session-benefits {
 
-  max-width: 390px;
+  width: 100%;
 
-  margin: 22px 0 42px;
+  max-width: 430px;
+
+  display: flex;
+
+  flex-direction: column;
+
+  gap: 13px;
+
+  margin: 30px 0 42px;
 
   color: rgba(
     255,
     255,
     255,
-    0.62
+    0.72
   );
 
-  font-size: 17px;
+  font-size: 16px;
 
-  line-height: 1.5;
+  line-height: 1.4;
+
+  text-align: left;
 
 }
 
 
-/* BOTON GOOGLE */
+/* BENEFICIO */
+
+.session-benefit {
+
+  display: flex;
+
+  align-items: flex-start;
+
+  gap: 11px;
+
+}
+
+
+/* CHECK */
+
+.session-check {
+
+  flex: 0 0 auto;
+
+  color: #ffffff;
+
+  font-size: 17px;
+
+  font-weight: 800;
+
+  line-height: 1.4;
+
+}
+
+
+/* BOTON */
 
 .google-btn {
 
@@ -177,8 +212,6 @@ body {
   align-items: center;
 
   justify-content: center;
-
-  gap: 13px;
 
   border: 1px solid
     rgba(
@@ -239,29 +272,6 @@ body {
 }
 
 
-/* ICONO GOOGLE */
-
-.google-icon {
-
-  width: 25px;
-
-  height: 25px;
-
-  display: flex;
-
-  align-items: center;
-
-  justify-content: center;
-
-  font-size: 20px;
-
-  font-weight: 700;
-
-  color: #4285f4;
-
-}
-
-
 /* HOVER */
 
 .google-btn:hover {
@@ -313,7 +323,7 @@ body {
 }
 
 
-/* ELIMINA EL OUTLINE NORMAL */
+/* OUTLINE */
 
 .google-btn:focus {
 
@@ -322,7 +332,7 @@ body {
 }
 
 
-/* LO MANTENEMOS PARA TECLADO */
+/* TECLADO */
 
 .google-btn:focus-visible {
 
@@ -346,40 +356,44 @@ body {
 
   .session-view {
 
-    padding:
-      24px;
+    padding: 24px;
 
   }
 
   .session-content {
 
     transform:
-      translateY(7%);
+      translateY(3%);
 
   }
 
   .session-brand {
 
-    margin-bottom: 30px;
+    margin-bottom: 27px;
 
     font-size: 14px;
+
+    letter-spacing:
+      3.5px;
 
   }
 
   .session-title {
 
-    font-size: 39px;
+    font-size: 36px;
 
     letter-spacing:
-      -1.6px;
+      -1.5px;
 
   }
 
-  .session-description {
+  .session-benefits {
 
-    font-size: 16px;
+    font-size: 15px;
 
-    margin-top: 20px;
+    gap: 11px;
+
+    margin-top: 27px;
 
     margin-bottom: 36px;
 
@@ -394,4 +408,3 @@ body {
   }
 
 }
-```
