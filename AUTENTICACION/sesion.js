@@ -12,10 +12,6 @@ export function Sesion(app) {
           passflow.space
         </div>
 
-        <h1 class="session-title">
-          Todo lo que necesitás para gestionar tu negocio.
-        </h1>
-
         <div class="session-benefits">
 
           <div class="session-benefit">
@@ -40,12 +36,7 @@ export function Sesion(app) {
 
           <div class="session-benefit">
             <span class="session-check">✓</span>
-            <span>Accedé a funciones diseñadas para hacer crecer tu proyecto</span>
-          </div>
-
-          <div class="session-benefit">
-            <span class="session-check">✓</span>
-            <span>Centralizá las herramientas de tu negocio en una sola plataforma</span>
+            <span>Centralizá las herramientas de tu negocio</span>
           </div>
 
         </div>
