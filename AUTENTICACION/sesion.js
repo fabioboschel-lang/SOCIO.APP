@@ -108,7 +108,7 @@ export function Sesion(app) {
 
             options: {
               redirectTo:
-                "https://fabioboschel-lang.github.io/SOCIO.APP/"
+                "https://passflow.space"
             }
 
           });
