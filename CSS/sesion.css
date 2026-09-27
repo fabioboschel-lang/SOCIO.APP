@@ -92,6 +92,12 @@ body {
 
 .session-brand {
 
+  display: flex;
+
+  align-items: center;
+
+  gap: 12px;
+
   margin-bottom: 70px;
 
   color: #ffffff;
@@ -105,6 +111,21 @@ body {
   opacity: 0.95;
 
   text-align: left;
+
+}
+
+
+/* LOGO PASSFLOW */
+
+.session-logo {
+
+  width: 42px;
+
+  height: 42px;
+
+  object-fit: contain;
+
+  flex: 0 0 42px;
 
 }
 
@@ -373,11 +394,24 @@ body {
 
   .session-brand {
 
-    margin-bottom: 55px;
+  margin-bottom: 55px;
 
-    font-size: 27px;
+  font-size: 27px;
 
-  }
+  gap: 10px;
+
+}
+
+
+.session-logo {
+
+  width: 36px;
+
+  height: 36px;
+
+  flex-basis: 36px;
+
+}
 
 
   .session-benefits {
