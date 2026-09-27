@@ -47,7 +47,7 @@ export function Sesion(app) {
           <div class="session-benefit">
             <img
               class="benefit-icon"
-              src="../IMAGENES/Qrlogo.jpg"
+              src="../IMAGENES/Qrlogo.png"
               alt=""
             >
 
@@ -73,7 +73,7 @@ export function Sesion(app) {
           <div class="session-benefit">
             <img
               class="benefit-icon"
-              src="../IMAGENES/Escanlogo.jpg"
+              src="../IMAGENES/Escanlogo.png"
               alt=""
             >
 
