@@ -9,7 +9,15 @@ export function Sesion(app) {
       <div class="session-content">
 
         <div class="session-brand">
-  PassFlow.space
+
+  <span>passflow</span>
+
+  <img
+    class="session-logo"
+    src="../IMAGENES/LOGO.png"
+    alt="Logo de PassFlow"
+  >
+
 </div>
 
 <div class="session-description">
