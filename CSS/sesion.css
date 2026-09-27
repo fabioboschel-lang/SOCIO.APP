@@ -119,15 +119,15 @@ body {
 /* LOGO PASSFLOW */
 
 .session-logo {
+  position: absolute;
+
+  top: 30px;
+  right: 30px;
 
   width: 42px;
-
   height: 42px;
 
   object-fit: contain;
-
-  flex: 0 0 42px;
-
 }
 
 
