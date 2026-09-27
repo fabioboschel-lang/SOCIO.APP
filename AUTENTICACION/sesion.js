@@ -15,31 +15,71 @@ export function Sesion(app) {
         <div class="session-benefits">
 
           <div class="session-benefit">
-            <span class="session-check">✓</span>
-            <span>Recibí tus pagos directamente en Mercado Pago</span>
+            <img
+              class="benefit-icon"
+              src="../IMAGENES/Personalizar.png"
+              alt=""
+            >
+
+            <span>
+              Creá y personalizá tu propio sitio web
+            </span>
           </div>
 
-          <div class="session-benefit">
-            <span class="session-check">✓</span>
-            <span>Personalizá la experiencia de tu sitio</span>
-          </div>
 
           <div class="session-benefit">
-            <span class="session-check">✓</span>
-            <span>Gestioná tus ventas y operaciones desde un solo lugar</span>
+            <img
+              class="benefit-icon"
+              src="../IMAGENES/Carrito.png"
+              alt=""
+            >
+
+            <span>
+              Ofrecé una experiencia de compra rápida y simple
+            </span>
           </div>
 
-          <div class="session-benefit">
-            <span class="session-check">✓</span>
-            <span>Ofrecé una experiencia de compra rápida y simple</span>
-          </div>
 
           <div class="session-benefit">
-            <span class="session-check">✓</span>
-            <span>Centralizá las herramientas de tu negocio</span>
+            <img
+              class="benefit-icon"
+              src="../IMAGENES/Qrlogo.jpg"
+              alt=""
+            >
+
+            <span>
+              Vendé entradas online y generá tickets con códigos QR
+            </span>
+          </div>
+
+
+          <div class="session-benefit">
+            <img
+              class="benefit-icon"
+              src="../IMAGENES/LogoMP.png"
+              alt=""
+            >
+
+            <span>
+              Recibí tus pagos directamente en Mercado Pago
+            </span>
+          </div>
+
+
+          <div class="session-benefit">
+            <img
+              class="benefit-icon"
+              src="../IMAGENES/Escanlogo.jpg"
+              alt=""
+            >
+
+            <span>
+              Delegá el escaneo de entradas a tu equipo
+            </span>
           </div>
 
         </div>
+
 
         <button
           id="googleBtn"
@@ -53,6 +93,7 @@ export function Sesion(app) {
     </div>
 
   `;
+
 
   document
     .getElementById("googleBtn")
