@@ -9,10 +9,14 @@ export function Sesion(app) {
       <div class="session-content">
 
         <div class="session-brand">
-          PassFlow
-        </div>
+  passflow
+</div>
 
-        <div class="session-benefits">
+<div class="session-description">
+  Ticketera especializada en boliches y discotecas
+</div>
+
+<div class="session-benefits">
 
           <div class="session-benefit">
             <img
