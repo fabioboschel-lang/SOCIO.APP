@@ -8,14 +8,15 @@ export function createNombreStep() {
           ¿Cómo se llama tu evento?
         </label>
 
-        <textarea
-  id="create-nombre"
-  name="nombre"
-  placeholder="Nombre del evento"
-  maxlength="100"
-  rows="1"
-  required
-></textarea>
+        <input
+          type="text"
+          id="create-nombre"
+          name="nombre"
+          placeholder="Nombre del evento"
+          maxlength="100"
+          autocomplete="off"
+          required
+        >
       </div>
     `,
 
