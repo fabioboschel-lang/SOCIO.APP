@@ -19,11 +19,6 @@
   box-sizing: border-box;
 }
 
-
-/* ========================================
-   ENCABEZADO
-======================================== */
-
 .create-header {
   width: 100%;
   max-width: 560px;
@@ -120,12 +115,15 @@
 
 .create-step {
   width: 100%;
+
   min-height: 230px;
 
   animation: createStepIn 220ms ease;
 }
 
-/* Oculta las pantallas inactivas. */
+/* Garantiza que las pantallas inactivas
+   permanezcan ocultas aunque otro estilo
+   establezca display. */
 
 .create-step[hidden] {
   display: none !important;
@@ -145,7 +143,7 @@
 
 
 /* ========================================
-   CAMPOS GENERALES
+   CAMPOS
 ======================================== */
 
 .create-field {
@@ -210,6 +208,7 @@
 
 .create-field textarea {
   min-height: 160px;
+
   resize: vertical;
 }
 
@@ -224,57 +223,6 @@
 
   font-size: 12px;
   line-height: 1.5;
-}
-
-
-/* ========================================
-   NOMBRE DEL EVENTO
-   Campo minimalista, sin borde ni fondo
-======================================== */
-
-#create-nombre {
-  display: block;
-
-  width: 100%;
-  min-height: 54px;
-  height: 54px;
-
-  padding: 0;
-
-  border: none;
-  border-radius: 0;
-
-  outline: none;
-  box-shadow: none;
-
-  background: transparent;
-  color: #ffffff;
-
-  font-family: inherit;
-  font-size: 20px;
-  font-weight: 500;
-  line-height: 1.5;
-
-  resize: none;
-  overflow: hidden;
-
-  appearance: none;
-  -webkit-appearance: none;
-
-  transition: none;
-}
-
-#create-nombre::placeholder {
-  color: #696977;
-  opacity: 1;
-}
-
-#create-nombre:focus {
-  border: none;
-  outline: none;
-  box-shadow: none;
-
-  background: transparent;
 }
 
 
@@ -354,7 +302,8 @@
   display: none !important;
 }
 
-/* Indicador de foco para navegación con teclado. */
+/* Indicador visual de foco al navegar
+   con teclado hasta el selector. */
 
 .create-field input[type="file"]:focus-visible
   + .create-file-focus {
@@ -430,7 +379,8 @@
   box-shadow: none;
 }
 
-/* Oculta las flechas del campo numérico. */
+/* Oculta las flechas del campo numérico
+   para una presentación más limpia. */
 
 .create-price-input input[type="number"]::-webkit-inner-spin-button,
 .create-price-input input[type="number"]::-webkit-outer-spin-button {
@@ -586,10 +536,52 @@
   .create-btn-secondary {
     min-width: 95px;
   }
+}
 
-  #create-nombre {
-    font-size: 20px;
-  }
+
+/* ========================================
+   NOMBRE DEL EVENTO
+   Estilo minimalista
+======================================== */
+
+#create-nombre {
+  display: block;
+
+  width: 100%;
+  height: 54px;
+  min-height: 54px;
+
+  padding: 0;
+
+  border: none;
+  border-radius: 0;
+
+  outline: none;
+  box-shadow: none;
+
+  background: transparent;
+  color: #ffffff;
+
+  font-family: inherit;
+  font-size: 20px;
+  font-weight: 500;
+  line-height: 1.5;
+
+  resize: none;
+  overflow: hidden;
+}
+
+#create-nombre::placeholder {
+  color: #696977;
+  opacity: 1;
+}
+
+#create-nombre:focus {
+  border: none;
+  outline: none;
+  box-shadow: none;
+
+  background: transparent;
 }
 
 
