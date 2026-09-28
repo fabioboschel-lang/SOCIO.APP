@@ -1,54 +1,31 @@
-export function createNombreStep() {
-  return {
-    title: "Nombre del evento",
+// CREATE/nombre.js
 
-    html: `
-      <div class="create-field">
-        <label for="create-nombre">
-          ¿Cómo se llama tu evento?
-        </label>
+export const nombrehtml = `
 
-        <input
-          type="text"
-          id="create-nombre"
-          name="nombre"
-          placeholder="Nombre del evento"
-          maxlength="100"
-          autocomplete="off"
-          required
-        >
-      </div>
-    `,
+<div
+  id="create-nombre-step"
+  class="create-step"
+  style="display: none;"
+>
 
-    validate(section) {
-      const input = section.querySelector("#create-nombre");
-      const value = input.value.trim();
+  <div class="create-field">
 
-      if (!value) {
-        input.setCustomValidity("Ingresá el nombre del evento.");
-        input.reportValidity();
-        input.setCustomValidity("");
-        return false;
-      }
+    <label for="create-nombre">
+      ¿Cómo se llama tu evento?
+    </label>
 
-      if (value.length < 3) {
-        input.setCustomValidity(
-          "El nombre debe tener al menos 3 caracteres."
-        );
-        input.reportValidity();
-        input.setCustomValidity("");
-        return false;
-      }
+    <textarea
+      id="create-nombre"
+      name="nombre"
+      placeholder="Nombre del evento"
+      maxlength="100"
+      rows="1"
+      autocomplete="off"
+      required
+    ></textarea>
 
-      return true;
-    },
+  </div>
 
-    getValue(section) {
-      return {
-        nombre: section
-          .querySelector("#create-nombre")
-          .value.trim()
-      };
-    }
-  };
-}
+</div>
+
+`;
