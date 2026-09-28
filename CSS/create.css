@@ -554,9 +554,8 @@
 
 
 #create-nombre {
-  height: 48px;
-  min-height: 48px;
-  max-height: 48px;
-  resize: none;
-  overflow: hidden;
+  border: none;
+  outline: none;
+  background: transparent;
+  box-shadow: none;
 }
