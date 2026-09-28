@@ -40,7 +40,7 @@ export function Create(app) {
 
       <header class="create-header">
         <h1>Crear evento</h1>
-        <p>Completá los datos de tu evo.</p>
+        <p>Completá los datos de tu eveo.</p>
       </header>
 
 
