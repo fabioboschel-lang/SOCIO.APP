@@ -1,280 +1,521 @@
-
-import { navigate } from "../navigate.js";
-import { supabase } from "../supabase.js";
-
-import { createNombreStep } from "./nombre.js";
-import { createDescripcionStep } from "./descripcion.js";
-import { createImagenStep } from "./imagen.js";
-import { createUbicacionStep } from "./ubicacion.js";
-import { createFechaStep } from "./fecha.js";
-import { createPrecioStep } from "./precio.js";
+import { NavigateUX } from "./NAVIGATEUX/navigateUX.js";
+import { KiteEditor } from "./kiteditor.js";
+import { navigate } from "./navigate.js";
+import { supabase } from "./supabase.js";
 
 export function Create(app) {
-  const steps = [
-    createNombreStep(),
-    createDescripcionStep(),
-    createImagenStep(),
-    createUbicacionStep(),
-    createFechaStep(),
-    createPrecioStep()
-  ];
-
-  let currentStep = 0;
-  let isPublishing = false;
-
   app.innerHTML = `
-    <main class="create-view">
-      <header class="create-header">
-        <h1>Crear evento</h1>
-        <p>Completá los datos de tu evento.</p>
-      </header>
+    <div class="create-view">
 
-      <div class="create-progress">
-        <div class="create-progress-info">
-          <span id="create-step-label"></span>
-          <span id="create-step-number"></span>
+      <div class="create-content">
+
+        <div class="create-top">
+          <span class="create-brand">SOCIO</span>
+          <span id="stepCounter" class="step-counter">1 de 6</span>
         </div>
 
-        <div class="create-progress-track">
-          <div
-            id="create-progress-bar"
-            class="create-progress-bar"
-          ></div>
+        <div class="progress-track">
+          <div id="progressBar" class="progress-bar"></div>
         </div>
-      </div>
 
-      <form id="create-form" novalidate>
-        <div id="create-steps"></div>
+        <!-- PASO 1: NOMBRE -->
+        <section class="create-step active" data-step="0">
+          <h1 class="create-title">
+            ¿Cómo se llama tu discoteca?
+          </h1>
 
+          <p class="create-description">
+            Escribí el nombre con el que tus clientes la conocen.
+          </p>
+
+          <input
+            id="eventName"
+            class="create-input"
+            type="text"
+            placeholder="Nombre de la discoteca"
+            autocomplete="organization"
+            maxlength="100"
+          >
+        </section>
+
+        <!-- PASO 2: DESCRIPCIÓN -->
+        <section class="create-step" data-step="1">
+          <h1 class="create-title">
+            Describí tu discoteca
+          </h1>
+
+          <p class="create-description">
+            Contales a tus clientes qué hace especial a tu lugar.
+          </p>
+
+          <textarea
+            id="eventDescription"
+            class="create-textarea"
+            placeholder="Escribí una descripción..."
+            maxlength="1000"
+          ></textarea>
+        </section>
+
+        <!-- PASO 3: IMAGEN -->
+        <section class="create-step" data-step="2">
+          <h1 class="create-title">
+            Agregá una imagen
+          </h1>
+
+          <p class="create-description">
+            Elegí una imagen que represente tu discoteca.
+          </p>
+
+          <label for="eventImage" class="image-selector">
+            <span id="imageText">
+              <span class="image-plus">+</span>
+              Seleccionar imagen
+            </span>
+
+            <img
+              id="imagePreview"
+              class="image-preview"
+              alt="Vista previa de la imagen"
+              style="display: none;"
+            >
+          </label>
+
+          <input
+            id="eventImage"
+            type="file"
+            accept="image/*"
+            hidden
+          >
+        </section>
+
+        <!-- PASO 4: UBICACIÓN -->
+        <section class="create-step" data-step="3">
+          <h1 class="create-title">
+            ¿Dónde está ubicada?
+          </h1>
+
+          <p class="create-description">
+            Indicá la dirección de tu discoteca.
+          </p>
+
+          <input
+            id="eventLocation"
+            class="create-input"
+            type="text"
+            placeholder="Dirección o ubicación"
+            autocomplete="street-address"
+            maxlength="250"
+          >
+        </section>
+
+        <!-- PASO 5: FECHA -->
+        <section class="create-step" data-step="4">
+          <h1 class="create-title">
+            ¿Cuándo se realiza?
+          </h1>
+
+          <p class="create-description">
+            Seleccioná la fecha y hora del evento.
+          </p>
+
+          <input
+            id="eventDate"
+            class="create-input"
+            type="datetime-local"
+          >
+        </section>
+
+        <!-- PASO 6: PRECIO -->
+        <section class="create-step" data-step="5">
+          <h1 class="create-title">
+            ¿Cuánto cuesta la entrada?
+          </h1>
+
+          <p class="create-description">
+            Ingresá el precio de la entrada en pesos.
+          </p>
+
+          <div class="price-field">
+            <span class="price-symbol">$</span>
+
+            <input
+              id="eventPrice"
+              class="create-input price-input"
+              type="number"
+              min="0"
+              step="any"
+              placeholder="0"
+              inputmode="decimal"
+            >
+          </div>
+        </section>
+
+        <!-- NAVEGACIÓN -->
         <div class="create-actions">
           <button
+            id="backBtn"
+            class="back-btn"
             type="button"
-            id="create-back"
-            class="create-btn create-btn-secondary"
+            style="visibility: hidden;"
           >
             Volver
           </button>
 
           <button
+            id="nextBtn"
+            class="create-btn"
             type="button"
-            id="create-next"
-            class="create-btn create-btn-primary"
           >
             Continuar
           </button>
         </div>
 
-        <p
-          id="create-error"
-          class="create-error"
-          role="alert"
-          hidden
-        ></p>
-      </form>
-    </main>
+      </div>
+    </div>
   `;
 
-  const form = app.querySelector("#create-form");
-  const stepsContainer = app.querySelector("#create-steps");
-  const backButton = app.querySelector("#create-back");
-  const nextButton = app.querySelector("#create-next");
-  const stepLabel = app.querySelector("#create-step-label");
-  const stepNumber = app.querySelector("#create-step-number");
-  const progressBar = app.querySelector("#create-progress-bar");
-  const errorMessage = app.querySelector("#create-error");
-
-  // Cada pantalla se crea una sola vez.
-  const stepElements = steps.map((step, index) => {
-    const section = document.createElement("section");
-
-    section.className = "create-step";
-    section.dataset.step = index;
-    section.hidden = true;
-    section.innerHTML = step.html;
-
-    stepsContainer.appendChild(section);
-
-    if (typeof step.mount === "function") {
-      step.mount(section);
-    }
-
-    return section;
-  });
-
-  // Mantiene el comportamiento de la navegación inferior.
   NavigateUX(app);
 
-  function showError(message) {
-    errorMessage.textContent = message;
-    errorMessage.hidden = false;
-  }
+  const steps = [
+    ...app.querySelectorAll(".create-step")
+  ];
 
-  function clearError() {
-    errorMessage.textContent = "";
-    errorMessage.hidden = true;
-  }
+  const stepCounter =
+    app.querySelector("#stepCounter");
 
-  function renderStep() {
-    stepElements.forEach((section, index) => {
-      const isActive = index === currentStep;
+  const progressBar =
+    app.querySelector("#progressBar");
 
-      section.hidden = !isActive;
-      section.classList.toggle("active", isActive);
-    });
+  const backBtn =
+    app.querySelector("#backBtn");
 
-    const current = currentStep + 1;
-    const total = steps.length;
-    const isFirst = currentStep === 0;
-    const isLast = currentStep === total - 1;
+  const nextBtn =
+    app.querySelector("#nextBtn");
 
-    stepLabel.textContent = steps[currentStep].title;
-    stepNumber.textContent = `${current} de ${total}`;
+  const imageInput =
+    app.querySelector("#eventImage");
 
-    progressBar.style.width = `${(current / total) * 100}%`;
+  const imagePreview =
+    app.querySelector("#imagePreview");
 
-    backButton.hidden = isFirst;
-    nextButton.textContent = isLast ? "Publicar evento" : "Continuar";
-    nextButton.disabled = isPublishing;
+  const imageText =
+    app.querySelector("#imageText");
 
-    clearError();
-  }
+  let currentStep = 0;
+  let isPublishing = false;
 
-  function validateCurrentStep() {
-    const step = steps[currentStep];
-    const section = stepElements[currentStep];
+  /*
+   * =========================
+   * SELECTOR DE IMAGEN
+   * =========================
+   */
 
-    if (typeof step.validate !== "function") {
-      return true;
+  imageInput.addEventListener("change", () => {
+    const imagen = imageInput.files?.[0];
+
+    if (!imagen) return;
+
+    if (!imagen.type.startsWith("image/")) {
+      alert("Seleccioná un archivo de imagen.");
+      imageInput.value = "";
+      return;
     }
 
-    return step.validate(section);
-  }
-
-  function getFormData() {
-    const data = {};
-
-    steps.forEach((step, index) => {
-      const value = step.getValue(stepElements[index]);
-      Object.assign(data, value);
-    });
-
-    return data;
-  }
-
-  async function publishEvent() {
-    if (isPublishing) return;
-
-    isPublishing = true;
-    nextButton.disabled = true;
-    backButton.disabled = true;
-    nextButton.textContent = "Publicando...";
-    clearError();
-
-    try {
-      const {
-        nombre,
-        descripcion,
-        imagen,
-        ubicacion,
-        fecha,
-        valor
-      } = getFormData();
-
-      const {
-        data: { user },
-        error: authError
-      } = await supabase.auth.getUser();
-
-      if (authError) throw authError;
-
-      if (!user) {
-        throw new Error("Tenés que iniciar sesión para publicar.");
-      }
-
-      // Subir imagen a Supabase Storage.
-      const extension = imagen.name.split(".").pop() || "jpg";
-      const imagePath =
-        `${user.id}/${crypto.randomUUID()}.${extension}`;
-
-      const { error: uploadError } = await supabase.storage
-        .from("eventos")
-        .upload(imagePath, imagen, {
-          upsert: false,
-          contentType: imagen.type || undefined
-        });
-
-      if (uploadError) throw uploadError;
-
-      const { data: publicUrlData } = supabase.storage
-        .from("eventos")
-        .getPublicUrl(imagePath);
-
-      const imagenUrl = publicUrlData.publicUrl;
-
-      // Crear el evento.
-      const { error: insertError } = await supabase
-        .from("Eventos")
-        .insert({
-          nombre,
-          imagen: imagenUrl,
-          descripcion,
-          ubicacion,
-          fecha,
-          valor: Number(valor),
-          "ID usuario": user.id
-        });
-
-      if (insertError) {
-        // Evita dejar una imagen huérfana si falla el INSERT.
-        await supabase.storage
-          .from("eventos")
-          .remove([imagePath]);
-
-        throw insertError;
-      }
-
-      navigate("home");
-    } catch (error) {
-      console.error("Error al publicar el evento:", error);
-
-      showError(
-        error.message || "No se pudo publicar el evento."
-      );
-    } finally {
-      isPublishing = false;
-      nextButton.disabled = false;
-      backButton.disabled = false;
-      renderStep();
-    }
-  }
-
-  backButton.addEventListener("click", () => {
-    if (isPublishing || currentStep === 0) return;
-
-    currentStep--;
-    renderStep();
+    imagePreview.src = URL.createObjectURL(imagen);
+    imagePreview.style.display = "block";
+    imageText.style.display = "none";
   });
 
-  nextButton.addEventListener("click", async () => {
+  /*
+   * =========================
+   * MOSTRAR PASO
+   * =========================
+   */
+
+  function showStep(index) {
+    currentStep = index;
+
+    steps.forEach((step, i) => {
+      step.classList.toggle("active", i === index);
+    });
+
+    stepCounter.textContent =
+      `${index + 1} de ${steps.length}`;
+
+    progressBar.style.width =
+      `${((index + 1) / steps.length) * 100}%`;
+
+    backBtn.style.visibility =
+      index === 0 ? "hidden" : "visible";
+
+    nextBtn.textContent =
+      index === steps.length - 1
+        ? "Publicar discoteca"
+        : "Continuar";
+
+    nextBtn.disabled = false;
+
+    window.scrollTo({
+      top: 0,
+      behavior: "smooth"
+    });
+
+    const field = steps[index].querySelector(
+      "input:not([type='file']), textarea"
+    );
+
+    if (field) {
+      setTimeout(() => field.focus(), 250);
+    }
+  }
+
+  /*
+   * =========================
+   * VALIDAR PASO
+   * =========================
+   */
+
+  function validateStep(index) {
+    switch (index) {
+      case 0: {
+        const nombre =
+          app.querySelector("#eventName").value.trim();
+
+        if (!nombre) {
+          alert("Ingresá el nombre de tu discoteca.");
+          return false;
+        }
+
+        return true;
+      }
+
+      case 1: {
+        const descripcion =
+          app.querySelector("#eventDescription").value.trim();
+
+        if (!descripcion) {
+          alert("Ingresá una descripción.");
+          return false;
+        }
+
+        return true;
+      }
+
+      case 2: {
+        const imagen = imageInput.files?.[0];
+
+        if (!imagen) {
+          alert("Seleccioná una imagen.");
+          return false;
+        }
+
+        return true;
+      }
+
+      case 3: {
+        const ubicacion =
+          app.querySelector("#eventLocation").value.trim();
+
+        if (!ubicacion) {
+          alert("Ingresá la ubicación.");
+          return false;
+        }
+
+        return true;
+      }
+
+      case 4: {
+        const fecha =
+          app.querySelector("#eventDate").value;
+
+        if (!fecha) {
+          alert("Seleccioná la fecha y hora.");
+          return false;
+        }
+
+        return true;
+      }
+
+      case 5: {
+        const valor =
+          app.querySelector("#eventPrice").value.trim();
+
+        if (valor === "") {
+          alert("Ingresá el precio de la entrada.");
+          return false;
+        }
+
+        if (!Number.isFinite(Number(valor)) || Number(valor) < 0) {
+          alert("Ingresá un precio válido.");
+          return false;
+        }
+
+        return true;
+      }
+
+      default:
+        return false;
+    }
+  }
+
+  /*
+   * =========================
+   * VOLVER
+   * =========================
+   */
+
+  backBtn.addEventListener("click", () => {
+    if (currentStep > 0 && !isPublishing) {
+      showStep(currentStep - 1);
+    }
+  });
+
+  /*
+   * =========================
+   * CONTINUAR / PUBLICAR
+   * =========================
+   */
+
+  nextBtn.addEventListener("click", async () => {
     if (isPublishing) return;
 
-    clearError();
-
-    if (!validateCurrentStep()) return;
+    if (!validateStep(currentStep)) return;
 
     if (currentStep < steps.length - 1) {
-      currentStep++;
-      renderStep();
+      showStep(currentStep + 1);
       return;
     }
 
     await publishEvent();
   });
 
-  // Evita que Enter envíe el formulario y recargue la página.
-  form.addEventListener("submit", event => {
-    event.preventDefault();
-  });
+  /*
+   * =========================
+   * PUBLICAR EVENTO
+   * =========================
+   */
 
-  renderStep();
+  async function publishEvent() {
+    if (isPublishing) return;
+
+    isPublishing = true;
+    nextBtn.disabled = true;
+    backBtn.disabled = true;
+    nextBtn.textContent = "Publicando...";
+
+    const nombre =
+      app.querySelector("#eventName").value.trim();
+
+    const descripcion =
+      app.querySelector("#eventDescription").value.trim();
+
+    const imagen =
+      imageInput.files?.[0];
+
+    const ubicacion =
+      app.querySelector("#eventLocation").value.trim();
+
+    const fecha =
+      app.querySelector("#eventDate").value;
+
+    const valor =
+      app.querySelector("#eventPrice").value.trim();
+
+    try {
+      /*
+       * OBTENER SESIÓN
+       */
+
+      const {
+        data: sessionData,
+        error: sessionError
+      } = await supabase.auth.getSession();
+
+      if (sessionError) throw sessionError;
+
+      const user = sessionData.session?.user;
+
+      if (!user) {
+        alert("No hay ninguna sesión iniciada.");
+        navigate("sesion");
+        return;
+      }
+
+      /*
+       * SUBIR IMAGEN
+       */
+
+      const extension =
+        imagen.name.split(".").pop() || "jpg";
+
+      const nombreArchivo =
+        `${crypto.randomUUID()}.${extension}`;
+
+      const ruta =
+        `${user.id}/${nombreArchivo}`;
+
+      const {
+        error: uploadError
+      } = await supabase
+        .storage
+        .from("eventos")
+        .upload(ruta, imagen);
+
+      if (uploadError) throw uploadError;
+
+      /*
+       * OBTENER URL PÚBLICA
+       */
+
+      const {
+        data: urlData
+      } = supabase
+        .storage
+        .from("eventos")
+        .getPublicUrl(ruta);
+
+      const imagenUrl = urlData.publicUrl;
+
+      /*
+       * INSERTAR EN EVENTOS
+       *
+       * Se conservan los campos de la tabla.
+       * Redes y color quedan fuera de este flujo.
+       */
+
+      const {
+        error: insertError
+      } = await supabase
+        .from("Eventos")
+        .insert({
+          nombre: nombre,
+          imagen: imagenUrl,
+          descripcion: descripcion,
+          ubicacion: ubicacion,
+          fecha: fecha,
+          valor: Number(valor),
+          "ID usuario": user.id
+        });
+
+      if (insertError) throw insertError;
+
+      navigate("home");
+
+    } catch (err) {
+      console.error("Error al publicar el evento:", err);
+
+      alert("No se pudo publicar el evento. Intentá nuevamente.");
+
+      isPublishing = false;
+      nextBtn.disabled = false;
+      backBtn.disabled = false;
+      nextBtn.textContent = "Publicar discoteca";
+    }
+  }
+
+  /*
+   * INICIAR FLUJO
+   */
+
+  showStep(0);
 }
