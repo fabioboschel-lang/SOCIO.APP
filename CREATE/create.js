@@ -1,4 +1,3 @@
-
 import { navigate } from "../navigate.js";
 import { supabase } from "../supabase.js";
 
@@ -26,7 +25,7 @@ export function Create(app) {
     <main class="create-view">
       <header class="create-header">
         <h1>Crear evento</h1>
-        <p>Completá los tu evento.</p>
+        <p>Completá los datos de tu evento.</p>
       </header>
 
       <div class="create-progress">
@@ -83,7 +82,10 @@ export function Create(app) {
   const progressBar = app.querySelector("#create-progress-bar");
   const errorMessage = app.querySelector("#create-error");
 
-  // Cada pantalla se crea una sola vez.
+  /* ========================================
+     CREAR LAS PANTALLAS
+  ======================================== */
+
   const stepElements = steps.map((step, index) => {
     const section = document.createElement("section");
 
@@ -101,8 +103,9 @@ export function Create(app) {
     return section;
   });
 
-  // Mantiene el comportamiento de la navegación inferior.
-  NavigateUX(app);
+  /* ========================================
+     ERRORES
+  ======================================== */
 
   function showError(message) {
     errorMessage.textContent = message;
@@ -114,6 +117,10 @@ export function Create(app) {
     errorMessage.hidden = true;
   }
 
+  /* ========================================
+     MOSTRAR PANTALLA ACTUAL
+  ======================================== */
+
   function renderStep() {
     stepElements.forEach((section, index) => {
       const isActive = index === currentStep;
@@ -124,20 +131,29 @@ export function Create(app) {
 
     const current = currentStep + 1;
     const total = steps.length;
+
     const isFirst = currentStep === 0;
     const isLast = currentStep === total - 1;
 
     stepLabel.textContent = steps[currentStep].title;
     stepNumber.textContent = `${current} de ${total}`;
 
-    progressBar.style.width = `${(current / total) * 100}%`;
+    progressBar.style.width =
+      `${(current / total) * 100}%`;
 
     backButton.hidden = isFirst;
-    nextButton.textContent = isLast ? "Publicar evento" : "Continuar";
+
+    nextButton.textContent =
+      isLast ? "Publicar evento" : "Continuar";
+
     nextButton.disabled = isPublishing;
 
     clearError();
   }
+
+  /* ========================================
+     VALIDAR PANTALLA ACTUAL
+  ======================================== */
 
   function validateCurrentStep() {
     const step = steps[currentStep];
@@ -150,24 +166,38 @@ export function Create(app) {
     return step.validate(section);
   }
 
+  /* ========================================
+     OBTENER DATOS
+  ======================================== */
+
   function getFormData() {
     const data = {};
 
     steps.forEach((step, index) => {
-      const value = step.getValue(stepElements[index]);
+      const value = step.getValue(
+        stepElements[index]
+      );
+
       Object.assign(data, value);
     });
 
     return data;
   }
 
+  /* ========================================
+     PUBLICAR EVENTO
+  ======================================== */
+
   async function publishEvent() {
     if (isPublishing) return;
 
     isPublishing = true;
+
     nextButton.disabled = true;
     backButton.disabled = true;
+
     nextButton.textContent = "Publicando...";
+
     clearError();
 
     try {
@@ -185,47 +215,74 @@ export function Create(app) {
         error: authError
       } = await supabase.auth.getUser();
 
-      if (authError) throw authError;
-
-      if (!user) {
-        throw new Error("Tenés que iniciar sesión para publicar.");
+      if (authError) {
+        throw authError;
       }
 
-      // Subir imagen a Supabase Storage.
-      const extension = imagen.name.split(".").pop() || "jpg";
+      if (!user) {
+        throw new Error(
+          "Tenés que iniciar sesión para publicar."
+        );
+      }
+
+      /* ========================================
+         SUBIR IMAGEN
+      ======================================== */
+
+      const extension =
+        imagen.name.split(".").pop() || "jpg";
+
       const imagePath =
         `${user.id}/${crypto.randomUUID()}.${extension}`;
 
-      const { error: uploadError } = await supabase.storage
-        .from("eventos")
-        .upload(imagePath, imagen, {
-          upsert: false,
-          contentType: imagen.type || undefined
-        });
+      const { error: uploadError } =
+        await supabase.storage
+          .from("eventos")
+          .upload(
+            imagePath,
+            imagen,
+            {
+              upsert: false,
+              contentType: imagen.type || undefined
+            }
+          );
 
-      if (uploadError) throw uploadError;
+      if (uploadError) {
+        throw uploadError;
+      }
 
-      const { data: publicUrlData } = supabase.storage
-        .from("eventos")
-        .getPublicUrl(imagePath);
+      /* ========================================
+         URL PÚBLICA
+      ======================================== */
 
-      const imagenUrl = publicUrlData.publicUrl;
+      const { data: publicUrlData } =
+        supabase.storage
+          .from("eventos")
+          .getPublicUrl(imagePath);
 
-      // Crear el evento.
-      const { error: insertError } = await supabase
-        .from("Eventos")
-        .insert({
-          nombre,
-          imagen: imagenUrl,
-          descripcion,
-          ubicacion,
-          fecha,
-          valor: Number(valor),
-          "ID usuario": user.id
-        });
+      const imagenUrl =
+        publicUrlData.publicUrl;
+
+      /* ========================================
+         CREAR EVENTO
+      ======================================== */
+
+      const { error: insertError } =
+        await supabase
+          .from("Eventos")
+          .insert({
+            nombre,
+            imagen: imagenUrl,
+            descripcion,
+            ubicacion,
+            fecha,
+            valor: Number(valor),
+            "ID usuario": user.id
+          });
 
       if (insertError) {
-        // Evita dejar una imagen huérfana si falla el INSERT.
+        /* Eliminar imagen si falla el INSERT. */
+
         await supabase.storage
           .from("eventos")
           .remove([imagePath]);
@@ -234,47 +291,89 @@ export function Create(app) {
       }
 
       navigate("home");
+
     } catch (error) {
-      console.error("Error al publicar el evento:", error);
+      console.error(
+        "Error al publicar el evento:",
+        error
+      );
 
       showError(
-        error.message || "No se pudo publicar el evento."
+        error.message ||
+        "No se pudo publicar el evento."
       );
+
     } finally {
       isPublishing = false;
+
       nextButton.disabled = false;
       backButton.disabled = false;
+
       renderStep();
     }
   }
 
+  /* ========================================
+     BOTÓN VOLVER
+  ======================================== */
+
   backButton.addEventListener("click", () => {
-    if (isPublishing || currentStep === 0) return;
-
-    currentStep--;
-    renderStep();
-  });
-
-  nextButton.addEventListener("click", async () => {
-    if (isPublishing) return;
-
-    clearError();
-
-    if (!validateCurrentStep()) return;
-
-    if (currentStep < steps.length - 1) {
-      currentStep++;
-      renderStep();
+    if (
+      isPublishing ||
+      currentStep === 0
+    ) {
       return;
     }
 
-    await publishEvent();
+    currentStep--;
+
+    renderStep();
   });
 
-  // Evita que Enter envíe el formulario y recargue la página.
-  form.addEventListener("submit", event => {
-    event.preventDefault();
-  });
+  /* ========================================
+     BOTÓN CONTINUAR / PUBLICAR
+  ======================================== */
+
+  nextButton.addEventListener(
+    "click",
+    async () => {
+      if (isPublishing) return;
+
+      clearError();
+
+      if (!validateCurrentStep()) {
+        return;
+      }
+
+      if (
+        currentStep <
+        steps.length - 1
+      ) {
+        currentStep++;
+
+        renderStep();
+
+        return;
+      }
+
+      await publishEvent();
+    }
+  );
+
+  /* ========================================
+     EVITAR SUBMIT DEL FORMULARIO
+  ======================================== */
+
+  form.addEventListener(
+    "submit",
+    event => {
+      event.preventDefault();
+    }
+  );
+
+  /* ========================================
+     INICIAR EN LA PRIMERA PANTALLA
+  ======================================== */
 
   renderStep();
 }
