@@ -1,45 +1,31 @@
-export function createUbicacionStep() {
-  return {
-    title: "Ubicación",
+// CREATE/ubicacion.js
 
-    html: `
-      <div class="create-field">
-        <label for="create-ubicacion">
-          ¿Dónde se realiza?
-        </label>
+export const ubicacionhtml = `
 
-        <input
-          type="text"
-          id="create-ubicacion"
-          name="ubicacion"
-          placeholder="Dirección o nombre del lugar"
-          maxlength="250"
-          autocomplete="street-address"
-          required
-        >
-      </div>
-    `,
+<div
+  id="create-ubicacion-step"
+  class="create-step"
+  style="display: none;"
+>
 
-    validate(section) {
-      const input = section.querySelector("#create-ubicacion");
-      const value = input.value.trim();
+  <div class="create-field">
 
-      if (!value) {
-        input.setCustomValidity("Ingresá la ubicación del evento.");
-        input.reportValidity();
-        input.setCustomValidity("");
-        return false;
-      }
+    <label for="create-ubicacion">
+      ¿Dónde se realiza?
+    </label>
 
-      return true;
-    },
+    <input
+      type="text"
+      id="create-ubicacion"
+      name="ubicacion"
+      placeholder="Dirección o nombre del lugar"
+      maxlength="250"
+      autocomplete="street-address"
+      required
+    >
 
-    getValue(section) {
-      return {
-        ubicacion: section
-          .querySelector("#create-ubicacion")
-          .value.trim()
-      };
-    }
-  };
-}
+  </div>
+
+</div>
+
+`;
