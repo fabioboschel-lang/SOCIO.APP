@@ -143,6 +143,9 @@ export function Create(app) {
   const nextButton =
     app.querySelector("#create-next");
 
+  const createActions =
+    app.querySelector(".create-actions");
+
   const stepNumber =
     app.querySelector("#create-step-number");
 
@@ -164,6 +167,63 @@ export function Create(app) {
 
   const totalSteps =
     stepElements.length;
+
+
+  /* ========================================
+     POSICIÓN DEL BOTÓN CON TECLADO MÓVIL
+  ======================================== */
+
+  const visualViewport =
+    window.visualViewport;
+
+
+  function updateKeyboardPosition() {
+
+    if (!visualViewport) {
+      return;
+    }
+
+
+    const keyboardHeight =
+      window.innerHeight -
+      visualViewport.height;
+
+
+    if (keyboardHeight > 100) {
+
+      createActions.style.bottom =
+        `${keyboardHeight + 6}px`;
+
+    } else {
+
+      createActions.style.bottom =
+        "";
+
+    }
+  }
+
+
+  if (visualViewport) {
+
+    visualViewport.addEventListener(
+      "resize",
+      updateKeyboardPosition
+    );
+
+    visualViewport.addEventListener(
+      "scroll",
+      updateKeyboardPosition
+    );
+  }
+
+
+  window.addEventListener(
+    "resize",
+    updateKeyboardPosition
+  );
+
+
+  updateKeyboardPosition();
 
 
   /* ========================================
