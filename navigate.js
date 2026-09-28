@@ -1,6 +1,6 @@
 import { Sesion } from "./AUTENTICACION/sesion.js";
 import { Home } from "./home.js";
-import { Create } from "./create.js";
+import { Create } from "./CREATE/create.js";
 import { MercadoPago } from "./mercadopago.js";
 
 
