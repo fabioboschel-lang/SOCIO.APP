@@ -9,7 +9,7 @@ export function Sesion(app) {
       <div class="session-content">
 
         <div class="session-brand">
-  PassFlow
+  Pas....sFlow
 </div>
 
 <img
