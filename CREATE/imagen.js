@@ -1,110 +1,51 @@
-export function createImagenStep() {
-  return {
-    title: "Imagen del evento",
+// CREATE/imagen.js
 
-    html: `
-      <div class="create-field">
-        <label for="create-imagen">
-          Elegí una imagen
-        </label>
+export const imagenhtml = `
 
-        <label
-          for="create-imagen"
-          class="create-image-picker"
-        >
-          <span class="create-image-placeholder">
-            Seleccionar imagen
-          </span>
+<div
+  id="create-imagen-step"
+  class="create-step"
+  style="display: none;"
+>
 
-          <img
-            id="create-image-preview"
-            class="create-image-preview"
-            alt="Vista previa de la imagen del evento"
-            hidden
-          >
-        </label>
+  <div class="create-field">
 
-        <input
-          type="file"
-          id="create-imagen"
-          name="imagen"
-          accept="image/*"
-          required
-        >
+    <label for="create-imagen">
+      Elegí una imagen
+    </label>
 
-        <small class="create-field-hint">
-          Seleccioná una imagen en formato JPG, PNG o WebP.
-        </small>
-      </div>
-    `,
+    <label
+      for="create-imagen"
+      class="create-image-picker"
+    >
 
-    mount(section) {
-      const input = section.querySelector("#create-imagen");
-      const preview = section.querySelector("#create-image-preview");
-      const placeholder = section.querySelector(
-        ".create-image-placeholder"
-      );
+      <span class="create-image-placeholder">
+        Seleccionar imagen
+      </span>
 
-      let previewUrl = null;
+      <img
+        id="create-image-preview"
+        class="create-image-preview"
+        alt="Vista previa de la imagen del evento"
+        hidden
+      >
 
-      input.addEventListener("change", () => {
-        const file = input.files?.[0];
+    </label>
 
-        if (previewUrl) {
-          URL.revokeObjectURL(previewUrl);
-          previewUrl = null;
-        }
+    <input
+      type="file"
+      id="create-imagen"
+      name="imagen"
+      accept="image/*"
+      required
+    >
 
-        if (!file) {
-          preview.removeAttribute("src");
-          preview.hidden = true;
-          placeholder.hidden = false;
-          return;
-        }
+    <small class="create-field-hint">
+      Seleccioná una imagen en formato JPG, PNG o WebP.
+    </small>
 
-        previewUrl = URL.createObjectURL(file);
-        preview.src = previewUrl;
-        preview.hidden = false;
-        placeholder.hidden = true;
-      });
-    },
+  </div>
 
-    validate(section) {
-      const input = section.querySelector("#create-imagen");
-      const file = input.files?.[0];
+</div>
 
-      if (!file) {
-        input.setCustomValidity("Seleccioná una imagen para el evento.");
-        input.reportValidity();
-        input.setCustomValidity("");
-        return false;
-      }
-
-      if (!file.type.startsWith("image/")) {
-        input.setCustomValidity("El archivo debe ser una imagen.");
-        input.reportValidity();
-        input.setCustomValidity("");
-        return false;
-      }
-
-      const maxSize = 10 * 1024 * 1024;
-
-      if (file.size > maxSize) {
-        input.setCustomValidity(
-          "La imagen no puede superar los 10 MB."
-        );
-        input.reportValidity();
-        input.setCustomValidity("");
-        return false;
-      }
-
-      return true;
-    },
-
-    getValue(section) {
-      return {
-        imagen: section.querySelector("#create-imagen").files[0]
-      };
-    }
-  };
-}
+`;
