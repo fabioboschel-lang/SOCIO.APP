@@ -1,58 +1,28 @@
-export function createFechaStep() {
-  return {
-    title: "Fecha y hora",
+// CREATE/fecha.js
 
-    html: `
-      <div class="create-field">
-        <label for="create-fecha">
-          ¿Cuándo se realiza?
-        </label>
+export const fechahtml = `
 
-        <input
-          type="datetime-local"
-          id="create-fecha"
-          name="fecha"
-          required
-        >
-      </div>
-    `,
+<div
+  id="create-fecha-step"
+  class="create-step"
+  style="display: none;"
+>
 
-    validate(section) {
-      const input = section.querySelector("#create-fecha");
-      const value = input.value;
+  <div class="create-field">
 
-      if (!value) {
-        input.setCustomValidity("Seleccioná la fecha y hora.");
-        input.reportValidity();
-        input.setCustomValidity("");
-        return false;
-      }
+    <label for="create-fecha">
+      ¿Cuándo se realiza?
+    </label>
 
-      const selectedDate = new Date(value);
+    <input
+      type="datetime-local"
+      id="create-fecha"
+      name="fecha"
+      required
+    >
 
-      if (Number.isNaN(selectedDate.getTime())) {
-        input.setCustomValidity("Ingresá una fecha válida.");
-        input.reportValidity();
-        input.setCustomValidity("");
-        return false;
-      }
+  </div>
 
-      if (selectedDate.getTime() <= Date.now()) {
-        input.setCustomValidity(
-          "La fecha del evento debe ser futura."
-        );
-        input.reportValidity();
-        input.setCustomValidity("");
-        return false;
-      }
+</div>
 
-      return true;
-    },
-
-    getValue(section) {
-      return {
-        fecha: section.querySelector("#create-fecha").value
-      };
-    }
-  };
-}
+`;
