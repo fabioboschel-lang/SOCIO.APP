@@ -9,14 +9,16 @@ export function createNombreStep() {
         </label>
 
         <input
-          type="text"
-          id="create-nombre"
-          name="nombre"
-          placeholder="Nombre del evento"
-          maxlength="100"
-          autocomplete="off"
-          required
-        >
+  type="text"
+  id="create-nombre"
+  name="nombre"
+  placeholder="Nombre del evento"
+  maxlength="100"
+  autocomplete="off"
+  autocorrect="off"
+  spellcheck="false"
+  required
+>
       </div>
     `,
 
