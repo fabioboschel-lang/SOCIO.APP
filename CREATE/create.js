@@ -1,58 +1,84 @@
+// CREATE/create.js
+
 import { navigate } from "../navigate.js";
 import { supabase } from "../supabase.js";
 
-import { createNombreStep } from "./nombre.js";
-import { createDescripcionStep } from "./descripcion.js";
-import { createImagenStep } from "./imagen.js";
-import { createUbicacionStep } from "./ubicacion.js";
-import { createFechaStep } from "./fecha.js";
-import { createPrecioStep } from "./precio.js";
+import { nombrehtml } from "./nombre.js";
+import { descripcionhtml } from "./descripcion.js";
+import { imagenhtml } from "./imagen.js";
+import { ubicacionhtml } from "./ubicacion.js";
+import { fechahtml } from "./fecha.js";
+import { preciohtml } from "./precio.js";
 
 export function Create(app) {
-  const steps = [
-    createNombreStep(),
-    createDescripcionStep(),
-    createImagenStep(),
-    createUbicacionStep(),
-    createFechaStep(),
-    createPrecioStep()
-  ];
 
   let currentStep = 0;
   let isPublishing = false;
 
   app.innerHTML = `
+
     <main class="create-view">
+
+      <!-- ========================================
+           FLECHA VOLVER
+      ======================================== -->
+
+      <button
+        type="button"
+        id="create-back"
+        class="create-back"
+        aria-label="Volver"
+        style="display: none;"
+      >
+        ←
+      </button>
+
+
+      <!-- ========================================
+           ENCABEZADO
+      ======================================== -->
+
       <header class="create-header">
         <h1>Crear evento</h1>
-        <p>Completá los datos de tu eventooooo.</p>
+        <p>Completá los datos de tu evento.</p>
       </header>
 
-      <div class="create-progress">
-        <div class="create-progress-info">
-          <span id="create-step-label"></span>
-          <span id="create-step-number"></span>
+
+      <!-- ========================================
+           FORMULARIO
+      ======================================== -->
+
+      <form
+        id="create-form"
+        novalidate
+      >
+
+        <!-- ========================================
+             PANTALLAS
+        ======================================== -->
+
+        <div id="create-steps">
+
+          ${nombrehtml}
+
+          ${descripcionhtml}
+
+          ${imagenhtml}
+
+          ${ubicacionhtml}
+
+          ${fechahtml}
+
+          ${preciohtml}
+
         </div>
 
-        <div class="create-progress-track">
-          <div
-            id="create-progress-bar"
-            class="create-progress-bar"
-          ></div>
-        </div>
-      </div>
 
-      <form id="create-form" novalidate>
-        <div id="create-steps"></div>
+        <!-- ========================================
+             ACCIONES
+        ======================================== -->
 
         <div class="create-actions">
-          <button
-            type="button"
-            id="create-back"
-            class="create-btn create-btn-secondary"
-          >
-            Volver
-          </button>
 
           <button
             type="button"
@@ -61,7 +87,13 @@ export function Create(app) {
           >
             Continuar
           </button>
+
         </div>
+
+
+        <!-- ========================================
+             ERROR
+        ======================================== -->
 
         <p
           id="create-error"
@@ -69,138 +101,685 @@ export function Create(app) {
           role="alert"
           hidden
         ></p>
+
       </form>
+
+
+      <!-- ========================================
+           PROGRESO
+      ======================================== -->
+
+      <div class="create-progress">
+
+        <div class="create-progress-info">
+          <span id="create-step-number"></span>
+        </div>
+
+        <div class="create-progress-track">
+
+          <div
+            id="create-progress-bar"
+            class="create-progress-bar"
+          ></div>
+
+        </div>
+
+      </div>
+
     </main>
   `;
 
-  const form = app.querySelector("#create-form");
-  const stepsContainer = app.querySelector("#create-steps");
-  const backButton = app.querySelector("#create-back");
-  const nextButton = app.querySelector("#create-next");
-  const stepLabel = app.querySelector("#create-step-label");
-  const stepNumber = app.querySelector("#create-step-number");
-  const progressBar = app.querySelector("#create-progress-bar");
-  const errorMessage = app.querySelector("#create-error");
 
   /* ========================================
-     CREAR LAS PANTALLAS
+     REFERENCIAS
   ======================================== */
 
-  const stepElements = steps.map((step, index) => {
-    const section = document.createElement("section");
+  const form =
+    app.querySelector("#create-form");
 
-    section.className = "create-step";
-    section.dataset.step = index;
-    section.hidden = true;
-    section.innerHTML = step.html;
+  const backButton =
+    app.querySelector("#create-back");
 
-    stepsContainer.appendChild(section);
+  const nextButton =
+    app.querySelector("#create-next");
 
-    if (typeof step.mount === "function") {
-      step.mount(section);
-    }
+  const stepNumber =
+    app.querySelector("#create-step-number");
 
-    return section;
-  });
+  const progressBar =
+    app.querySelector("#create-progress-bar");
+
+  const errorMessage =
+    app.querySelector("#create-error");
+
+
+  const stepElements = [
+    app.querySelector("#create-nombre-step"),
+    app.querySelector("#create-descripcion-step"),
+    app.querySelector("#create-imagen-step"),
+    app.querySelector("#create-ubicacion-step"),
+    app.querySelector("#create-fecha-step"),
+    app.querySelector("#create-precio-step")
+  ];
+
+  const totalSteps =
+    stepElements.length;
+
 
   /* ========================================
-     ERRORES
+     PREVIEW DE IMAGEN
+  ======================================== */
+
+  const imageInput =
+    app.querySelector("#create-imagen");
+
+  const imagePreview =
+    app.querySelector("#create-image-preview");
+
+  const imagePlaceholder =
+    app.querySelector(".create-image-placeholder");
+
+  let imagePreviewUrl = null;
+
+
+  if (
+    imageInput &&
+    imagePreview &&
+    imagePlaceholder
+  ) {
+
+    imageInput.addEventListener(
+      "change",
+      () => {
+
+        const file =
+          imageInput.files?.[0];
+
+
+        if (imagePreviewUrl) {
+
+          URL.revokeObjectURL(
+            imagePreviewUrl
+          );
+
+          imagePreviewUrl = null;
+        }
+
+
+        if (!file) {
+
+          imagePreview.removeAttribute(
+            "src"
+          );
+
+          imagePreview.hidden = true;
+
+          imagePlaceholder.hidden =
+            false;
+
+          return;
+        }
+
+
+        imagePreviewUrl =
+          URL.createObjectURL(file);
+
+        imagePreview.src =
+          imagePreviewUrl;
+
+        imagePreview.hidden =
+          false;
+
+        imagePlaceholder.hidden =
+          true;
+      }
+    );
+  }
+
+
+  /* ========================================
+     MOSTRAR ERROR
   ======================================== */
 
   function showError(message) {
-    errorMessage.textContent = message;
-    errorMessage.hidden = false;
+
+    errorMessage.textContent =
+      message;
+
+    errorMessage.hidden =
+      false;
   }
 
+
+  /* ========================================
+     LIMPIAR ERROR
+  ======================================== */
+
   function clearError() {
-    errorMessage.textContent = "";
-    errorMessage.hidden = true;
+
+    errorMessage.textContent =
+      "";
+
+    errorMessage.hidden =
+      true;
   }
+
 
   /* ========================================
      MOSTRAR PANTALLA ACTUAL
   ======================================== */
 
   function renderStep() {
-    stepElements.forEach((section, index) => {
-      const isActive = index === currentStep;
 
-      section.hidden = !isActive;
-      section.classList.toggle("active", isActive);
-    });
+    stepElements.forEach(
+      (section, index) => {
 
-    const current = currentStep + 1;
-    const total = steps.length;
+        section.style.display =
+          index === currentStep
+            ? "block"
+            : "none";
+      }
+    );
 
-    const isFirst = currentStep === 0;
-    const isLast = currentStep === total - 1;
 
-    stepLabel.textContent = steps[currentStep].title;
-    stepNumber.textContent = `${current} de ${total}`;
+    const current =
+      currentStep + 1;
+
+
+    const isFirst =
+      currentStep === 0;
+
+
+    const isLast =
+      currentStep === totalSteps - 1;
+
+
+    /* ========================================
+       PROGRESO
+    ======================================== */
+
+    stepNumber.textContent =
+      `Paso ${current} de ${totalSteps}`;
+
 
     progressBar.style.width =
-      `${(current / total) * 100}%`;
+      `${(current / totalSteps) * 100}%`;
 
-    backButton.hidden = isFirst;
+
+    /* ========================================
+       FLECHA
+    ======================================== */
+
+    backButton.style.display =
+      isFirst
+        ? "none"
+        : "block";
+
+
+    /* ========================================
+       CONTINUAR
+    ======================================== */
 
     nextButton.textContent =
-      isLast ? "Publicar evento" : "Continuar";
+      isLast
+        ? "Publicar evento"
+        : "Continuar";
 
-    nextButton.disabled = isPublishing;
+
+    nextButton.disabled =
+      isPublishing;
+
 
     clearError();
   }
+
+
+  /* ========================================
+     VALIDAR NOMBRE
+  ======================================== */
+
+  function validateNombre() {
+
+    const input =
+      app.querySelector("#create-nombre");
+
+    const value =
+      input.value.trim();
+
+
+    if (!value) {
+
+      input.setCustomValidity(
+        "Ingresá el nombre del evento."
+      );
+
+      input.reportValidity();
+
+      input.setCustomValidity("");
+
+      return false;
+    }
+
+
+    if (value.length < 3) {
+
+      input.setCustomValidity(
+        "El nombre debe tener al menos 3 caracteres."
+      );
+
+      input.reportValidity();
+
+      input.setCustomValidity("");
+
+      return false;
+    }
+
+
+    return true;
+  }
+
+
+  /* ========================================
+     VALIDAR DESCRIPCIÓN
+  ======================================== */
+
+  function validateDescripcion() {
+
+    const input =
+      app.querySelector(
+        "#create-descripcion"
+      );
+
+    const value =
+      input.value.trim();
+
+
+    if (!value) {
+
+      input.setCustomValidity(
+        "Ingresá una descripción."
+      );
+
+      input.reportValidity();
+
+      input.setCustomValidity("");
+
+      return false;
+    }
+
+
+    if (value.length < 10) {
+
+      input.setCustomValidity(
+        "La descripción debe tener al menos 10 caracteres."
+      );
+
+      input.reportValidity();
+
+      input.setCustomValidity("");
+
+      return false;
+    }
+
+
+    return true;
+  }
+
+
+  /* ========================================
+     VALIDAR IMAGEN
+  ======================================== */
+
+  function validateImagen() {
+
+    const input =
+      app.querySelector(
+        "#create-imagen"
+      );
+
+    const file =
+      input.files?.[0];
+
+
+    if (!file) {
+
+      input.setCustomValidity(
+        "Seleccioná una imagen para el evento."
+      );
+
+      input.reportValidity();
+
+      input.setCustomValidity("");
+
+      return false;
+    }
+
+
+    if (!file.type.startsWith("image/")) {
+
+      input.setCustomValidity(
+        "El archivo debe ser una imagen."
+      );
+
+      input.reportValidity();
+
+      input.setCustomValidity("");
+
+      return false;
+    }
+
+
+    const maxSize =
+      10 * 1024 * 1024;
+
+
+    if (file.size > maxSize) {
+
+      input.setCustomValidity(
+        "La imagen no puede superar los 10 MB."
+      );
+
+      input.reportValidity();
+
+      input.setCustomValidity("");
+
+      return false;
+    }
+
+
+    return true;
+  }
+
+
+  /* ========================================
+     VALIDAR UBICACIÓN
+  ======================================== */
+
+  function validateUbicacion() {
+
+    const input =
+      app.querySelector(
+        "#create-ubicacion"
+      );
+
+    const value =
+      input.value.trim();
+
+
+    if (!value) {
+
+      input.setCustomValidity(
+        "Ingresá la ubicación del evento."
+      );
+
+      input.reportValidity();
+
+      input.setCustomValidity("");
+
+      return false;
+    }
+
+
+    return true;
+  }
+
+
+  /* ========================================
+     VALIDAR FECHA
+  ======================================== */
+
+  function validateFecha() {
+
+    const input =
+      app.querySelector(
+        "#create-fecha"
+      );
+
+    const value =
+      input.value;
+
+
+    if (!value) {
+
+      input.setCustomValidity(
+        "Seleccioná la fecha y hora."
+      );
+
+      input.reportValidity();
+
+      input.setCustomValidity("");
+
+      return false;
+    }
+
+
+    const selectedDate =
+      new Date(value);
+
+
+    if (
+      Number.isNaN(
+        selectedDate.getTime()
+      )
+    ) {
+
+      input.setCustomValidity(
+        "Ingresá una fecha válida."
+      );
+
+      input.reportValidity();
+
+      input.setCustomValidity("");
+
+      return false;
+    }
+
+
+    if (
+      selectedDate.getTime() <=
+      Date.now()
+    ) {
+
+      input.setCustomValidity(
+        "La fecha del evento debe ser futura."
+      );
+
+      input.reportValidity();
+
+      input.setCustomValidity("");
+
+      return false;
+    }
+
+
+    return true;
+  }
+
+
+  /* ========================================
+     VALIDAR PRECIO
+  ======================================== */
+
+  function validatePrecio() {
+
+    const input =
+      app.querySelector(
+        "#create-precio"
+      );
+
+    const rawValue =
+      input.value.trim();
+
+    const value =
+      Number(rawValue);
+
+
+    if (rawValue === "") {
+
+      input.setCustomValidity(
+        "Ingresá el precio de la entrada."
+      );
+
+      input.reportValidity();
+
+      input.setCustomValidity("");
+
+      return false;
+    }
+
+
+    if (
+      !Number.isFinite(value) ||
+      value < 0
+    ) {
+
+      input.setCustomValidity(
+        "El precio debe ser un número igual o mayor a 0."
+      );
+
+      input.reportValidity();
+
+      input.setCustomValidity("");
+
+      return false;
+    }
+
+
+    if (!Number.isInteger(value)) {
+
+      input.setCustomValidity(
+        "Ingresá el precio como un número entero."
+      );
+
+      input.reportValidity();
+
+      input.setCustomValidity("");
+
+      return false;
+    }
+
+
+    return true;
+  }
+
 
   /* ========================================
      VALIDAR PANTALLA ACTUAL
   ======================================== */
 
   function validateCurrentStep() {
-    const step = steps[currentStep];
-    const section = stepElements[currentStep];
 
-    if (typeof step.validate !== "function") {
-      return true;
+    switch (currentStep) {
+
+      case 0:
+        return validateNombre();
+
+      case 1:
+        return validateDescripcion();
+
+      case 2:
+        return validateImagen();
+
+      case 3:
+        return validateUbicacion();
+
+      case 4:
+        return validateFecha();
+
+      case 5:
+        return validatePrecio();
+
+      default:
+        return false;
     }
-
-    return step.validate(section);
   }
+
 
   /* ========================================
      OBTENER DATOS
   ======================================== */
 
   function getFormData() {
-    const data = {};
 
-    steps.forEach((step, index) => {
-      const value = step.getValue(
-        stepElements[index]
-      );
+    return {
 
-      Object.assign(data, value);
-    });
+      nombre:
+        app
+          .querySelector("#create-nombre")
+          .value
+          .trim(),
 
-    return data;
+      descripcion:
+        app
+          .querySelector(
+            "#create-descripcion"
+          )
+          .value
+          .trim(),
+
+      imagen:
+        app
+          .querySelector(
+            "#create-imagen"
+          )
+          .files?.[0],
+
+      ubicacion:
+        app
+          .querySelector(
+            "#create-ubicacion"
+          )
+          .value
+          .trim(),
+
+      fecha:
+        app
+          .querySelector(
+            "#create-fecha"
+          )
+          .value,
+
+      valor:
+        Number(
+          app
+            .querySelector(
+              "#create-precio"
+            )
+            .value
+        )
+    };
   }
+
 
   /* ========================================
      PUBLICAR EVENTO
   ======================================== */
 
   async function publishEvent() {
-    if (isPublishing) return;
+
+    if (isPublishing) {
+      return;
+    }
+
 
     isPublishing = true;
 
-    nextButton.disabled = true;
-    backButton.disabled = true;
 
-    nextButton.textContent = "Publicando...";
+    nextButton.disabled =
+      true;
+
+    backButton.disabled =
+      true;
+
+    nextButton.textContent =
+      "Publicando...";
+
 
     clearError();
 
+
     try {
+
       const {
         nombre,
         descripcion,
@@ -210,32 +789,48 @@ export function Create(app) {
         valor
       } = getFormData();
 
+
+      /* ========================================
+         USUARIO
+      ======================================== */
+
       const {
         data: { user },
         error: authError
-      } = await supabase.auth.getUser();
+      } =
+        await supabase.auth.getUser();
+
 
       if (authError) {
         throw authError;
       }
 
+
       if (!user) {
+
         throw new Error(
           "Tenés que iniciar sesión para publicar."
         );
       }
+
 
       /* ========================================
          SUBIR IMAGEN
       ======================================== */
 
       const extension =
-        imagen.name.split(".").pop() || "jpg";
+        imagen.name
+          .split(".")
+          .pop() || "jpg";
+
 
       const imagePath =
         `${user.id}/${crypto.randomUUID()}.${extension}`;
 
-      const { error: uploadError } =
+
+      const {
+        error: uploadError
+      } =
         await supabase.storage
           .from("eventos")
           .upload(
@@ -243,31 +838,43 @@ export function Create(app) {
             imagen,
             {
               upsert: false,
-              contentType: imagen.type || undefined
+              contentType:
+                imagen.type ||
+                undefined
             }
           );
+
 
       if (uploadError) {
         throw uploadError;
       }
 
+
       /* ========================================
          URL PÚBLICA
       ======================================== */
 
-      const { data: publicUrlData } =
+      const {
+        data: publicUrlData
+      } =
         supabase.storage
           .from("eventos")
-          .getPublicUrl(imagePath);
+          .getPublicUrl(
+            imagePath
+          );
+
 
       const imagenUrl =
         publicUrlData.publicUrl;
 
+
       /* ========================================
-         CREAR EVENTO
+         INSERTAR EVENTO
       ======================================== */
 
-      const { error: insertError } =
+      const {
+        error: insertError
+      } =
         await supabase
           .from("Eventos")
           .insert({
@@ -276,79 +883,113 @@ export function Create(app) {
             descripcion,
             ubicacion,
             fecha,
-            valor: Number(valor),
+            valor,
             "ID usuario": user.id
           });
 
+
+      /* ========================================
+         SI FALLA EL INSERT
+      ======================================== */
+
       if (insertError) {
-        /* Eliminar imagen si falla el INSERT. */
 
         await supabase.storage
           .from("eventos")
-          .remove([imagePath]);
+          .remove([
+            imagePath
+          ]);
 
         throw insertError;
       }
 
+
+      /* ========================================
+         HOME
+      ======================================== */
+
       navigate("home");
 
+
     } catch (error) {
+
       console.error(
         "Error al publicar el evento:",
         error
       );
+
 
       showError(
         error.message ||
         "No se pudo publicar el evento."
       );
 
-    } finally {
-      isPublishing = false;
 
-      nextButton.disabled = false;
-      backButton.disabled = false;
+    } finally {
+
+      isPublishing =
+        false;
+
+      nextButton.disabled =
+        false;
+
+      backButton.disabled =
+        false;
 
       renderStep();
     }
   }
 
+
   /* ========================================
-     BOTÓN VOLVER
+     FLECHA VOLVER
   ======================================== */
 
-  backButton.addEventListener("click", () => {
-    if (
-      isPublishing ||
-      currentStep === 0
-    ) {
-      return;
+  backButton.addEventListener(
+    "click",
+    () => {
+
+      if (
+        isPublishing ||
+        currentStep === 0
+      ) {
+        return;
+      }
+
+
+      currentStep--;
+
+      renderStep();
     }
+  );
 
-    currentStep--;
-
-    renderStep();
-  });
 
   /* ========================================
-     BOTÓN CONTINUAR / PUBLICAR
+     CONTINUAR / PUBLICAR
   ======================================== */
 
   nextButton.addEventListener(
     "click",
     async () => {
-      if (isPublishing) return;
+
+      if (isPublishing) {
+        return;
+      }
+
 
       clearError();
+
 
       if (!validateCurrentStep()) {
         return;
       }
 
+
       if (
         currentStep <
-        steps.length - 1
+        totalSteps - 1
       ) {
+
         currentStep++;
 
         renderStep();
@@ -356,12 +997,14 @@ export function Create(app) {
         return;
       }
 
+
       await publishEvent();
     }
   );
 
+
   /* ========================================
-     EVITAR SUBMIT DEL FORMULARIO
+     EVITAR SUBMIT
   ======================================== */
 
   form.addEventListener(
@@ -371,8 +1014,9 @@ export function Create(app) {
     }
   );
 
+
   /* ========================================
-     INICIAR EN LA PRIMERA PANTALLA
+     INICIAR
   ======================================== */
 
   renderStep();
