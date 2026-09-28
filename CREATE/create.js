@@ -26,7 +26,7 @@ export function Create(app) {
     <main class="create-view">
       <header class="create-header">
         <h1>Crear evento</h1>
-        <p>Completá los datos de tu evento.</p>
+        <p>Completá los tu evento.</p>
       </header>
 
       <div class="create-progress">
