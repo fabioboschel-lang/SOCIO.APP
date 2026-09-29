@@ -65,19 +65,78 @@ export function Create(app) {
 
         <div id="create-steps">
 
-  ${nombrehtml}
+          <!-- ======================================
+               PASO 1 - NOMBRE
+          ====================================== -->
 
-  ${ubicacionhtml}
+          <div
+            id="create-nombre-step"
+            class="create-step"
+          >
 
-  ${fechahtml}
+            ${nombrehtml}
 
-  ${imagenhtml}
+          </div>
 
-  ${preciohtml}
 
-  ${descripcionhtml}
+          <!-- ======================================
+               PASO 2 - UBICACIÓN + FECHA
+          ====================================== -->
 
-</div>
+          <div
+            id="create-ubicacion-fecha-step"
+            class="create-step"
+          >
+
+            ${ubicacionhtml}
+
+            ${fechahtml}
+
+          </div>
+
+
+          <!-- ======================================
+               PASO 3 - IMAGEN
+          ====================================== -->
+
+          <div
+            id="create-imagen-step"
+            class="create-step"
+          >
+
+            ${imagenhtml}
+
+          </div>
+
+
+          <!-- ======================================
+               PASO 4 - PRECIO
+          ====================================== -->
+
+          <div
+            id="create-precio-step"
+            class="create-step"
+          >
+
+            ${preciohtml}
+
+          </div>
+
+
+          <!-- ======================================
+               PASO 5 - DESCRIPCIÓN
+          ====================================== -->
+
+          <div
+            id="create-descripcion-step"
+            class="create-step"
+          >
+
+            ${descripcionhtml}
+
+          </div>
+
+        </div>
 
 
         <!-- ========================================
@@ -143,32 +202,53 @@ export function Create(app) {
   const form =
     app.querySelector("#create-form");
 
+
   const backButton =
     app.querySelector("#create-back");
+
 
   const nextButton =
     app.querySelector("#create-next");
 
+
   const createActions =
     app.querySelector(".create-actions");
+
 
   const stepNumber =
     app.querySelector("#create-step-number");
 
+
   const progressBar =
     app.querySelector("#create-progress-bar");
+
 
   const errorMessage =
     app.querySelector("#create-error");
 
 
   const stepElements = [
-    app.querySelector("#create-nombre-step"),
-    app.querySelector("#create-ubicacion-step"),
-    app.querySelector("#create-fecha-step"),
-    app.querySelector("#create-imagen-step"),
-    app.querySelector("#create-precio-step"),
-    app.querySelector("#create-descripcion-step")
+
+    app.querySelector(
+      "#create-nombre-step"
+    ),
+
+    app.querySelector(
+      "#create-ubicacion-fecha-step"
+    ),
+
+    app.querySelector(
+      "#create-imagen-step"
+    ),
+
+    app.querySelector(
+      "#create-precio-step"
+    ),
+
+    app.querySelector(
+      "#create-descripcion-step"
+    )
+
   ];
 
 
@@ -177,6 +257,7 @@ export function Create(app) {
 
 
   initUbicacion();
+
   initFecha();
 
 
@@ -222,6 +303,7 @@ export function Create(app) {
       updateKeyboardPosition
     );
 
+
     visualViewport.addEventListener(
       "scroll",
       updateKeyboardPosition
@@ -243,12 +325,16 @@ export function Create(app) {
   ======================================== */
 
   const imageInput =
-    app.querySelector("#create-imagen");
+    app.querySelector(
+      "#create-imagen"
+    );
+
 
   const imagePreview =
     app.querySelector(
       "#create-image-preview"
     );
+
 
   const imagePlaceholder =
     app.querySelector(
@@ -790,24 +876,35 @@ export function Create(app) {
     switch (currentStep) {
 
       case 0:
+
         return validateNombre();
 
+
       case 1:
-        return validateUbicacion();
+
+        return (
+          validateUbicacion() &&
+          validateFecha()
+        );
+
 
       case 2:
-        return validateFecha();
 
-      case 3:
         return validateImagen();
 
-      case 4:
+
+      case 3:
+
         return validatePrecio();
 
-      case 5:
+
+      case 4:
+
         return validateDescripcion();
 
+
       default:
+
         return false;
     }
   }
@@ -861,7 +958,7 @@ export function Create(app) {
           .querySelector(
             "#create-fecha-picker"
           )
-          .dataset
+          ?.dataset
           .value || "",
 
 
@@ -883,7 +980,9 @@ export function Create(app) {
 
   async function publishEvent() {
 
-    if (isPublishing) {
+    if (
+      isPublishing
+    ) {
       return;
     }
 
@@ -950,7 +1049,8 @@ export function Create(app) {
       const extension =
         imagen.name
           .split(".")
-          .pop() || "jpg";
+          .pop() ||
+        "jpg";
 
 
       const imagePath =
@@ -1105,7 +1205,9 @@ export function Create(app) {
     "click",
     async () => {
 
-      if (isPublishing) {
+      if (
+        isPublishing
+      ) {
         return;
       }
 
