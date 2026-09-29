@@ -6,7 +6,10 @@ import { supabase } from "../supabase.js";
 import { nombrehtml } from "./nombre.js";
 import { descripcionhtml } from "./descripcion.js";
 import { imagenhtml } from "./imagen.js";
-import { ubicacionhtml } from "./ubicacion.js";
+import {
+  ubicacionhtml,
+  initUbicacion
+} from "./ubicacion.js";
 import { fechahtml } from "./fecha.js";
 import { preciohtml } from "./precio.js";
 
@@ -167,6 +170,8 @@ export function Create(app) {
 
   const totalSteps =
     stepElements.length;
+
+    initUbicacion();
 
 
   /* ========================================
