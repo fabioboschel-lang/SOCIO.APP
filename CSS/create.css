@@ -35,9 +35,18 @@
 
   box-sizing: border-box;
 
+  /*
+    IMPORTANTE:
+    El contenido puede superar el viewport.
+    No usar overflow:hidden aquí porque impediría
+    el scroll vertical de la pantalla.
+  */
+  overflow-x: hidden;
+  overflow-y: visible;
+
   padding:
     28px 20px
-    calc(170px + env(safe-area-inset-bottom));
+    calc(190px + env(safe-area-inset-bottom));
 
   background: var(--create-bg);
   color: var(--create-text);
@@ -86,10 +95,6 @@
   line-height: 1.55;
 }
 
-/*
-   Actualmente create.js deja ambos elementos
-   vacíos. En ese caso no dejamos espacio inútil.
-*/
 .create-header h1:empty,
 .create-header p:empty {
   display: none;
@@ -172,11 +177,24 @@
 
   margin: 0 auto;
 
-  padding-bottom: 20px;
+  /*
+    El formulario debe poder crecer con el contenido.
+    No height:100vh.
+    No overflow:hidden.
+  */
+  min-height: 0;
+
+  padding-bottom: 30px;
 }
 
 #create-steps {
   width: 100%;
+
+  /*
+    Permite que los pasos determinen naturalmente
+    la altura total de la página.
+  */
+  min-height: 0;
 }
 
 
@@ -215,9 +233,13 @@
 #create-ubicacion-fecha-step {
   position: relative;
 
-  min-height: calc(100dvh - 190px);
+  /*
+    Ya no forzamos una altura basada en el viewport.
+    El contenido determina la altura real.
+  */
+  min-height: 230px;
 
-  padding-bottom: 150px;
+  padding-bottom: 30px;
 }
 
 
@@ -327,7 +349,6 @@
 
 /* =========================================================
    INPUT NUMBER
-   Elimina las flechas visuales para un aspecto limpio
 ========================================================= */
 
 .create-view input[type="number"] {
@@ -345,7 +366,6 @@
 
 /* =========================================================
    NOMBRE DEL EVENTO
-   Minimalista
 ========================================================= */
 
 #create-nombre {
@@ -508,6 +528,12 @@
 
 .create-ticket-config {
   width: 100%;
+
+  /*
+    Importante para que el paso de precio pueda crecer
+    libremente y generar scroll vertical.
+  */
+  min-height: 0;
 }
 
 
@@ -593,6 +619,12 @@
   width: 100%;
 
   gap: 14px;
+
+  /*
+    La lista crece naturalmente.
+    No se limita su altura.
+  */
+  min-height: 0;
 }
 
 
@@ -621,7 +653,12 @@
   box-shadow:
     0 10px 30px rgba(0, 0, 0, 0.12);
 
-  scroll-margin-bottom: 170px;
+  /*
+    Permite que al enfocar un campo el navegador
+    pueda desplazarlo por encima de los controles fijos.
+  */
+  scroll-margin-top: 80px;
+  scroll-margin-bottom: 190px;
 
   transition:
     border-color 180ms ease,
@@ -1141,7 +1178,7 @@
 
 /* =========================================================
    PROGRESO
-   Se mantiene independiente del teclado.
+   Se mantiene fijo.
 ========================================================= */
 
 .create-progress {
@@ -1213,9 +1250,7 @@
 ========================================================= */
 
 .create-error {
-  margin:
-    20px 0
-    0;
+  margin: 20px 0 0;
 
   padding: 12px 14px;
 
@@ -1239,26 +1274,23 @@
 
 /* =========================================================
    SELECTOR DE FECHA
+   IMPORTANTE:
+   Ya NO es fixed.
+   Forma parte del contenido y puede desplazarse.
 ========================================================= */
 
 #create-ubicacion-fecha-step .create-fecha-picker {
-  position: fixed;
-
-  left: 20px;
-  right: 20px;
-  bottom: calc(126px + env(safe-area-inset-bottom));
-
-  z-index: 135;
+  position: relative;
 
   display: grid;
   grid-template-columns: 1fr 1fr 1.45fr;
 
-  width: auto;
+  width: 100%;
   max-width: 560px;
 
   height: 78px;
 
-  margin: 0 auto;
+  margin: 18px auto 0;
 
   overflow: hidden;
 
@@ -1423,6 +1455,19 @@
 }
 
 
+/*
+  No bloquear el scroll de la página desde el contenedor.
+*/
+html,
+body {
+  overflow-x: hidden;
+}
+
+body {
+  overflow-y: auto;
+}
+
+
 /* =========================================================
    MOBILE
 ========================================================= */
@@ -1432,7 +1477,7 @@
   .create-view {
     padding:
       22px 18px
-      calc(166px + env(safe-area-inset-bottom));
+      calc(190px + env(safe-area-inset-bottom));
   }
 
 
@@ -1458,8 +1503,9 @@
   }
 
   #create-ubicacion-fecha-step {
-    min-height: calc(100dvh - 170px);
-    padding-bottom: 140px;
+    min-height: 210px;
+
+    padding-bottom: 30px;
   }
 
 
@@ -1521,6 +1567,9 @@
     padding: 16px;
 
     border-radius: 16px;
+
+    scroll-margin-top: 70px;
+    scroll-margin-bottom: 190px;
   }
 
   .create-ticket-fields {
@@ -1555,13 +1604,17 @@
   ----------------------------- */
 
   #create-ubicacion-fecha-step .create-fecha-picker {
-    left: 18px;
-    right: 18px;
+    position: relative;
 
-    bottom:
-      calc(120px + env(safe-area-inset-bottom));
+    left: auto;
+    right: auto;
+    bottom: auto;
+
+    width: 100%;
 
     height: 72px;
+
+    margin-top: 16px;
 
     border-radius: 14px;
 
@@ -1638,6 +1691,9 @@
   .create-view {
     padding-left: 15px;
     padding-right: 15px;
+
+    padding-bottom:
+      calc(190px + env(safe-area-inset-bottom));
   }
 
   .create-back {
@@ -1657,8 +1713,8 @@
   }
 
   #create-ubicacion-fecha-step .create-fecha-picker {
-    left: 15px;
-    right: 15px;
+    left: auto;
+    right: auto;
 
     grid-template-columns: 1fr 1fr 1.35fr;
   }
