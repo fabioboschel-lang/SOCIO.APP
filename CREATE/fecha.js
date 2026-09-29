@@ -105,12 +105,6 @@ export function initFecha() {
   }
 
 
-  /*
-  ========================================
-  EVITAR INICIALIZAR DOS VECES
-  ========================================
-  */
-
   if (picker.dataset.initialized === "true") {
     return;
   }
@@ -118,11 +112,9 @@ export function initFecha() {
   picker.dataset.initialized = "true";
 
 
-  /*
-  ========================================
-  FECHA ACTUAL
-  ========================================
-  */
+  /* ========================================
+     FECHA ACTUAL
+  ======================================== */
 
   const now = new Date();
 
@@ -131,33 +123,28 @@ export function initFecha() {
   const currentDay = now.getDate();
 
 
-  /*
-  ========================================
-  HORA INICIAL
-  REDONDEADA A INTERVALOS DE 30 MINUTOS
-  ========================================
-  */
+  /* ========================================
+     HORA INICIAL
+  ======================================== */
 
   let initialHour = now.getHours();
   let initialMinute = now.getMinutes();
 
-  let roundedMinutes = Math.ceil(initialMinute / 30) * 30;
+  let roundedMinutes =
+    Math.ceil(initialMinute / 30) * 30;
+
 
   if (roundedMinutes === 60) {
+
     initialHour += 1;
     roundedMinutes = 0;
   }
 
 
-  /*
-  ========================================
-  SI PASA DE 23:30
-  ========================================
-  */
-
   let initialDay = currentDay;
   let initialMonth = currentMonth;
   let initialYear = currentYear;
+
 
   if (initialHour >= 24) {
 
@@ -169,17 +156,13 @@ export function initFecha() {
       currentDay + 1
     );
 
-    /*
-    Solo permitimos fechas dentro del año actual.
-    Si el siguiente día ya es del próximo año,
-    dejamos 23:30 del 31 de diciembre.
-    */
 
     if (nextDay.getFullYear() !== currentYear) {
 
       initialDay = 31;
       initialMonth = 11;
       initialYear = currentYear;
+
       initialHour = 23;
       roundedMinutes = 30;
 
@@ -187,16 +170,13 @@ export function initFecha() {
 
       initialDay = nextDay.getDate();
       initialMonth = nextDay.getMonth();
-
     }
   }
 
 
-  /*
-  ========================================
-  ESTADO
-  ========================================
-  */
+  /* ========================================
+     ESTADO
+  ======================================== */
 
   let selectedHour = initialHour;
   let selectedMinute = roundedMinutes;
@@ -206,11 +186,9 @@ export function initFecha() {
   let selectedYear = initialYear;
 
 
-  /*
-  ========================================
-  UTILIDADES
-  ========================================
-  */
+  /* ========================================
+     UTILIDADES
+  ======================================== */
 
   function daysInMonth(year, month) {
 
@@ -234,16 +212,21 @@ export function initFecha() {
 
   function clampDay() {
 
-    const minimumDay = getMinimumDay(selectedMonth);
+    const minimumDay =
+      getMinimumDay(selectedMonth);
 
-    const maximumDay = daysInMonth(
-      selectedYear,
-      selectedMonth
-    );
+    const maximumDay =
+      daysInMonth(
+        selectedYear,
+        selectedMonth
+      );
 
     selectedDay = Math.max(
       minimumDay,
-      Math.min(selectedDay, maximumDay)
+      Math.min(
+        selectedDay,
+        maximumDay
+      )
     );
   }
 
@@ -266,8 +249,10 @@ export function initFecha() {
       selectedMinute
     ).padStart(2, "0");
 
+
     input.value =
       `${selectedYear}-${month}-${day}T${hour}:${minute}`;
+
 
     input.dispatchEvent(
       new Event("input", {
@@ -283,64 +268,9 @@ export function initFecha() {
   }
 
 
-  /*
-  ========================================
-  ACTUALIZAR VISUAL
-  ========================================
-  */
-
-  function updateDisplay(
-    display,
-    value,
-    direction = null
-  ) {
-
-    display.classList.remove(
-      "is-changing-next",
-      "is-changing-prev"
-    );
-
-    /*
-    Forzamos un nuevo ciclo de renderizado
-    para que la animación pueda volver a ejecutarse.
-    */
-
-    void display.offsetWidth;
-
-    display.textContent = value;
-
-    if (direction === "next") {
-
-      display.classList.add(
-        "is-changing-next"
-      );
-
-    } else if (direction === "prev") {
-
-      display.classList.add(
-        "is-changing-prev"
-      );
-    }
-
-
-    const removeAnimation = () => {
-
-      display.classList.remove(
-        "is-changing-next",
-        "is-changing-prev"
-      );
-    };
-
-
-    display.addEventListener(
-      "animationend",
-      removeAnimation,
-      {
-        once: true
-      }
-    );
-  }
-
+  /* ========================================
+     RENDER
+  ======================================== */
 
   function renderAll() {
 
@@ -352,6 +282,7 @@ export function initFecha() {
 
     monthDisplay.textContent =
       MONTH_NAMES[selectedMonth];
+
 
     hourDisplay.setAttribute(
       "aria-valuetext",
@@ -368,23 +299,24 @@ export function initFecha() {
       monthDisplay.textContent
     );
 
+
     updateInput();
   }
 
 
-  /*
-  ========================================
-  HORA
-  ========================================
-  */
+  /* ========================================
+     CAMBIAR HORA
+  ======================================== */
 
   function changeHour(direction) {
 
     let totalMinutes =
-      (selectedHour * 60) +
+      selectedHour * 60 +
       selectedMinute;
 
-    totalMinutes += direction * 30;
+
+    totalMinutes +=
+      direction * 30;
 
 
     if (totalMinutes < 0) {
@@ -403,21 +335,23 @@ export function initFecha() {
       totalMinutes % 60;
 
 
-    updateDisplay(
-      hourDisplay,
-      `${String(selectedHour).padStart(2, "0")}:${String(selectedMinute).padStart(2, "0")}`,
-      direction > 0 ? "next" : "prev"
+    hourDisplay.textContent =
+      `${String(selectedHour).padStart(2, "0")}:${String(selectedMinute).padStart(2, "0")}`;
+
+
+    hourDisplay.setAttribute(
+      "aria-valuetext",
+      hourDisplay.textContent
     );
+
 
     updateInput();
   }
 
 
-  /*
-  ========================================
-  DÍA
-  ========================================
-  */
+  /* ========================================
+     CAMBIAR DÍA
+  ======================================== */
 
   function changeDay(direction) {
 
@@ -447,21 +381,23 @@ export function initFecha() {
     selectedDay = nextDay;
 
 
-    updateDisplay(
-      dayDisplay,
-      String(selectedDay),
-      direction > 0 ? "next" : "prev"
+    dayDisplay.textContent =
+      String(selectedDay);
+
+
+    dayDisplay.setAttribute(
+      "aria-valuetext",
+      dayDisplay.textContent
     );
+
 
     updateInput();
   }
 
 
-  /*
-  ========================================
-  MES
-  ========================================
-  */
+  /* ========================================
+     CAMBIAR MES
+  ======================================== */
 
   function changeMonth(direction) {
 
@@ -469,94 +405,157 @@ export function initFecha() {
       selectedMonth + direction;
 
 
-    /*
-    No permitimos meses anteriores
-    al mes actual.
-    */
-
     if (nextMonth < currentMonth) {
       nextMonth = 11;
     }
 
-
-    /*
-    No permitimos meses posteriores
-    a diciembre del año actual.
-    */
 
     if (nextMonth > 11) {
       nextMonth = currentMonth;
     }
 
 
-    /*
-    Si estamos en un mes válido distinto,
-    mantenemos el mismo día siempre que exista.
-    */
-
     selectedMonth = nextMonth;
 
     clampDay();
 
 
-    updateDisplay(
-      monthDisplay,
-      MONTH_NAMES[selectedMonth],
-      direction > 0 ? "next" : "prev"
+    monthDisplay.textContent =
+      MONTH_NAMES[selectedMonth];
+
+
+    dayDisplay.textContent =
+      String(selectedDay);
+
+
+    monthDisplay.setAttribute(
+      "aria-valuetext",
+      monthDisplay.textContent
     );
 
-
-    /*
-    Como el cambio de mes puede haber
-    corregido el día, actualizamos ambos.
-    */
-
-    updateDisplay(
-      dayDisplay,
-      String(selectedDay)
+    dayDisplay.setAttribute(
+      "aria-valuetext",
+      dayDisplay.textContent
     );
+
 
     updateInput();
   }
 
 
-  /*
-  ========================================
-  GESTOS
-  ========================================
-  */
+  /* ========================================
+     SWIPE CONTINUO
+  ======================================== */
 
-  function setupSwipe(
+  function setupContinuousSwipe(
     element,
     onNext,
     onPrev
   ) {
 
-    let startY = null;
+    let startY = 0;
+    let lastY = 0;
+    let accumulatedDistance = 0;
+
     let pointerActive = false;
+
+
+    /*
+    Cuántos píxeles hay que desplazar
+    para cambiar un valor.
+
+    Un valor más bajo hace que la rueda
+    sea más sensible.
+    */
+
+    const pixelsPerStep = 28;
 
 
     element.addEventListener(
       "pointerdown",
       (event) => {
 
-        if (
-          event.pointerType !== "touch" &&
-          event.pointerType !== "pen" &&
-          event.pointerType !== "mouse"
-        ) {
-          return;
-        }
+        pointerActive = true;
 
         startY = event.clientY;
-        pointerActive = true;
+        lastY = event.clientY;
+
+        accumulatedDistance = 0;
 
 
         try {
+
           element.setPointerCapture(
             event.pointerId
           );
+
         } catch {}
+      }
+    );
+
+
+    element.addEventListener(
+      "pointermove",
+      (event) => {
+
+        if (!pointerActive) {
+          return;
+        }
+
+
+        const currentY =
+          event.clientY;
+
+
+        /*
+        Movimiento desde el último frame.
+        */
+
+        const movement =
+          lastY - currentY;
+
+
+        lastY = currentY;
+
+
+        /*
+        Acumulamos el desplazamiento.
+
+        Positivo = dedo sube
+        Negativo = dedo baja
+        */
+
+        accumulatedDistance +=
+          movement;
+
+
+        /*
+        Mientras haya suficiente distancia
+        acumulada, seguimos cambiando valores.
+        */
+
+        while (
+          accumulatedDistance >=
+          pixelsPerStep
+        ) {
+
+          onNext();
+
+          accumulatedDistance -=
+            pixelsPerStep;
+        }
+
+
+        while (
+          accumulatedDistance <=
+          -pixelsPerStep
+        ) {
+
+          onPrev();
+
+          accumulatedDistance +=
+            pixelsPerStep;
+        }
       }
     );
 
@@ -565,38 +564,18 @@ export function initFecha() {
       "pointerup",
       (event) => {
 
-        if (
-          !pointerActive ||
-          startY === null
-        ) {
-          return;
-        }
-
-
-        const deltaY =
-          startY - event.clientY;
-
-
-        startY = null;
         pointerActive = false;
 
-
-        /*
-        Una sola pasada de 30px
-        equivale exactamente a un paso.
-        */
-
-        const threshold = 30;
+        accumulatedDistance = 0;
 
 
-        if (deltaY >= threshold) {
+        try {
 
-          onNext();
+          element.releasePointerCapture(
+            event.pointerId
+          );
 
-        } else if (deltaY <= -threshold) {
-
-          onPrev();
-        }
+        } catch {}
       }
     );
 
@@ -605,43 +584,41 @@ export function initFecha() {
       "pointercancel",
       () => {
 
-        startY = null;
         pointerActive = false;
+        accumulatedDistance = 0;
       }
     );
   }
 
 
-  /*
-  ========================================
-  CONFIGURAR GESTOS
-  ========================================
-  */
+  /* ========================================
+     ACTIVAR RUEDA CONTINUA
+  ======================================== */
 
-  setupSwipe(
+  setupContinuousSwipe(
     hourDisplay,
     () => changeHour(1),
     () => changeHour(-1)
   );
 
-  setupSwipe(
+
+  setupContinuousSwipe(
     dayDisplay,
     () => changeDay(1),
     () => changeDay(-1)
   );
 
-  setupSwipe(
+
+  setupContinuousSwipe(
     monthDisplay,
     () => changeMonth(1),
     () => changeMonth(-1)
   );
 
 
-  /*
-  ========================================
-  TECLADO
-  ========================================
-  */
+  /* ========================================
+     TECLADO
+  ======================================== */
 
   function setupKeyboard(
     element,
@@ -687,12 +664,11 @@ export function initFecha() {
   );
 
 
-  /*
-  ========================================
-  INICIALIZAR
-  ========================================
-  */
+  /* ========================================
+     INICIALIZAR
+  ======================================== */
 
   clampDay();
+
   renderAll();
 }
