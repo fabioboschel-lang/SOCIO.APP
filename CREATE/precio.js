@@ -54,7 +54,7 @@ export const preciohtml = `
 
 
       <!-- ======================================
-           LISTA
+           LISTA DE TIPOS
       ====================================== -->
 
       <div
@@ -63,7 +63,7 @@ export const preciohtml = `
       >
 
         <!-- ====================================
-             TIPO DE ENTRADA 1
+             TIPO 1
         ==================================== -->
 
         <article
@@ -153,7 +153,7 @@ export const preciohtml = `
 
 
             <!-- ==================================
-                 LÍMITE INDIVIDUAL
+                 LÍMITE DE VENTA
             ================================== -->
 
             <div class="create-field create-ticket-limit-field">
