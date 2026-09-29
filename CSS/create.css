@@ -145,6 +145,19 @@
 
 
 /* ========================================
+   PASO UBICACIÓN + FECHA
+======================================== */
+
+#create-ubicacion-fecha-step {
+  position: relative;
+
+  min-height: calc(100vh - 210px);
+
+  padding-bottom: 150px;
+}
+
+
+/* ========================================
    CAMPOS
 ======================================== */
 
@@ -574,7 +587,7 @@
 }
 
 .create-progress-bar {
-  width: 16.6667%;
+  width: 20%;
   height: 100%;
 
   background: #7c3aed;
@@ -608,100 +621,45 @@
 
 
 /* ========================================
-   RESPONSIVE
-======================================== */
-
-@media (max-width: 480px) {
-
-  .create-view {
-    padding: 26px 18px 140px;
-  }
-
-  .create-header {
-    margin-bottom: 28px;
-  }
-
-  .create-header h1 {
-    font-size: 25px;
-  }
-
-  .create-step {
-    min-height: 210px;
-  }
-
-  .create-image-picker {
-    min-height: 190px;
-  }
-
-  .create-actions {
-    bottom: 6px;
-    padding: 10px 18px;
-  }
-
-  .create-btn {
-    min-height: 50px;
-    padding: 0 16px;
-  }
-
-  .create-progress {
-    left: 18px;
-    right: 18px;
-    bottom: 76px;
-  }
-
-  .create-back {
-    top: 14px;
-    left: 14px;
-  }
-}
-
-
-/* ========================================
-   MOVIMIENTO REDUCIDO
-======================================== */
-
-@media (prefers-reduced-motion: reduce) {
-
-  .create-step {
-    animation: none;
-  }
-
-  .create-progress-bar,
-  .create-btn,
-  .create-back,
-  .create-field input,
-  .create-field textarea,
-  .create-image-picker {
-    transition: none;
-  }
-}
-
-
-/* ========================================
    SELECTOR DE FECHA
+   POSICIONADO ABAJO EN EL PASO 2
 ======================================== */
 
-.create-fecha-picker {
-  display: grid;
+#create-ubicacion-fecha-step
+  .create-fecha-picker {
+
+  position: fixed;
+
+  left: 20px;
+  right: 20px;
+
+  bottom: 126px;
+
+  z-index: 135;
+
+  width: auto;
+  max-width: 560px;
+
+  margin: 0 auto;
 
   grid-template-columns: 1fr 1fr 1.45fr;
 
-  width: 100%;
   height: 78px;
-
-  margin-top: 32px;
 
   border: 1px solid rgba(255, 255, 255, 0.12);
   border-radius: 16px;
 
   overflow: hidden;
 
-  background: rgba(255, 255, 255, 0.03);
+  background: rgba(18, 18, 26, 0.96);
+
+  backdrop-filter: blur(10px);
+  -webkit-backdrop-filter: blur(10px);
 }
 
 
 /* ========================================
-   COLUMNAS
+   COLUMNAS DE FECHA
 ======================================== */
 
 .create-fecha-column {
@@ -726,7 +684,6 @@
 
 /* ========================================
    VALOR VISIBLE
-   SOLO UNA FILA
 ======================================== */
 
 .create-fecha-display {
@@ -795,6 +752,7 @@
     opacity: 1;
     transform: translateY(0);
   }
+
 }
 
 @keyframes createFechaPrev {
@@ -808,22 +766,93 @@
     opacity: 1;
     transform: translateY(0);
   }
+
 }
 
 
 /* ========================================
-   RESPONSIVE - FECHA
+   RESPONSIVE
 ======================================== */
 
 @media (max-width: 480px) {
 
-  .create-fecha-picker {
-    height: 72px;
+  .create-view {
+    padding: 26px 18px 140px;
+  }
 
-    margin-top: 28px;
+
+  .create-header {
+    margin-bottom: 28px;
+  }
+
+
+  .create-header h1 {
+    font-size: 25px;
+  }
+
+
+  .create-step {
+    min-height: 210px;
+  }
+
+
+  #create-ubicacion-fecha-step {
+    min-height: calc(100vh - 190px);
+
+    padding-bottom: 140px;
+  }
+
+
+  .create-image-picker {
+    min-height: 190px;
+  }
+
+
+  .create-actions {
+    bottom: 6px;
+
+    padding: 10px 18px;
+  }
+
+
+  .create-btn {
+    min-height: 50px;
+
+    padding: 0 16px;
+  }
+
+
+  .create-progress {
+    left: 18px;
+    right: 18px;
+
+    bottom: 76px;
+  }
+
+
+  .create-back {
+    top: 14px;
+    left: 14px;
+  }
+
+
+  /* ======================================
+     FECHA - MOBILE
+  ====================================== */
+
+  #create-ubicacion-fecha-step
+    .create-fecha-picker {
+
+    left: 18px;
+    right: 18px;
+
+    bottom: 122px;
+
+    height: 72px;
 
     border-radius: 14px;
   }
+
 
   .create-fecha-display {
     padding: 0 6px;
@@ -835,14 +864,26 @@
 
 
 /* ========================================
-   MOVIMIENTO REDUCIDO - FECHA
+   MOVIMIENTO REDUCIDO
 ======================================== */
 
 @media (prefers-reduced-motion: reduce) {
+
+  .create-step {
+    animation: none;
+  }
+
+  .create-progress-bar,
+  .create-btn,
+  .create-back,
+  .create-field input,
+  .create-field textarea,
+  .create-image-picker {
+    transition: none;
+  }
 
   .create-fecha-display.is-changing-next,
   .create-fecha-display.is-changing-prev {
     animation: none;
   }
-
 }
