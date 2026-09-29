@@ -675,3 +675,202 @@
     transition: none;
   }
 }
+
+
+/* ========================================
+   SELECTOR DE FECHA
+======================================== */
+
+.create-fecha-picker {
+  display: grid;
+  grid-template-columns: 1fr 1fr 1.6fr;
+  width: 100%;
+  height: 180px;
+  margin-top: 32px;
+  border: 1px solid rgba(255, 255, 255, 0.12);
+  border-radius: 16px;
+  overflow: hidden;
+  background: rgba(255, 255, 255, 0.03);
+}
+
+
+/* ========================================
+   COLUMNAS
+======================================== */
+
+.create-fecha-column {
+  position: relative;
+  min-width: 0;
+  height: 100%;
+  border-right: 1px solid rgba(255, 255, 255, 0.1);
+}
+
+.create-fecha-column:last-child {
+  border-right: none;
+}
+
+
+/* ========================================
+   CONTENEDOR SCROLL
+======================================== */
+
+.create-fecha-scroll {
+  position: relative;
+
+  display: flex;
+  flex-direction: column;
+  align-items: stretch;
+
+  height: 100%;
+
+  overflow-y: auto;
+  overflow-x: hidden;
+
+  scroll-snap-type: y mandatory;
+  overscroll-behavior: contain;
+
+  scrollbar-width: none;
+
+  -webkit-overflow-scrolling: touch;
+}
+
+.create-fecha-scroll::-webkit-scrollbar {
+  display: none;
+}
+
+
+/* ========================================
+   OPCIONES
+======================================== */
+
+.create-fecha-option {
+  flex: 0 0 60px;
+
+  width: 100%;
+  height: 60px;
+
+  padding: 0 8px;
+
+  border: none;
+  background: transparent;
+
+  color: rgba(255, 255, 255, 0.35);
+
+  font-family: inherit;
+  font-size: 20px;
+  font-weight: 500;
+
+  text-align: center;
+
+  scroll-snap-align: center;
+
+  cursor: pointer;
+
+  transition:
+    color 0.15s ease,
+    transform 0.15s ease,
+    opacity 0.15s ease;
+}
+
+
+/* ========================================
+   OPCIÓN SELECCIONADA
+======================================== */
+
+.create-fecha-option.is-selected {
+  color: #ffffff;
+  font-weight: 700;
+  transform: scale(1.05);
+}
+
+
+/* ========================================
+   ETIQUETAS
+======================================== */
+
+.create-fecha-label {
+  position: absolute;
+
+  left: 50%;
+  bottom: 12px;
+
+  transform: translateX(-50%);
+
+  z-index: 5;
+
+  font-size: 11px;
+  font-weight: 500;
+
+  color: rgba(255, 255, 255, 0.4);
+
+  pointer-events: none;
+}
+
+
+/* ========================================
+   EFECTO DEGRADADO SUPERIOR / INFERIOR
+======================================== */
+
+.create-fecha-column::before,
+.create-fecha-column::after {
+  content: "";
+
+  position: absolute;
+
+  left: 0;
+  right: 0;
+
+  height: 45px;
+
+  z-index: 3;
+
+  pointer-events: none;
+}
+
+.create-fecha-column::before {
+  top: 0;
+
+  background:
+    linear-gradient(
+      to bottom,
+      rgba(15, 15, 15, 1),
+      rgba(15, 15, 15, 0)
+    );
+}
+
+.create-fecha-column::after {
+  bottom: 0;
+
+  background:
+    linear-gradient(
+      to top,
+      rgba(15, 15, 15, 1),
+      rgba(15, 15, 15, 0)
+    );
+}
+
+
+/* ========================================
+   RESPONSIVE
+======================================== */
+
+@media (max-width: 480px) {
+
+  .create-fecha-picker {
+    height: 170px;
+    margin-top: 28px;
+    border-radius: 14px;
+  }
+
+  .create-fecha-option {
+    flex-basis: 56px;
+    height: 56px;
+    font-size: 18px;
+  }
+
+  .create-fecha-label {
+    bottom: 10px;
+    font-size: 10px;
+  }
+
+}
