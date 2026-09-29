@@ -40,7 +40,7 @@ export function Create(app) {
 
       <header class="create-header">
         <h1><h1>
-        <p>.</p>
+        <p></p>
       </header>
 
 
