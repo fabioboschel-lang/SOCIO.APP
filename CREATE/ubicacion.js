@@ -15,12 +15,6 @@ const GOOGLE_MAPS_API_KEY =
 
 export const ubicacionhtml = `
 
-<div
-  id="create-ubicacion-step"
-  class="create-step"
-  style="display: none;"
->
-
   <div class="create-field">
 
     <label>
@@ -71,7 +65,7 @@ export const ubicacionhtml = `
 
   </div>
 
-</div>
+
 
 `;
 
