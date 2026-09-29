@@ -1,1260 +1,260 @@
-// CREATE/create.js
+// CREATE/precio.js
 
-import { navigate } from "../navigate.js";
-import { supabase } from "../supabase.js";
+export const preciohtml = `
 
-import { nombrehtml } from "./nombre.js";
-import { descripcionhtml } from "./descripcion.js";
-import { imagenhtml } from "./imagen.js";
-import {
-  ubicacionhtml,
-  initUbicacion
-} from "./ubicacion.js";
-import {
-  fechahtml,
-  initFecha
-} from "./fecha.js";
-import { preciohtml } from "./precio.js";
+  <div class="create-ticket-config">
 
-export function Create(app) {
+    <!-- ========================================
+         CAPACIDAD TOTAL
+    ======================================== -->
 
-  let currentStep = 0;
-  let isPublishing = false;
+    <div class="create-field">
 
-  app.innerHTML = `
+      <label for="create-capacidad">
+        ¿Cuántas personas pueden asistir?
+      </label>
 
-    <main class="create-view">
+      <input
+        type="number"
+        id="create-capacidad"
+        name="capacidad"
+        placeholder="1000"
+        min="1"
+        max="1000000"
+        step="1"
+        inputmode="numeric"
+        autocomplete="off"
+        required
+      >
+
+      <small class="create-field-hint">
+        Es el máximo total de personas que pueden entrar al evento.
+      </small>
+
+    </div>
+
+
+    <!-- ========================================
+         TIPOS DE ENTRADA
+    ======================================== -->
+
+    <div class="create-ticket-types">
+
+      <div class="create-ticket-types-header">
+
+        <h2>
+          Tipos de entrada
+        </h2>
+
+        <p>
+          Podés crear uno o varios tipos de entrada.
+        </p>
+
+      </div>
+
+
+      <!-- ======================================
+           LISTA DE TIPOS
+      ====================================== -->
+
+      <div
+        id="create-ticket-list"
+        class="create-ticket-list"
+      >
+
+        <!-- ====================================
+             TIPO 1
+        ==================================== -->
+
+        <article
+          class="create-ticket-card"
+          data-ticket-index="0"
+        >
+
+          <div class="create-ticket-card-header">
+
+            <span class="create-ticket-number">
+              Entrada 1
+            </span>
+
+            <button
+              type="button"
+              class="create-ticket-remove"
+              aria-label="Eliminar tipo de entrada"
+              hidden
+            >
+              ×
+            </button>
+
+          </div>
+
+
+          <div class="create-ticket-fields">
+
+            <!-- ==================================
+                 NOMBRE
+            ================================== -->
+
+            <div class="create-field">
+
+              <label for="create-ticket-name-0">
+                Nombre
+              </label>
+
+              <input
+                type="text"
+                id="create-ticket-name-0"
+                class="create-ticket-name"
+                placeholder="General"
+                maxlength="80"
+                autocomplete="off"
+                required
+              >
+
+            </div>
+
+
+            <!-- ==================================
+                 PRECIO
+            ================================== -->
+
+            <div class="create-field">
+
+              <label for="create-ticket-price-0">
+                Precio
+              </label>
+
+              <div class="create-price-input">
+
+                <span aria-hidden="true">
+                  $
+                </span>
+
+                <input
+                  type="number"
+                  id="create-ticket-price-0"
+                  class="create-ticket-price"
+                  placeholder="0"
+                  min="0"
+                  max="100000000"
+                  step="1"
+                  inputmode="numeric"
+                  autocomplete="off"
+                  required
+                >
+
+              </div>
+
+              <small class="create-field-hint">
+                Ingresá 0 si esta entrada es gratuita.
+              </small>
+
+            </div>
+
+
+            <!-- ==================================
+                 LÍMITE DE VENTA
+            ================================== -->
+
+            <div class="create-field create-ticket-limit-field">
+
+              <label>
+                Límite de venta
+              </label>
+
+
+              <div class="create-ticket-limit-options">
+
+                <!-- SIN LÍMITE -->
+
+                <label class="create-ticket-limit-option">
+
+                  <input
+                    type="radio"
+                    name="create-ticket-limit-0"
+                    class="create-ticket-limit-mode"
+                    value="none"
+                    checked
+                  >
+
+                  <span>
+                    Sin límite
+                  </span>
+
+                </label>
+
+
+                <!-- CON LÍMITE -->
+
+                <label class="create-ticket-limit-option">
+
+                  <input
+                    type="radio"
+                    name="create-ticket-limit-0"
+                    class="create-ticket-limit-mode"
+                    value="limited"
+                  >
+
+                  <span>
+                    Establecer límite
+                  </span>
+
+                </label>
+
+              </div>
+
+
+              <!-- ==================================
+                   CANTIDAD MÁXIMA
+              ================================== -->
+
+              <div
+                class="create-ticket-limit-input"
+                hidden
+              >
+
+                <input
+                  type="number"
+                  class="create-ticket-limit"
+                  min="1"
+                  max="1000000"
+                  step="1"
+                  inputmode="numeric"
+                  autocomplete="off"
+                  placeholder="Cantidad máxima"
+                  aria-label="Cantidad máxima de entradas"
+                >
+
+              </div>
+
+
+              <small class="create-field-hint">
+                Sin límite permite vender este tipo hasta alcanzar la capacidad total del evento.
+              </small>
+
+            </div>
+
+          </div>
+
+        </article>
+
+      </div>
+
 
       <!-- ========================================
-           FLECHA VOLVER
+           AGREGAR TIPO
       ======================================== -->
 
       <button
         type="button"
-        id="create-back"
-        class="create-back"
-        aria-label="Volver"
-        style="display: none;"
+        id="create-add-ticket"
+        class="create-add-ticket"
       >
-        ←
+        + Agregar tipo de entrada
       </button>
 
+    </div>
 
-      <!-- ========================================
-           ENCABEZADO
-      ======================================== -->
+  </div>
 
-      <header class="create-header">
-        <h1><h1>
-        <p></p>
-      </header>
-
-
-      <!-- ========================================
-           FORMULARIO
-      ======================================== -->
-
-      <form
-        id="create-form"
-        novalidate
-      >
-
-        <!-- ========================================
-             PANTALLAS
-        ======================================== -->
-
-        <div id="create-steps">
-
-          <!-- ======================================
-               PASO 1 - NOMBRE
-          ====================================== -->
-
-          <div
-            id="create-nombre-step"
-            class="create-step"
-          >
-
-            ${nombrehtml}
-
-          </div>
-
-
-          <!-- ======================================
-               PASO 2 - UBICACIÓN + FECHA
-          ====================================== -->
-
-          <div
-            id="create-ubicacion-fecha-step"
-            class="create-step"
-          >
-
-            ${ubicacionhtml}
-
-            ${fechahtml}
-
-          </div>
-
-
-          <!-- ======================================
-               PASO 3 - IMAGEN
-          ====================================== -->
-
-          <div
-            id="create-imagen-step"
-            class="create-step"
-          >
-
-            ${imagenhtml}
-
-          </div>
-
-
-          <!-- ======================================
-               PASO 4 - PRECIO
-          ====================================== -->
-
-          <div
-            id="create-precio-step"
-            class="create-step"
-          >
-
-            ${preciohtml}
-
-          </div>
-
-
-          <!-- ======================================
-               PASO 5 - DESCRIPCIÓN
-          ====================================== -->
-
-          <div
-            id="create-descripcion-step"
-            class="create-step"
-          >
-
-            ${descripcionhtml}
-
-          </div>
-
-        </div>
-
-
-        <!-- ========================================
-             ACCIONES
-        ======================================== -->
-
-        <div class="create-actions">
-
-          <button
-            type="button"
-            id="create-next"
-            class="create-btn create-btn-primary"
-          >
-            Continuar
-          </button>
-
-        </div>
-
-
-        <!-- ========================================
-             ERROR
-        ======================================== -->
-
-        <p
-          id="create-error"
-          class="create-error"
-          role="alert"
-          hidden
-        ></p>
-
-      </form>
-
-
-      <!-- ========================================
-           PROGRESO
-      ======================================== -->
-
-      <div class="create-progress">
-
-        <div class="create-progress-info">
-          <span id="create-step-number"></span>
-        </div>
-
-        <div class="create-progress-track">
-
-          <div
-            id="create-progress-bar"
-            class="create-progress-bar"
-          ></div>
-
-        </div>
-
-      </div>
-
-    </main>
-  `;
-
-
-  /* ========================================
-     REFERENCIAS
-  ======================================== */
-
-  const form =
-    app.querySelector("#create-form");
-
-
-  const backButton =
-    app.querySelector("#create-back");
-
-
-  const nextButton =
-    app.querySelector("#create-next");
-
-
-  const createActions =
-    app.querySelector(".create-actions");
-
-
-  const stepNumber =
-    app.querySelector("#create-step-number");
-
-
-  const progressBar =
-    app.querySelector("#create-progress-bar");
-
-
-  const errorMessage =
-    app.querySelector("#create-error");
-
-
-  const stepElements = [
-
-    app.querySelector(
-      "#create-nombre-step"
-    ),
-
-    app.querySelector(
-      "#create-ubicacion-fecha-step"
-    ),
-
-    app.querySelector(
-      "#create-imagen-step"
-    ),
-
-    app.querySelector(
-      "#create-precio-step"
-    ),
-
-    app.querySelector(
-      "#create-descripcion-step"
-    )
-
-  ];
-
-
-  const totalSteps =
-    stepElements.length;
-
-
-  initUbicacion();
-
-  initFecha();
-
-
-  /* ========================================
-     POSICIÓN DEL BOTÓN CON TECLADO MÓVIL
-  ======================================== */
-
-  const visualViewport =
-    window.visualViewport;
-
-
-  function updateKeyboardPosition() {
-
-    if (!visualViewport) {
-      return;
-    }
-
-
-    const keyboardHeight =
-      window.innerHeight -
-      visualViewport.height;
-
-
-    if (
-      keyboardHeight > 100
-    ) {
-
-      createActions.style.bottom =
-        `${keyboardHeight + 6}px`;
-
-    } else {
-
-      createActions.style.bottom =
-        "";
-    }
-  }
-
-
-  if (visualViewport) {
-
-    visualViewport.addEventListener(
-      "resize",
-      updateKeyboardPosition
-    );
-
-
-    visualViewport.addEventListener(
-      "scroll",
-      updateKeyboardPosition
-    );
-  }
-
-
-  window.addEventListener(
-    "resize",
-    updateKeyboardPosition
-  );
-
-
-  updateKeyboardPosition();
-
-
-  /* ========================================
-     PREVIEW DE IMAGEN
-  ======================================== */
-
-  const imageInput =
-    app.querySelector(
-      "#create-imagen"
-    );
-
-
-  const imagePreview =
-    app.querySelector(
-      "#create-image-preview"
-    );
-
-
-  const imagePlaceholder =
-    app.querySelector(
-      ".create-image-placeholder"
-    );
-
-
-  let imagePreviewUrl =
-    null;
-
-
-  if (
-    imageInput &&
-    imagePreview &&
-    imagePlaceholder
-  ) {
-
-    imageInput.addEventListener(
-      "change",
-      () => {
-
-        const file =
-          imageInput.files?.[0];
-
-
-        if (imagePreviewUrl) {
-
-          URL.revokeObjectURL(
-            imagePreviewUrl
-          );
-
-          imagePreviewUrl =
-            null;
-        }
-
-
-        if (!file) {
-
-          imagePreview.removeAttribute(
-            "src"
-          );
-
-          imagePreview.hidden =
-            true;
-
-          imagePlaceholder.hidden =
-            false;
-
-          return;
-        }
-
-
-        imagePreviewUrl =
-          URL.createObjectURL(
-            file
-          );
-
-
-        imagePreview.src =
-          imagePreviewUrl;
-
-
-        imagePreview.hidden =
-          false;
-
-
-        imagePlaceholder.hidden =
-          true;
-      }
-    );
-  }
-
-
-  /* ========================================
-     MOSTRAR ERROR
-  ======================================== */
-
-  function showError(
-    message
-  ) {
-
-    errorMessage.textContent =
-      message;
-
-    errorMessage.hidden =
-      false;
-  }
-
-
-  /* ========================================
-     LIMPIAR ERROR
-  ======================================== */
-
-  function clearError() {
-
-    errorMessage.textContent =
-      "";
-
-    errorMessage.hidden =
-      true;
-  }
-
-
-  /* ========================================
-     MOSTRAR PANTALLA ACTUAL
-  ======================================== */
-
-  function renderStep() {
-
-    stepElements.forEach(
-      (section, index) => {
-
-        section.style.display =
-          index === currentStep
-            ? "block"
-            : "none";
-      }
-    );
-
-
-    const current =
-      currentStep + 1;
-
-
-    const isFirst =
-      currentStep === 0;
-
-
-    const isLast =
-      currentStep ===
-      totalSteps - 1;
-
-
-    /* ========================================
-       PROGRESO
-    ======================================== */
-
-    stepNumber.textContent =
-      `Paso ${current} de ${totalSteps}`;
-
-
-    progressBar.style.width =
-      `${(current / totalSteps) * 100}%`;
-
-
-    /* ========================================
-       FLECHA
-    ======================================== */
-
-    backButton.style.display =
-      isFirst
-        ? "none"
-        : "block";
-
-
-    /* ========================================
-       CONTINUAR
-    ======================================== */
-
-    nextButton.textContent =
-      isLast
-        ? "Publicar evento"
-        : "Continuar";
-
-
-    nextButton.disabled =
-      isPublishing;
-
-
-    clearError();
-  }
-
-
-  /* ========================================
-     VALIDAR NOMBRE
-  ======================================== */
-
-  function validateNombre() {
-
-    const input =
-      app.querySelector(
-        "#create-nombre"
-      );
-
-
-    const value =
-      input.value.trim();
-
-
-    if (!value) {
-
-      input.setCustomValidity(
-        "Ingresá el nombre del evento."
-      );
-
-      input.reportValidity();
-
-      input.setCustomValidity("");
-
-      return false;
-    }
-
-
-    if (
-      value.length < 3
-    ) {
-
-      input.setCustomValidity(
-        "El nombre debe tener al menos 3 caracteres."
-      );
-
-      input.reportValidity();
-
-      input.setCustomValidity("");
-
-      return false;
-    }
-
-
-    return true;
-  }
-
-
-  /* ========================================
-     VALIDAR DESCRIPCIÓN
-  ======================================== */
-
-  function validateDescripcion() {
-
-    const input =
-      app.querySelector(
-        "#create-descripcion"
-      );
-
-
-    const value =
-      input.value.trim();
-
-
-    if (!value) {
-
-      input.setCustomValidity(
-        "Ingresá una descripción."
-      );
-
-      input.reportValidity();
-
-      input.setCustomValidity("");
-
-      return false;
-    }
-
-
-    if (
-      value.length < 10
-    ) {
-
-      input.setCustomValidity(
-        "La descripción debe tener al menos 10 caracteres."
-      );
-
-      input.reportValidity();
-
-      input.setCustomValidity("");
-
-      return false;
-    }
-
-
-    return true;
-  }
-
-
-  /* ========================================
-     VALIDAR IMAGEN
-  ======================================== */
-
-  function validateImagen() {
-
-    const input =
-      app.querySelector(
-        "#create-imagen"
-      );
-
-
-    const file =
-      input.files?.[0];
-
-
-    if (!file) {
-
-      input.setCustomValidity(
-        "Seleccioná una imagen para el evento."
-      );
-
-      input.reportValidity();
-
-      input.setCustomValidity("");
-
-      return false;
-    }
-
-
-    if (
-      !file.type.startsWith(
-        "image/"
-      )
-    ) {
-
-      input.setCustomValidity(
-        "El archivo debe ser una imagen."
-      );
-
-      input.reportValidity();
-
-      input.setCustomValidity("");
-
-      return false;
-    }
-
-
-    const maxSize =
-      10 * 1024 * 1024;
-
-
-    if (
-      file.size > maxSize
-    ) {
-
-      input.setCustomValidity(
-        "La imagen no puede superar los 10 MB."
-      );
-
-      input.reportValidity();
-
-      input.setCustomValidity("");
-
-      return false;
-    }
-
-
-    return true;
-  }
-
-
-  /* ========================================
-     VALIDAR UBICACIÓN
-  ======================================== */
-
-  function validateUbicacion() {
-
-    const input =
-      app.querySelector(
-        "#create-ubicacion"
-      );
-
-
-    const value =
-      input.value.trim();
-
-
-    if (!value) {
-
-      input.setCustomValidity(
-        "Ingresá la ubicación del evento."
-      );
-
-      input.reportValidity();
-
-      input.setCustomValidity("");
-
-      return false;
-    }
-
-
-    return true;
-  }
-
-
-  /* ========================================
-     VALIDAR FECHA
-  ======================================== */
-
-  function validateFecha() {
-
-    const picker =
-      app.querySelector(
-        "#create-fecha-picker"
-      );
-
-
-    const hourDisplay =
-      app.querySelector(
-        "#create-fecha-hour"
-      );
-
-
-    const value =
-      picker?.dataset.value ||
-      "";
-
-
-    if (!value) {
-
-      showError(
-        "Seleccioná la fecha y hora."
-      );
-
-
-      hourDisplay?.focus();
-
-
-      return false;
-    }
-
-
-    const selectedDate =
-      new Date(value);
-
-
-    if (
-      Number.isNaN(
-        selectedDate.getTime()
-      )
-    ) {
-
-      showError(
-        "Ingresá una fecha válida."
-      );
-
-
-      hourDisplay?.focus();
-
-
-      return false;
-    }
-
-
-    if (
-      selectedDate.getTime() <=
-      Date.now()
-    ) {
-
-      showError(
-        "La fecha del evento debe ser futura."
-      );
-
-
-      hourDisplay?.focus();
-
-
-      return false;
-    }
-
-
-    return true;
-  }
-
-
-  /* ========================================
-     VALIDAR PRECIO
-  ======================================== */
-
-  function validatePrecio() {
-
-    const input =
-      app.querySelector(
-        "#create-precio"
-      );
-
-
-    const rawValue =
-      input.value.trim();
-
-
-    const value =
-      Number(rawValue);
-
-
-    if (
-      rawValue === ""
-    ) {
-
-      input.setCustomValidity(
-        "Ingresá el precio de la entrada."
-      );
-
-      input.reportValidity();
-
-      input.setCustomValidity("");
-
-      return false;
-    }
-
-
-    if (
-      !Number.isFinite(value) ||
-      value < 0
-    ) {
-
-      input.setCustomValidity(
-        "El precio debe ser un número igual o mayor a 0."
-      );
-
-      input.reportValidity();
-
-      input.setCustomValidity("");
-
-      return false;
-    }
-
-
-    if (
-      !Number.isInteger(value)
-    ) {
-
-      input.setCustomValidity(
-        "Ingresá el precio como un número entero."
-      );
-
-      input.reportValidity();
-
-      input.setCustomValidity("");
-
-      return false;
-    }
-
-
-    return true;
-  }
-
-
-  /* ========================================
-     VALIDAR PANTALLA ACTUAL
-  ======================================== */
-
-  function validateCurrentStep() {
-
-    switch (currentStep) {
-
-      case 0:
-
-        return validateNombre();
-
-
-      case 1:
-
-        return (
-          validateUbicacion() &&
-          validateFecha()
-        );
-
-
-      case 2:
-
-        return validateImagen();
-
-
-      case 3:
-
-        return validatePrecio();
-
-
-      case 4:
-
-        return validateDescripcion();
-
-
-      default:
-
-        return false;
-    }
-  }
-
-
-  /* ========================================
-     OBTENER DATOS
-  ======================================== */
-
-  function getFormData() {
-
-    return {
-
-      nombre:
-        app
-          .querySelector(
-            "#create-nombre"
-          )
-          .value
-          .trim(),
-
-
-      descripcion:
-        app
-          .querySelector(
-            "#create-descripcion"
-          )
-          .value
-          .trim(),
-
-
-      imagen:
-        app
-          .querySelector(
-            "#create-imagen"
-          )
-          .files?.[0],
-
-
-      ubicacion:
-        app
-          .querySelector(
-            "#create-ubicacion"
-          )
-          .value
-          .trim(),
-
-
-      fecha:
-        app
-          .querySelector(
-            "#create-fecha-picker"
-          )
-          ?.dataset
-          .value || "",
-
-
-      valor:
-        Number(
-          app
-            .querySelector(
-              "#create-precio"
-            )
-            .value
-        )
-    };
-  }
-
-
-  /* ========================================
-     PUBLICAR EVENTO
-  ======================================== */
-
-  async function publishEvent() {
-
-    if (
-      isPublishing
-    ) {
-      return;
-    }
-
-
-    isPublishing =
-      true;
-
-
-    nextButton.disabled =
-      true;
-
-
-    backButton.disabled =
-      true;
-
-
-    nextButton.textContent =
-      "Publicando...";
-
-
-    clearError();
-
-
-    try {
-
-      const {
-        nombre,
-        descripcion,
-        imagen,
-        ubicacion,
-        fecha,
-        valor
-      } = getFormData();
-
-
-      /* ========================================
-         USUARIO
-      ======================================== */
-
-      const {
-        data: { user },
-        error: authError
-      } =
-        await supabase.auth.getUser();
-
-
-      if (authError) {
-        throw authError;
-      }
-
-
-      if (!user) {
-
-        throw new Error(
-          "Tenés que iniciar sesión para publicar."
-        );
-      }
-
-
-      /* ========================================
-         SUBIR IMAGEN
-      ======================================== */
-
-      const extension =
-        imagen.name
-          .split(".")
-          .pop() ||
-        "jpg";
-
-
-      const imagePath =
-        `${user.id}/${crypto.randomUUID()}.${extension}`;
-
-
-      const {
-        error: uploadError
-      } =
-        await supabase.storage
-          .from("eventos")
-          .upload(
-            imagePath,
-            imagen,
-            {
-              upsert: false,
-              contentType:
-                imagen.type ||
-                undefined
-            }
-          );
-
-
-      if (uploadError) {
-        throw uploadError;
-      }
-
-
-      /* ========================================
-         URL PÚBLICA
-      ======================================== */
-
-      const {
-        data: publicUrlData
-      } =
-        supabase.storage
-          .from("eventos")
-          .getPublicUrl(
-            imagePath
-          );
-
-
-      const imagenUrl =
-        publicUrlData.publicUrl;
-
-
-      /* ========================================
-         INSERTAR EVENTO
-      ======================================== */
-
-      const {
-        error: insertError
-      } =
-        await supabase
-          .from("Eventos")
-          .insert({
-            nombre,
-            imagen: imagenUrl,
-            descripcion,
-            ubicacion,
-            fecha,
-            valor,
-            "ID usuario": user.id
-          });
-
-
-      /* ========================================
-         SI FALLA EL INSERT
-      ======================================== */
-
-      if (insertError) {
-
-        await supabase.storage
-          .from("eventos")
-          .remove([
-            imagePath
-          ]);
-
-        throw insertError;
-      }
-
-
-      /* ========================================
-         HOME
-      ======================================== */
-
-      navigate("home");
-
-
-    } catch (error) {
-
-      console.error(
-        "Error al publicar el evento:",
-        error
-      );
-
-
-      showError(
-        error.message ||
-        "No se pudo publicar el evento."
-      );
-
-
-    } finally {
-
-      isPublishing =
-        false;
-
-
-      nextButton.disabled =
-        false;
-
-
-      backButton.disabled =
-        false;
-
-
-      renderStep();
-    }
-  }
-
-
-  /* ========================================
-     FLECHA VOLVER
-  ======================================== */
-
-  backButton.addEventListener(
-    "click",
-    () => {
-
-      if (
-        isPublishing ||
-        currentStep === 0
-      ) {
-        return;
-      }
-
-
-      currentStep--;
-
-
-      renderStep();
-    }
-  );
-
-
-  /* ========================================
-     CONTINUAR / PUBLICAR
-  ======================================== */
-
-  nextButton.addEventListener(
-    "click",
-    async () => {
-
-      if (
-        isPublishing
-      ) {
-        return;
-      }
-
-
-      clearError();
-
-
-      if (
-        !validateCurrentStep()
-      ) {
-        return;
-      }
-
-
-      if (
-        currentStep <
-        totalSteps - 1
-      ) {
-
-        currentStep++;
-
-        renderStep();
-
-        return;
-      }
-
-
-      await publishEvent();
-    }
-  );
-
-
-  /* ========================================
-     EVITAR SUBMIT
-  ======================================== */
-
-  form.addEventListener(
-    "submit",
-    event => {
-      event.preventDefault();
-    }
-  );
-
-
-  /* ========================================
-     INICIAR
-  ======================================== */
-
-  renderStep();
-}
+`;
