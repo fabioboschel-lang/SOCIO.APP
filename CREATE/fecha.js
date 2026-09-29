@@ -1,5 +1,4 @@
-export const fechahtml = `
-<div id="create-fecha-step" class="create-step" style="display:none;">
+export const fechahtml =
 
   <div class="create-field">
 
@@ -58,7 +57,7 @@ export const fechahtml = `
 
   </div>
 
-</div>
+
 `;
 
 
