@@ -2,11 +2,7 @@
 
 export const nombrehtml = `
 
-<div
-  id="create-nombre-step"
-  class="create-step"
-  style="display: none;"
->
+
 
   <div class="create-field">
 
@@ -26,6 +22,6 @@ export const nombrehtml = `
 
   </div>
 
-</div>
+
 
 `;
