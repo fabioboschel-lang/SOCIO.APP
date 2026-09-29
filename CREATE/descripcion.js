@@ -2,11 +2,7 @@
 
 export const descripcionhtml = `
 
-<div
-  id="create-descripcion-step"
-  class="create-step"
-  style="display: none;"
->
+
 
   <div class="create-field">
 
@@ -30,6 +26,6 @@ export const descripcionhtml = `
 
   </div>
 
-</div>
+
 
 `;
