@@ -59,19 +59,19 @@ export function Create(app) {
 
         <div id="create-steps">
 
-          ${nombrehtml}
+  ${nombrehtml}
 
-          ${descripcionhtml}
+  ${ubicacionhtml}
 
-          ${imagenhtml}
+  ${fechahtml}
 
-          ${ubicacionhtml}
+  ${imagenhtml}
 
-          ${fechahtml}
+  ${preciohtml}
 
-          ${preciohtml}
+  ${descripcionhtml}
 
-        </div>
+</div>
 
 
         <!-- ========================================
@@ -157,13 +157,13 @@ export function Create(app) {
 
 
   const stepElements = [
-    app.querySelector("#create-nombre-step"),
-    app.querySelector("#create-descripcion-step"),
-    app.querySelector("#create-imagen-step"),
-    app.querySelector("#create-ubicacion-step"),
-    app.querySelector("#create-fecha-step"),
-    app.querySelector("#create-precio-step")
-  ];
+  app.querySelector("#create-nombre-step"),
+  app.querySelector("#create-ubicacion-step"),
+  app.querySelector("#create-fecha-step"),
+  app.querySelector("#create-imagen-step"),
+  app.querySelector("#create-precio-step"),
+  app.querySelector("#create-descripcion-step")
+];
 
   const totalSteps =
     stepElements.length;
@@ -729,30 +729,30 @@ export function Create(app) {
 
   function validateCurrentStep() {
 
-    switch (currentStep) {
+  switch (currentStep) {
 
-      case 0:
-        return validateNombre();
+    case 0:
+      return validateNombre();
 
-      case 1:
-        return validateDescripcion();
+    case 1:
+      return validateUbicacion();
 
-      case 2:
-        return validateImagen();
+    case 2:
+      return validateFecha();
 
-      case 3:
-        return validateUbicacion();
+    case 3:
+      return validateImagen();
 
-      case 4:
-        return validateFecha();
+    case 4:
+      return validatePrecio();
 
-      case 5:
-        return validatePrecio();
+    case 5:
+      return validateDescripcion();
 
-      default:
-        return false;
-    }
+    default:
+      return false;
   }
+}
 
 
   /* ========================================
