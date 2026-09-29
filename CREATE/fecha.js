@@ -1,22 +1,9 @@
-// CREATE/fecha.js
-
-/* ========================================
-   HTML
-======================================== */
-
 export const fechahtml = `
-
-<div
-  id="create-fecha-step"
-  class="create-step"
-  style="display: none;"
->
+<div id="create-fecha-step" class="create-step" style="display:none;">
 
   <div class="create-field">
 
-    <label>
-      ¿Cuándo se realiza?
-    </label>
+    <label>¿Cuándo se realiza?</label>
 
     <p class="create-field-hint">
       Elegí la fecha y hora del evento.
@@ -25,68 +12,50 @@ export const fechahtml = `
     <div
       id="create-fecha-picker"
       class="create-fecha-picker"
+      aria-label="Selector de fecha y hora"
     >
 
-      <!-- HORA -->
       <div
         class="create-fecha-column"
         data-type="hour"
       >
-
         <div
           id="create-fecha-hour"
-          class="create-fecha-scroll"
+          class="create-fecha-display"
           tabindex="0"
+          role="button"
+          aria-label="Hora"
         ></div>
-
-        <span class="create-fecha-label">
-          hs
-        </span>
-
       </div>
 
-      <!-- DÍA -->
       <div
         class="create-fecha-column"
         data-type="day"
       >
-
         <div
           id="create-fecha-day"
-          class="create-fecha-scroll"
+          class="create-fecha-display"
           tabindex="0"
+          role="button"
+          aria-label="Día"
         ></div>
-
-        <span class="create-fecha-label">
-          día
-        </span>
-
       </div>
 
-      <!-- MES -->
       <div
         class="create-fecha-column"
         data-type="month"
       >
-
         <div
           id="create-fecha-month"
-          class="create-fecha-scroll"
+          class="create-fecha-display"
           tabindex="0"
+          role="button"
+          aria-label="Mes"
         ></div>
-
-        <span class="create-fecha-label">
-          mes
-        </span>
-
       </div>
 
     </div>
 
-    <!--
-      Valor final utilizado por create.js
-      y Supabase.
-    -->
     <input
       type="datetime-local"
       id="create-fecha"
@@ -97,15 +66,10 @@ export const fechahtml = `
   </div>
 
 </div>
-
 `;
 
 
-/* ========================================
-   CONFIGURACIÓN
-======================================== */
-
-const MONTHS = [
+const MONTH_NAMES = [
   "Enero",
   "Febrero",
   "Marzo",
@@ -121,573 +85,614 @@ const MONTHS = [
 ];
 
 
-/* ========================================
-   ESTADO
-======================================== */
-
-let initialized = false;
-
-let selectedHour = 0;
-let selectedMinute = 0;
-let selectedDay = 1;
-let selectedMonth = 0;
-let selectedYear = 0;
-
-
-/* ========================================
-   INICIALIZAR
-======================================== */
-
 export function initFecha() {
 
-  if (initialized) {
-    return;
-  }
+  const picker = document.querySelector("#create-fecha-picker");
+  const input = document.querySelector("#create-fecha");
 
-  const hourContainer =
-    document.querySelector(
-      "#create-fecha-hour"
-    );
-
-  const dayContainer =
-    document.querySelector(
-      "#create-fecha-day"
-    );
-
-  const monthContainer =
-    document.querySelector(
-      "#create-fecha-month"
-    );
-
-  const input =
-    document.querySelector(
-      "#create-fecha"
-    );
+  const hourDisplay = document.querySelector("#create-fecha-hour");
+  const dayDisplay = document.querySelector("#create-fecha-day");
+  const monthDisplay = document.querySelector("#create-fecha-month");
 
   if (
-    !hourContainer ||
-    !dayContainer ||
-    !monthContainer ||
-    !input
+    !picker ||
+    !input ||
+    !hourDisplay ||
+    !dayDisplay ||
+    !monthDisplay
   ) {
     return;
   }
 
 
-  /* ========================================
-     FECHA ACTUAL
-  ======================================== */
+  /*
+  ========================================
+  EVITAR INICIALIZAR DOS VECES
+  ========================================
+  */
+
+  if (picker.dataset.initialized === "true") {
+    return;
+  }
+
+  picker.dataset.initialized = "true";
+
+
+  /*
+  ========================================
+  FECHA ACTUAL
+  ========================================
+  */
 
   const now = new Date();
 
-  selectedYear =
-    now.getFullYear();
+  const currentYear = now.getFullYear();
+  const currentMonth = now.getMonth();
+  const currentDay = now.getDate();
 
-  selectedMonth =
-    now.getMonth();
 
   /*
-    Redondeamos la hora actual
-    al próximo intervalo de 30 minutos.
+  ========================================
+  HORA INICIAL
+  REDONDEADA A INTERVALOS DE 30 MINUTOS
+  ========================================
   */
 
-  let currentHour =
-    now.getHours();
+  let initialHour = now.getHours();
+  let initialMinute = now.getMinutes();
 
-  let currentMinute =
-    now.getMinutes();
+  let roundedMinutes = Math.ceil(initialMinute / 30) * 30;
 
-  if (currentMinute === 0) {
-
-    selectedHour =
-      currentHour;
-
-    selectedMinute =
-      0;
-
-  } else if (currentMinute <= 30) {
-
-    selectedHour =
-      currentHour;
-
-    selectedMinute =
-      30;
-
-  } else {
-
-    selectedHour =
-      currentHour + 1;
-
-    selectedMinute =
-      0;
+  if (roundedMinutes === 60) {
+    initialHour += 1;
+    roundedMinutes = 0;
   }
+
 
   /*
-    Si el redondeo pasa de las 23:30,
-    avanzamos al día siguiente.
+  ========================================
+  SI PASA DE 23:30
+  ========================================
   */
 
-  if (selectedHour >= 24) {
+  let initialDay = currentDay;
+  let initialMonth = currentMonth;
+  let initialYear = currentYear;
 
-    selectedHour = 0;
+  if (initialHour >= 24) {
 
-    const tomorrow =
-      new Date(now);
+    initialHour = 0;
 
-    tomorrow.setDate(
-      tomorrow.getDate() + 1
+    const nextDay = new Date(
+      currentYear,
+      currentMonth,
+      currentDay + 1
     );
 
-    selectedDay =
-      tomorrow.getDate();
+    /*
+    Solo permitimos fechas dentro del año actual.
+    Si el siguiente día ya es del próximo año,
+    dejamos 23:30 del 31 de diciembre.
+    */
 
-    selectedMonth =
-      tomorrow.getMonth();
+    if (nextDay.getFullYear() !== currentYear) {
 
-    selectedYear =
-      tomorrow.getFullYear();
+      initialDay = 31;
+      initialMonth = 11;
+      initialYear = currentYear;
+      initialHour = 23;
+      roundedMinutes = 30;
 
-  } else {
+    } else {
 
-    selectedDay =
-      now.getDate();
-  }
+      initialDay = nextDay.getDate();
+      initialMonth = nextDay.getMonth();
 
-
-  /* ========================================
-     CREAR OPCIONES
-  ======================================== */
-
-  renderHours();
-
-  renderMonths();
-
-  renderDays();
-
-
-  /* ========================================
-     EVENTOS
-  ======================================== */
-
-  hourContainer.addEventListener(
-    "click",
-    handleHourClick
-  );
-
-  dayContainer.addEventListener(
-    "click",
-    handleDayClick
-  );
-
-  monthContainer.addEventListener(
-    "click",
-    handleMonthClick
-  );
-
-
-  /* ========================================
-     VALOR INICIAL
-  ======================================== */
-
-  updateInput();
-
-  initialized = true;
-}
-
-
-/* ========================================
-   HORAS
-======================================== */
-
-function renderHours() {
-
-  const container =
-    document.querySelector(
-      "#create-fecha-hour"
-    );
-
-  if (!container) {
-    return;
-  }
-
-  let html = "";
-
-  for (
-    let hour = 0;
-    hour < 24;
-    hour++
-  ) {
-
-    for (
-      let minute of [0, 30]
-    ) {
-
-      const value =
-        `${String(hour).padStart(2, "0")}:${String(minute).padStart(2, "0")}`;
-
-      const selected =
-        hour === selectedHour &&
-        minute === selectedMinute;
-
-      html += `
-        <button
-          type="button"
-          class="create-fecha-option ${
-            selected
-              ? "is-selected"
-              : ""
-          }"
-          data-value="${value}"
-        >
-          ${value}
-        </button>
-      `;
     }
   }
 
-  container.innerHTML = html;
-
-  scrollToSelected(
-    container
-  );
-}
-
-
-/* ========================================
-   MESES
-======================================== */
-
-function renderMonths() {
-
-  const container =
-    document.querySelector(
-      "#create-fecha-month"
-    );
-
-  if (!container) {
-    return;
-  }
-
-  const now =
-    new Date();
-
-  const currentYear =
-    now.getFullYear();
-
-  const currentMonth =
-    now.getMonth();
-
-  let html = "";
 
   /*
-    Como solamente permitimos fechas
-    dentro del año actual, mostramos
-    desde el mes actual hasta diciembre.
+  ========================================
+  ESTADO
+  ========================================
   */
 
-  for (
-    let month = currentMonth;
-    month < 12;
-    month++
-  ) {
+  let selectedHour = initialHour;
+  let selectedMinute = roundedMinutes;
 
-    const selected =
-      month === selectedMonth;
-
-    html += `
-      <button
-        type="button"
-        class="create-fecha-option ${
-          selected
-            ? "is-selected"
-            : ""
-        }"
-        data-month="${month}"
-      >
-        ${MONTHS[month]}
-      </button>
-    `;
-  }
-
-  container.innerHTML =
-    html;
-
-  scrollToSelected(
-    container
-  );
-}
-
-
-/* ========================================
-   DÍAS
-======================================== */
-
-function renderDays() {
-
-  const container =
-    document.querySelector(
-      "#create-fecha-day"
-    );
-
-  if (!container) {
-    return;
-  }
-
-  const now =
-    new Date();
-
-  const currentYear =
-    now.getFullYear();
-
-  const currentMonth =
-    now.getMonth();
-
-  let firstDay = 1;
-
-  /*
-    Si estamos en el mes actual,
-    no permitimos días anteriores a hoy.
-  */
-
-  if (
-    selectedYear === currentYear &&
-    selectedMonth === currentMonth
-  ) {
-
-    firstDay =
-      now.getDate();
-  }
+  let selectedDay = initialDay;
+  let selectedMonth = initialMonth;
+  let selectedYear = initialYear;
 
 
   /*
-    Cantidad de días del mes.
+  ========================================
+  UTILIDADES
+  ========================================
   */
 
-  const daysInMonth =
-    new Date(
-      selectedYear,
-      selectedMonth + 1,
+  function daysInMonth(year, month) {
+
+    return new Date(
+      year,
+      month + 1,
       0
     ).getDate();
-
-
-  /*
-    Si el día seleccionado ya no existe
-    en el nuevo mes, lo ajustamos al último.
-  */
-
-  if (
-    selectedDay < firstDay
-  ) {
-
-    selectedDay =
-      firstDay;
-  }
-
-  if (
-    selectedDay > daysInMonth
-  ) {
-
-    selectedDay =
-      daysInMonth;
   }
 
 
-  let html = "";
+  function getMinimumDay(month) {
 
-  for (
-    let day = firstDay;
-    day <= daysInMonth;
-    day++
-  ) {
+    if (month === currentMonth) {
+      return currentDay;
+    }
 
-    const selected =
-      day === selectedDay;
-
-    html += `
-      <button
-        type="button"
-        class="create-fecha-option ${
-          selected
-            ? "is-selected"
-            : ""
-        }"
-        data-day="${day}"
-      >
-        ${day}
-      </button>
-    `;
+    return 1;
   }
 
-  container.innerHTML =
-    html;
 
-  scrollToSelected(
-    container
-  );
-}
+  function clampDay() {
 
+    const minimumDay = getMinimumDay(selectedMonth);
 
-/* ========================================
-   CLICK HORA
-======================================== */
-
-function handleHourClick(event) {
-
-  const option =
-    event.target.closest(
-      "[data-value]"
+    const maximumDay = daysInMonth(
+      selectedYear,
+      selectedMonth
     );
 
-  if (!option) {
-    return;
+    selectedDay = Math.max(
+      minimumDay,
+      Math.min(selectedDay, maximumDay)
+    );
   }
 
-  const value =
-    option.dataset.value;
 
-  const [
-    hour,
-    minute
-  ] =
-    value
-      .split(":")
-      .map(Number);
+  function updateInput() {
 
-  selectedHour =
-    hour;
-
-  selectedMinute =
-    minute;
-
-  renderHours();
-
-  updateInput();
-}
-
-
-/* ========================================
-   CLICK DÍA
-======================================== */
-
-function handleDayClick(event) {
-
-  const option =
-    event.target.closest(
-      "[data-day]"
-    );
-
-  if (!option) {
-    return;
-  }
-
-  selectedDay =
-    Number(
-      option.dataset.day
-    );
-
-  renderDays();
-
-  updateInput();
-}
-
-
-/* ========================================
-   CLICK MES
-======================================== */
-
-function handleMonthClick(event) {
-
-  const option =
-    event.target.closest(
-      "[data-month]"
-    );
-
-  if (!option) {
-    return;
-  }
-
-  selectedMonth =
-    Number(
-      option.dataset.month
-    );
-
-  /*
-    Al cambiar de mes tenemos que
-    reconstruir los días disponibles.
-  */
-
-  renderMonths();
-
-  renderDays();
-
-  updateInput();
-}
-
-
-/* ========================================
-   ACTUALIZAR INPUT FINAL
-======================================== */
-
-function updateInput() {
-
-  const input =
-    document.querySelector(
-      "#create-fecha"
-    );
-
-  if (!input) {
-    return;
-  }
-
-  const month =
-    String(
+    const month = String(
       selectedMonth + 1
     ).padStart(2, "0");
 
-  const day =
-    String(
+    const day = String(
       selectedDay
     ).padStart(2, "0");
 
-  const hour =
-    String(
+    const hour = String(
       selectedHour
     ).padStart(2, "0");
 
-  const minute =
-    String(
+    const minute = String(
       selectedMinute
     ).padStart(2, "0");
 
-  input.value =
-    `${selectedYear}-${month}-${day}T${hour}:${minute}`;
-}
+    input.value =
+      `${selectedYear}-${month}-${day}T${hour}:${minute}`;
 
-
-/* ========================================
-   SCROLL AL ELEMENTO SELECCIONADO
-======================================== */
-
-function scrollToSelected(
-  container
-) {
-
-  const selected =
-    container.querySelector(
-      ".is-selected"
+    input.dispatchEvent(
+      new Event("input", {
+        bubbles: true
+      })
     );
 
-  if (!selected) {
-    return;
+    input.dispatchEvent(
+      new Event("change", {
+        bubbles: true
+      })
+    );
   }
 
-  requestAnimationFrame(() => {
 
-    selected.scrollIntoView({
-      behavior: "auto",
-      block: "center"
-    });
+  /*
+  ========================================
+  ACTUALIZAR VISUAL
+  ========================================
+  */
 
-  });
+  function updateDisplay(
+    display,
+    value,
+    direction = null
+  ) {
+
+    display.classList.remove(
+      "is-changing-next",
+      "is-changing-prev"
+    );
+
+    /*
+    Forzamos un nuevo ciclo de renderizado
+    para que la animación pueda volver a ejecutarse.
+    */
+
+    void display.offsetWidth;
+
+    display.textContent = value;
+
+    if (direction === "next") {
+
+      display.classList.add(
+        "is-changing-next"
+      );
+
+    } else if (direction === "prev") {
+
+      display.classList.add(
+        "is-changing-prev"
+      );
+    }
+
+
+    const removeAnimation = () => {
+
+      display.classList.remove(
+        "is-changing-next",
+        "is-changing-prev"
+      );
+    };
+
+
+    display.addEventListener(
+      "animationend",
+      removeAnimation,
+      {
+        once: true
+      }
+    );
+  }
+
+
+  function renderAll() {
+
+    hourDisplay.textContent =
+      `${String(selectedHour).padStart(2, "0")}:${String(selectedMinute).padStart(2, "0")}`;
+
+    dayDisplay.textContent =
+      String(selectedDay);
+
+    monthDisplay.textContent =
+      MONTH_NAMES[selectedMonth];
+
+    hourDisplay.setAttribute(
+      "aria-valuetext",
+      hourDisplay.textContent
+    );
+
+    dayDisplay.setAttribute(
+      "aria-valuetext",
+      dayDisplay.textContent
+    );
+
+    monthDisplay.setAttribute(
+      "aria-valuetext",
+      monthDisplay.textContent
+    );
+
+    updateInput();
+  }
+
+
+  /*
+  ========================================
+  HORA
+  ========================================
+  */
+
+  function changeHour(direction) {
+
+    let totalMinutes =
+      (selectedHour * 60) +
+      selectedMinute;
+
+    totalMinutes += direction * 30;
+
+
+    if (totalMinutes < 0) {
+      totalMinutes = 23 * 60 + 30;
+    }
+
+    if (totalMinutes > 23 * 60 + 30) {
+      totalMinutes = 0;
+    }
+
+
+    selectedHour =
+      Math.floor(totalMinutes / 60);
+
+    selectedMinute =
+      totalMinutes % 60;
+
+
+    updateDisplay(
+      hourDisplay,
+      `${String(selectedHour).padStart(2, "0")}:${String(selectedMinute).padStart(2, "0")}`,
+      direction > 0 ? "next" : "prev"
+    );
+
+    updateInput();
+  }
+
+
+  /*
+  ========================================
+  DÍA
+  ========================================
+  */
+
+  function changeDay(direction) {
+
+    const minimumDay =
+      getMinimumDay(selectedMonth);
+
+    const maximumDay =
+      daysInMonth(
+        selectedYear,
+        selectedMonth
+      );
+
+
+    let nextDay =
+      selectedDay + direction;
+
+
+    if (nextDay > maximumDay) {
+      nextDay = minimumDay;
+    }
+
+    if (nextDay < minimumDay) {
+      nextDay = maximumDay;
+    }
+
+
+    selectedDay = nextDay;
+
+
+    updateDisplay(
+      dayDisplay,
+      String(selectedDay),
+      direction > 0 ? "next" : "prev"
+    );
+
+    updateInput();
+  }
+
+
+  /*
+  ========================================
+  MES
+  ========================================
+  */
+
+  function changeMonth(direction) {
+
+    let nextMonth =
+      selectedMonth + direction;
+
+
+    /*
+    No permitimos meses anteriores
+    al mes actual.
+    */
+
+    if (nextMonth < currentMonth) {
+      nextMonth = 11;
+    }
+
+
+    /*
+    No permitimos meses posteriores
+    a diciembre del año actual.
+    */
+
+    if (nextMonth > 11) {
+      nextMonth = currentMonth;
+    }
+
+
+    /*
+    Si estamos en un mes válido distinto,
+    mantenemos el mismo día siempre que exista.
+    */
+
+    selectedMonth = nextMonth;
+
+    clampDay();
+
+
+    updateDisplay(
+      monthDisplay,
+      MONTH_NAMES[selectedMonth],
+      direction > 0 ? "next" : "prev"
+    );
+
+
+    /*
+    Como el cambio de mes puede haber
+    corregido el día, actualizamos ambos.
+    */
+
+    updateDisplay(
+      dayDisplay,
+      String(selectedDay)
+    );
+
+    updateInput();
+  }
+
+
+  /*
+  ========================================
+  GESTOS
+  ========================================
+  */
+
+  function setupSwipe(
+    element,
+    onNext,
+    onPrev
+  ) {
+
+    let startY = null;
+    let pointerActive = false;
+
+
+    element.addEventListener(
+      "pointerdown",
+      (event) => {
+
+        if (
+          event.pointerType !== "touch" &&
+          event.pointerType !== "pen" &&
+          event.pointerType !== "mouse"
+        ) {
+          return;
+        }
+
+        startY = event.clientY;
+        pointerActive = true;
+
+
+        try {
+          element.setPointerCapture(
+            event.pointerId
+          );
+        } catch {}
+      }
+    );
+
+
+    element.addEventListener(
+      "pointerup",
+      (event) => {
+
+        if (
+          !pointerActive ||
+          startY === null
+        ) {
+          return;
+        }
+
+
+        const deltaY =
+          startY - event.clientY;
+
+
+        startY = null;
+        pointerActive = false;
+
+
+        /*
+        Una sola pasada de 30px
+        equivale exactamente a un paso.
+        */
+
+        const threshold = 30;
+
+
+        if (deltaY >= threshold) {
+
+          onNext();
+
+        } else if (deltaY <= -threshold) {
+
+          onPrev();
+        }
+      }
+    );
+
+
+    element.addEventListener(
+      "pointercancel",
+      () => {
+
+        startY = null;
+        pointerActive = false;
+      }
+    );
+  }
+
+
+  /*
+  ========================================
+  CONFIGURAR GESTOS
+  ========================================
+  */
+
+  setupSwipe(
+    hourDisplay,
+    () => changeHour(1),
+    () => changeHour(-1)
+  );
+
+  setupSwipe(
+    dayDisplay,
+    () => changeDay(1),
+    () => changeDay(-1)
+  );
+
+  setupSwipe(
+    monthDisplay,
+    () => changeMonth(1),
+    () => changeMonth(-1)
+  );
+
+
+  /*
+  ========================================
+  TECLADO
+  ========================================
+  */
+
+  function setupKeyboard(
+    element,
+    onNext,
+    onPrev
+  ) {
+
+    element.addEventListener(
+      "keydown",
+      (event) => {
+
+        if (event.key === "ArrowUp") {
+
+          event.preventDefault();
+          onNext();
+
+        } else if (event.key === "ArrowDown") {
+
+          event.preventDefault();
+          onPrev();
+        }
+      }
+    );
+  }
+
+
+  setupKeyboard(
+    hourDisplay,
+    () => changeHour(1),
+    () => changeHour(-1)
+  );
+
+  setupKeyboard(
+    dayDisplay,
+    () => changeDay(1),
+    () => changeDay(-1)
+  );
+
+  setupKeyboard(
+    monthDisplay,
+    () => changeMonth(1),
+    () => changeMonth(-1)
+  );
+
+
+  /*
+  ========================================
+  INICIALIZAR
+  ========================================
+  */
+
+  clampDay();
+  renderAll();
 }
