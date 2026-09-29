@@ -56,13 +56,6 @@ export const fechahtml = `
 
     </div>
 
-    <input
-      type="datetime-local"
-      id="create-fecha"
-      name="fecha"
-      hidden
-    >
-
   </div>
 
 </div>
@@ -87,16 +80,29 @@ const MONTH_NAMES = [
 
 export function initFecha() {
 
-  const picker = document.querySelector("#create-fecha-picker");
-  const input = document.querySelector("#create-fecha");
+  const picker =
+    document.querySelector(
+      "#create-fecha-picker"
+    );
 
-  const hourDisplay = document.querySelector("#create-fecha-hour");
-  const dayDisplay = document.querySelector("#create-fecha-day");
-  const monthDisplay = document.querySelector("#create-fecha-month");
+  const hourDisplay =
+    document.querySelector(
+      "#create-fecha-hour"
+    );
+
+  const dayDisplay =
+    document.querySelector(
+      "#create-fecha-day"
+    );
+
+  const monthDisplay =
+    document.querySelector(
+      "#create-fecha-month"
+    );
+
 
   if (
     !picker ||
-    !input ||
     !hourDisplay ||
     !dayDisplay ||
     !monthDisplay
@@ -105,59 +111,91 @@ export function initFecha() {
   }
 
 
-  if (picker.dataset.initialized === "true") {
+  if (
+    picker.dataset.initialized ===
+    "true"
+  ) {
     return;
   }
 
-  picker.dataset.initialized = "true";
+
+  picker.dataset.initialized =
+    "true";
 
 
   /* ========================================
      FECHA ACTUAL
   ======================================== */
 
-  const now = new Date();
+  const now =
+    new Date();
 
-  const currentYear = now.getFullYear();
-  const currentMonth = now.getMonth();
-  const currentDay = now.getDate();
+  const currentYear =
+    now.getFullYear();
+
+  const currentMonth =
+    now.getMonth();
+
+  const currentDay =
+    now.getDate();
 
 
   /* ========================================
      HORA INICIAL
   ======================================== */
 
-  let initialHour = now.getHours();
-  let initialMinute = now.getMinutes();
+  let initialHour =
+    now.getHours();
+
+  let initialMinute =
+    now.getMinutes();
+
 
   let roundedMinutes =
-    Math.ceil(initialMinute / 30) * 30;
+    Math.ceil(
+      initialMinute / 30
+    ) * 30;
 
 
-  if (roundedMinutes === 60) {
+  if (
+    roundedMinutes === 60
+  ) {
 
     initialHour += 1;
+
     roundedMinutes = 0;
   }
 
 
-  let initialDay = currentDay;
-  let initialMonth = currentMonth;
-  let initialYear = currentYear;
+  let initialDay =
+    currentDay;
+
+  let initialMonth =
+    currentMonth;
+
+  let initialYear =
+    currentYear;
 
 
-  if (initialHour >= 24) {
+  if (
+    initialHour >= 24
+  ) {
 
     initialHour = 0;
 
-    const nextDay = new Date(
-      currentYear,
-      currentMonth,
-      currentDay + 1
-    );
+
+    const nextDay =
+      new Date(
+        currentYear,
+        currentMonth,
+        currentDay + 1
+      );
 
 
-    if (nextDay.getFullYear() !== currentYear) {
+    if (
+      nextDay.getFullYear() !==
+      currentYear
+    ) {
 
       initialDay = 31;
       initialMonth = 11;
@@ -168,8 +206,11 @@ export function initFecha() {
 
     } else {
 
-      initialDay = nextDay.getDate();
-      initialMonth = nextDay.getMonth();
+      initialDay =
+        nextDay.getDate();
+
+      initialMonth =
+        nextDay.getMonth();
     }
   }
 
@@ -178,19 +219,30 @@ export function initFecha() {
      ESTADO
   ======================================== */
 
-  let selectedHour = initialHour;
-  let selectedMinute = roundedMinutes;
+  let selectedHour =
+    initialHour;
 
-  let selectedDay = initialDay;
-  let selectedMonth = initialMonth;
-  let selectedYear = initialYear;
+  let selectedMinute =
+    roundedMinutes;
+
+  let selectedDay =
+    initialDay;
+
+  let selectedMonth =
+    initialMonth;
+
+  let selectedYear =
+    initialYear;
 
 
   /* ========================================
      UTILIDADES
   ======================================== */
 
-  function daysInMonth(year, month) {
+  function daysInMonth(
+    year,
+    month
+  ) {
 
     return new Date(
       year,
@@ -200,9 +252,13 @@ export function initFecha() {
   }
 
 
-  function getMinimumDay(month) {
+  function getMinimumDay(
+    month
+  ) {
 
-    if (month === currentMonth) {
+    if (
+      month === currentMonth
+    ) {
       return currentDay;
     }
 
@@ -213,7 +269,10 @@ export function initFecha() {
   function clampDay() {
 
     const minimumDay =
-      getMinimumDay(selectedMonth);
+      getMinimumDay(
+        selectedMonth
+      );
+
 
     const maximumDay =
       daysInMonth(
@@ -221,50 +280,50 @@ export function initFecha() {
         selectedMonth
       );
 
-    selectedDay = Math.max(
-      minimumDay,
-      Math.min(
-        selectedDay,
-        maximumDay
-      )
-    );
+
+    selectedDay =
+      Math.max(
+        minimumDay,
+        Math.min(
+          selectedDay,
+          maximumDay
+        )
+      );
   }
 
 
-  function updateInput() {
+  /* ========================================
+     GUARDAR VALOR DE FECHA
+  ======================================== */
 
-    const month = String(
-      selectedMonth + 1
-    ).padStart(2, "0");
+  function updateFechaValue() {
 
-    const day = String(
-      selectedDay
-    ).padStart(2, "0");
-
-    const hour = String(
-      selectedHour
-    ).padStart(2, "0");
-
-    const minute = String(
-      selectedMinute
-    ).padStart(2, "0");
+    const month =
+      String(
+        selectedMonth + 1
+      ).padStart(2, "0");
 
 
-    input.value =
+    const day =
+      String(
+        selectedDay
+      ).padStart(2, "0");
+
+
+    const hour =
+      String(
+        selectedHour
+      ).padStart(2, "0");
+
+
+    const minute =
+      String(
+        selectedMinute
+      ).padStart(2, "0");
+
+
+    picker.dataset.value =
       `${selectedYear}-${month}-${day}T${hour}:${minute}`;
-
-
-    input.dispatchEvent(
-      new Event("input", {
-        bubbles: true
-      })
-    );
-
-    input.dispatchEvent(
-      new Event("change", {
-        bubbles: true
-      })
-    );
   }
 
 
@@ -277,8 +336,10 @@ export function initFecha() {
     hourDisplay.textContent =
       `${String(selectedHour).padStart(2, "0")}:${String(selectedMinute).padStart(2, "0")}`;
 
+
     dayDisplay.textContent =
       String(selectedDay);
+
 
     monthDisplay.textContent =
       MONTH_NAMES[selectedMonth];
@@ -289,10 +350,12 @@ export function initFecha() {
       hourDisplay.textContent
     );
 
+
     dayDisplay.setAttribute(
       "aria-valuetext",
       dayDisplay.textContent
     );
+
 
     monthDisplay.setAttribute(
       "aria-valuetext",
@@ -300,7 +363,7 @@ export function initFecha() {
     );
 
 
-    updateInput();
+    updateFechaValue();
   }
 
 
@@ -308,7 +371,9 @@ export function initFecha() {
      CAMBIAR HORA
   ======================================== */
 
-  function changeHour(direction) {
+  function changeHour(
+    direction
+  ) {
 
     let totalMinutes =
       selectedHour * 60 +
@@ -319,17 +384,29 @@ export function initFecha() {
       direction * 30;
 
 
-    if (totalMinutes < 0) {
-      totalMinutes = 23 * 60 + 30;
+    if (
+      totalMinutes < 0
+    ) {
+
+      totalMinutes =
+        23 * 60 + 30;
     }
 
-    if (totalMinutes > 23 * 60 + 30) {
+
+    if (
+      totalMinutes >
+      23 * 60 + 30
+    ) {
+
       totalMinutes = 0;
     }
 
 
     selectedHour =
-      Math.floor(totalMinutes / 60);
+      Math.floor(
+        totalMinutes / 60
+      );
+
 
     selectedMinute =
       totalMinutes % 60;
@@ -345,7 +422,7 @@ export function initFecha() {
     );
 
 
-    updateInput();
+    updateFechaValue();
   }
 
 
@@ -353,10 +430,15 @@ export function initFecha() {
      CAMBIAR DÍA
   ======================================== */
 
-  function changeDay(direction) {
+  function changeDay(
+    direction
+  ) {
 
     const minimumDay =
-      getMinimumDay(selectedMonth);
+      getMinimumDay(
+        selectedMonth
+      );
+
 
     const maximumDay =
       daysInMonth(
@@ -369,16 +451,26 @@ export function initFecha() {
       selectedDay + direction;
 
 
-    if (nextDay > maximumDay) {
-      nextDay = minimumDay;
+    if (
+      nextDay > maximumDay
+    ) {
+
+      nextDay =
+        minimumDay;
     }
 
-    if (nextDay < minimumDay) {
-      nextDay = maximumDay;
+
+    if (
+      nextDay < minimumDay
+    ) {
+
+      nextDay =
+        maximumDay;
     }
 
 
-    selectedDay = nextDay;
+    selectedDay =
+      nextDay;
 
 
     dayDisplay.textContent =
@@ -391,7 +483,7 @@ export function initFecha() {
     );
 
 
-    updateInput();
+    updateFechaValue();
   }
 
 
@@ -399,29 +491,42 @@ export function initFecha() {
      CAMBIAR MES
   ======================================== */
 
-  function changeMonth(direction) {
+  function changeMonth(
+    direction
+  ) {
 
     let nextMonth =
       selectedMonth + direction;
 
 
-    if (nextMonth < currentMonth) {
+    if (
+      nextMonth < currentMonth
+    ) {
+
       nextMonth = 11;
     }
 
 
-    if (nextMonth > 11) {
-      nextMonth = currentMonth;
+    if (
+      nextMonth > 11
+    ) {
+
+      nextMonth =
+        currentMonth;
     }
 
 
-    selectedMonth = nextMonth;
+    selectedMonth =
+      nextMonth;
+
 
     clampDay();
 
 
     monthDisplay.textContent =
-      MONTH_NAMES[selectedMonth];
+      MONTH_NAMES[
+        selectedMonth
+      ];
 
 
     dayDisplay.textContent =
@@ -433,13 +538,14 @@ export function initFecha() {
       monthDisplay.textContent
     );
 
+
     dayDisplay.setAttribute(
       "aria-valuetext",
       dayDisplay.textContent
     );
 
 
-    updateInput();
+    updateFechaValue();
   }
 
 
@@ -468,7 +574,7 @@ export function initFecha() {
     sea más sensible.
     */
 
-    const pixelsPerStep = 28;
+    const pixelsPerStep = 10;
 
 
     element.addEventListener(
@@ -477,10 +583,14 @@ export function initFecha() {
 
         pointerActive = true;
 
-        startY = event.clientY;
-        lastY = event.clientY;
+        startY =
+          event.clientY;
 
-        accumulatedDistance = 0;
+        lastY =
+          event.clientY;
+
+        accumulatedDistance =
+          0;
 
 
         try {
@@ -498,7 +608,9 @@ export function initFecha() {
       "pointermove",
       (event) => {
 
-        if (!pointerActive) {
+        if (
+          !pointerActive
+        ) {
           return;
         }
 
@@ -507,32 +619,18 @@ export function initFecha() {
           event.clientY;
 
 
-        /*
-        Movimiento desde el último frame.
-        */
-
         const movement =
-          lastY - currentY;
+          lastY -
+          currentY;
 
 
-        lastY = currentY;
+        lastY =
+          currentY;
 
-
-        /*
-        Acumulamos el desplazamiento.
-
-        Positivo = dedo sube
-        Negativo = dedo baja
-        */
 
         accumulatedDistance +=
           movement;
 
-
-        /*
-        Mientras haya suficiente distancia
-        acumulada, seguimos cambiando valores.
-        */
 
         while (
           accumulatedDistance >=
@@ -564,9 +662,11 @@ export function initFecha() {
       "pointerup",
       (event) => {
 
-        pointerActive = false;
+        pointerActive =
+          false;
 
-        accumulatedDistance = 0;
+        accumulatedDistance =
+          0;
 
 
         try {
@@ -584,8 +684,11 @@ export function initFecha() {
       "pointercancel",
       () => {
 
-        pointerActive = false;
-        accumulatedDistance = 0;
+        pointerActive =
+          false;
+
+        accumulatedDistance =
+          0;
       }
     );
   }
@@ -630,14 +733,22 @@ export function initFecha() {
       "keydown",
       (event) => {
 
-        if (event.key === "ArrowUp") {
+        if (
+          event.key ===
+          "ArrowUp"
+        ) {
 
           event.preventDefault();
+
           onNext();
 
-        } else if (event.key === "ArrowDown") {
+        } else if (
+          event.key ===
+          "ArrowDown"
+        ) {
 
           event.preventDefault();
+
           onPrev();
         }
       }
@@ -651,11 +762,13 @@ export function initFecha() {
     () => changeHour(-1)
   );
 
+
   setupKeyboard(
     dayDisplay,
     () => changeDay(1),
     () => changeDay(-1)
   );
+
 
   setupKeyboard(
     monthDisplay,
