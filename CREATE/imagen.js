@@ -2,11 +2,7 @@
 
 export const imagenhtml = `
 
-<div
-  id="create-imagen-step"
-  class="create-step"
-  style="display: none;"
->
+
 
   <div class="create-field">
 
@@ -46,6 +42,6 @@ export const imagenhtml = `
 
   </div>
 
-</div>
+
 
 `;
