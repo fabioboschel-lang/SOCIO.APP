@@ -10,7 +10,10 @@ import {
   ubicacionhtml,
   initUbicacion
 } from "./ubicacion.js";
-import { fechahtml } from "./fecha.js";
+import {
+  fechahtml,
+  initFecha
+} from "./fecha.js";
 import { preciohtml } from "./precio.js";
 
 export function Create(app) {
