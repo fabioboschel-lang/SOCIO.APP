@@ -137,9 +137,9 @@ function loadGoogleMaps() {
 
 
       script.src =
-        `https://maps.googleapis.com/maps/api/js?key=${encodeURIComponent(
-          GOOGLE_MAPS_API_KEY
-        )}&v=weekly&loading=async`;
+  `https://maps.googleapis.com/maps/api/js?key=${encodeURIComponent(
+    GOOGLE_MAPS_API_KEY
+  )}&v=weekly`;
 
 
       script.async = true;
