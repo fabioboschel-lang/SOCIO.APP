@@ -2,11 +2,7 @@
 
 export const preciohtml = `
 
-<div
-  id="create-precio-step"
-  class="create-step"
-  style="display: none;"
->
+
 
   <div class="create-field">
 
@@ -38,6 +34,6 @@ export const preciohtml = `
 
   </div>
 
-</div>
+
 
 `;
