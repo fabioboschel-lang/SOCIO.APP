@@ -175,6 +175,7 @@ export function Create(app) {
     stepElements.length;
 
     initUbicacion();
+    initFecha();
 
 
   /* ========================================
