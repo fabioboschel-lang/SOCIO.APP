@@ -163,19 +163,21 @@ export function Create(app) {
 
 
   const stepElements = [
-  app.querySelector("#create-nombre-step"),
-  app.querySelector("#create-ubicacion-step"),
-  app.querySelector("#create-fecha-step"),
-  app.querySelector("#create-imagen-step"),
-  app.querySelector("#create-precio-step"),
-  app.querySelector("#create-descripcion-step")
-];
+    app.querySelector("#create-nombre-step"),
+    app.querySelector("#create-ubicacion-step"),
+    app.querySelector("#create-fecha-step"),
+    app.querySelector("#create-imagen-step"),
+    app.querySelector("#create-precio-step"),
+    app.querySelector("#create-descripcion-step")
+  ];
+
 
   const totalSteps =
     stepElements.length;
 
-    initUbicacion();
-    initFecha();
+
+  initUbicacion();
+  initFecha();
 
 
   /* ========================================
@@ -198,7 +200,9 @@ export function Create(app) {
       visualViewport.height;
 
 
-    if (keyboardHeight > 100) {
+    if (
+      keyboardHeight > 100
+    ) {
 
       createActions.style.bottom =
         `${keyboardHeight + 6}px`;
@@ -207,7 +211,6 @@ export function Create(app) {
 
       createActions.style.bottom =
         "";
-
     }
   }
 
@@ -243,12 +246,18 @@ export function Create(app) {
     app.querySelector("#create-imagen");
 
   const imagePreview =
-    app.querySelector("#create-image-preview");
+    app.querySelector(
+      "#create-image-preview"
+    );
 
   const imagePlaceholder =
-    app.querySelector(".create-image-placeholder");
+    app.querySelector(
+      ".create-image-placeholder"
+    );
 
-  let imagePreviewUrl = null;
+
+  let imagePreviewUrl =
+    null;
 
 
   if (
@@ -271,7 +280,8 @@ export function Create(app) {
             imagePreviewUrl
           );
 
-          imagePreviewUrl = null;
+          imagePreviewUrl =
+            null;
         }
 
 
@@ -281,7 +291,8 @@ export function Create(app) {
             "src"
           );
 
-          imagePreview.hidden = true;
+          imagePreview.hidden =
+            true;
 
           imagePlaceholder.hidden =
             false;
@@ -291,13 +302,18 @@ export function Create(app) {
 
 
         imagePreviewUrl =
-          URL.createObjectURL(file);
+          URL.createObjectURL(
+            file
+          );
+
 
         imagePreview.src =
           imagePreviewUrl;
 
+
         imagePreview.hidden =
           false;
+
 
         imagePlaceholder.hidden =
           true;
@@ -310,7 +326,9 @@ export function Create(app) {
      MOSTRAR ERROR
   ======================================== */
 
-  function showError(message) {
+  function showError(
+    message
+  ) {
 
     errorMessage.textContent =
       message;
@@ -360,7 +378,8 @@ export function Create(app) {
 
 
     const isLast =
-      currentStep === totalSteps - 1;
+      currentStep ===
+      totalSteps - 1;
 
 
     /* ========================================
@@ -410,7 +429,10 @@ export function Create(app) {
   function validateNombre() {
 
     const input =
-      app.querySelector("#create-nombre");
+      app.querySelector(
+        "#create-nombre"
+      );
+
 
     const value =
       input.value.trim();
@@ -430,7 +452,9 @@ export function Create(app) {
     }
 
 
-    if (value.length < 3) {
+    if (
+      value.length < 3
+    ) {
 
       input.setCustomValidity(
         "El nombre debe tener al menos 3 caracteres."
@@ -459,6 +483,7 @@ export function Create(app) {
         "#create-descripcion"
       );
 
+
     const value =
       input.value.trim();
 
@@ -477,7 +502,9 @@ export function Create(app) {
     }
 
 
-    if (value.length < 10) {
+    if (
+      value.length < 10
+    ) {
 
       input.setCustomValidity(
         "La descripción debe tener al menos 10 caracteres."
@@ -506,6 +533,7 @@ export function Create(app) {
         "#create-imagen"
       );
 
+
     const file =
       input.files?.[0];
 
@@ -524,7 +552,11 @@ export function Create(app) {
     }
 
 
-    if (!file.type.startsWith("image/")) {
+    if (
+      !file.type.startsWith(
+        "image/"
+      )
+    ) {
 
       input.setCustomValidity(
         "El archivo debe ser una imagen."
@@ -542,7 +574,9 @@ export function Create(app) {
       10 * 1024 * 1024;
 
 
-    if (file.size > maxSize) {
+    if (
+      file.size > maxSize
+    ) {
 
       input.setCustomValidity(
         "La imagen no puede superar los 10 MB."
@@ -570,6 +604,7 @@ export function Create(app) {
       app.querySelector(
         "#create-ubicacion"
       );
+
 
     const value =
       input.value.trim();
@@ -599,24 +634,32 @@ export function Create(app) {
 
   function validateFecha() {
 
-    const input =
+    const picker =
       app.querySelector(
-        "#create-fecha"
+        "#create-fecha-picker"
       );
 
+
+    const hourDisplay =
+      app.querySelector(
+        "#create-fecha-hour"
+      );
+
+
     const value =
-      input.value;
+      picker?.dataset.value ||
+      "";
 
 
     if (!value) {
 
-      input.setCustomValidity(
+      showError(
         "Seleccioná la fecha y hora."
       );
 
-      input.reportValidity();
 
-      input.setCustomValidity("");
+      hourDisplay?.focus();
+
 
       return false;
     }
@@ -632,13 +675,13 @@ export function Create(app) {
       )
     ) {
 
-      input.setCustomValidity(
+      showError(
         "Ingresá una fecha válida."
       );
 
-      input.reportValidity();
 
-      input.setCustomValidity("");
+      hourDisplay?.focus();
+
 
       return false;
     }
@@ -649,13 +692,13 @@ export function Create(app) {
       Date.now()
     ) {
 
-      input.setCustomValidity(
+      showError(
         "La fecha del evento debe ser futura."
       );
 
-      input.reportValidity();
 
-      input.setCustomValidity("");
+      hourDisplay?.focus();
+
 
       return false;
     }
@@ -676,14 +719,18 @@ export function Create(app) {
         "#create-precio"
       );
 
+
     const rawValue =
       input.value.trim();
+
 
     const value =
       Number(rawValue);
 
 
-    if (rawValue === "") {
+    if (
+      rawValue === ""
+    ) {
 
       input.setCustomValidity(
         "Ingresá el precio de la entrada."
@@ -714,7 +761,9 @@ export function Create(app) {
     }
 
 
-    if (!Number.isInteger(value)) {
+    if (
+      !Number.isInteger(value)
+    ) {
 
       input.setCustomValidity(
         "Ingresá el precio como un número entero."
@@ -738,30 +787,30 @@ export function Create(app) {
 
   function validateCurrentStep() {
 
-  switch (currentStep) {
+    switch (currentStep) {
 
-    case 0:
-      return validateNombre();
+      case 0:
+        return validateNombre();
 
-    case 1:
-      return validateUbicacion();
+      case 1:
+        return validateUbicacion();
 
-    case 2:
-      return validateFecha();
+      case 2:
+        return validateFecha();
 
-    case 3:
-      return validateImagen();
+      case 3:
+        return validateImagen();
 
-    case 4:
-      return validatePrecio();
+      case 4:
+        return validatePrecio();
 
-    case 5:
-      return validateDescripcion();
+      case 5:
+        return validateDescripcion();
 
-    default:
-      return false;
+      default:
+        return false;
+    }
   }
-}
 
 
   /* ========================================
@@ -774,9 +823,12 @@ export function Create(app) {
 
       nombre:
         app
-          .querySelector("#create-nombre")
+          .querySelector(
+            "#create-nombre"
+          )
           .value
           .trim(),
+
 
       descripcion:
         app
@@ -786,12 +838,14 @@ export function Create(app) {
           .value
           .trim(),
 
+
       imagen:
         app
           .querySelector(
             "#create-imagen"
           )
           .files?.[0],
+
 
       ubicacion:
         app
@@ -801,12 +855,15 @@ export function Create(app) {
           .value
           .trim(),
 
+
       fecha:
         app
           .querySelector(
-            "#create-fecha"
+            "#create-fecha-picker"
           )
-          .value,
+          .dataset
+          .value || "",
+
 
       valor:
         Number(
@@ -831,14 +888,17 @@ export function Create(app) {
     }
 
 
-    isPublishing = true;
+    isPublishing =
+      true;
 
 
     nextButton.disabled =
       true;
 
+
     backButton.disabled =
       true;
+
 
     nextButton.textContent =
       "Publicando...";
@@ -999,11 +1059,14 @@ export function Create(app) {
       isPublishing =
         false;
 
+
       nextButton.disabled =
         false;
 
+
       backButton.disabled =
         false;
+
 
       renderStep();
     }
@@ -1028,6 +1091,7 @@ export function Create(app) {
 
       currentStep--;
 
+
       renderStep();
     }
   );
@@ -1049,7 +1113,9 @@ export function Create(app) {
       clearError();
 
 
-      if (!validateCurrentStep()) {
+      if (
+        !validateCurrentStep()
+      ) {
         return;
       }
 
