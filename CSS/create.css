@@ -622,12 +622,10 @@
 
 /* ========================================
    SELECTOR DE FECHA
-   POSICIONADO ABAJO EN EL PASO 2
+   PASO 2
 ======================================== */
 
-#create-ubicacion-fecha-step
-  .create-fecha-picker {
-
+#create-ubicacion-fecha-step .create-fecha-picker {
   position: fixed;
 
   left: 20px;
@@ -637,14 +635,15 @@
 
   z-index: 135;
 
+  display: grid;
+  grid-template-columns: 1fr 1fr 1.45fr;
+
   width: auto;
   max-width: 560px;
 
-  margin: 0 auto;
-
-  grid-template-columns: 1fr 1fr 1.45fr;
-
   height: 78px;
+
+  margin: 0 auto;
 
   border: 1px solid rgba(255, 255, 255, 0.12);
   border-radius: 16px;
@@ -659,6 +658,15 @@
 
 
 /* ========================================
+   TÍTULO DEL SELECTOR DE FECHA
+======================================== */
+
+#create-ubicacion-fecha-step .create-field > label {
+  margin-bottom: 4px;
+}
+
+
+/* ========================================
    COLUMNAS DE FECHA
 ======================================== */
 
@@ -669,6 +677,7 @@
   align-items: center;
   justify-content: center;
 
+  width: 100%;
   min-width: 0;
   height: 100%;
 
@@ -840,9 +849,7 @@
      FECHA - MOBILE
   ====================================== */
 
-  #create-ubicacion-fecha-step
-    .create-fecha-picker {
-
+  #create-ubicacion-fecha-step .create-fecha-picker {
     left: 18px;
     right: 18px;
 
@@ -851,6 +858,8 @@
     height: 72px;
 
     border-radius: 14px;
+
+    grid-template-columns: 1fr 1fr 1.45fr;
   }
 
 
