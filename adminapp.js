@@ -31,7 +31,7 @@ async function iniciarApp() {
 
   if (!userId) {
 
-    navigate("create");
+    navigate("sesion");
 
     return;
 
