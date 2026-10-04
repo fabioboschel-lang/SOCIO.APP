@@ -22,7 +22,7 @@ import { preciohtml } from "./precio.js";
 
 export function Create(app) {
 
-  let currentStep = 3;
+  let currentStep = 0;
   let isPublishing = false;
 
 
