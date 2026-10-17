@@ -9,14 +9,9 @@ export function Sesion(app) {
       <div class="session-content">
 
         <div class="session-brand">
-  Pas....sFlow
+  PassFlow
 </div>
 
-<img
-  class="session-logo"
-  src="../IMAGENES/LOGO.png"
-  alt="Logo de PassFlow"
->
 
 <div class="session-description">
   Ticketera especializada en <br> boliches y discotecas
