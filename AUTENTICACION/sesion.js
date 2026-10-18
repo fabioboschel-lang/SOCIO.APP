@@ -1,4 +1,5 @@
 import { supabase } from "../supabase.js";
+import { registrarEvento } from "../interaccionometro.js";
 
 export function Sesion(app) {
 
@@ -11,7 +12,6 @@ export function Sesion(app) {
         <div class="session-brand">
   PassFlow
 </div>
-
 
 <div class="session-description">
   Ticketera especializada en <br> boliches y discotecas
@@ -31,7 +31,6 @@ export function Sesion(app) {
             </span>
           </div>
 
-
           <div class="session-benefit">
             <img
               class="benefit-icon"
@@ -43,7 +42,6 @@ export function Sesion(app) {
               Ofrecé una experiencia de compra rápida y simple
             </span>
           </div>
-
 
           <div class="session-benefit">
             <img
@@ -57,7 +55,6 @@ export function Sesion(app) {
             </span>
           </div>
 
-
           <div class="session-benefit">
             <img
               class="benefit-icon"
@@ -69,7 +66,6 @@ export function Sesion(app) {
               Recibí tus pagos directamente en Mercado Pago
             </span>
           </div>
-
 
           <div class="session-benefit">
             <img
@@ -85,7 +81,6 @@ export function Sesion(app) {
 
         </div>
 
-
         <button
           id="googleBtn"
           class="google-btn"
@@ -99,12 +94,17 @@ export function Sesion(app) {
 
   `;
 
+  // La interfaz ya fue renderizada en el DOM.
+  registrarEvento("session_view");
 
   document
     .getElementById("googleBtn")
     .addEventListener(
       "click",
       async () => {
+
+        // Se registra antes de iniciar OAuth y abandonar esta página.
+        registrarEvento("session_start_click");
 
         const { data, error } =
           await supabase.auth.signInWithOAuth({
