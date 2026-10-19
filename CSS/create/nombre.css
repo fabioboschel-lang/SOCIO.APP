@@ -2,6 +2,16 @@
    NOMBRE DEL EVENTO
 ========================================================= */
 
+/* Posiciona la pregunta un poco por encima del centro vertical. */
+#create-nombre-step > .create-field {
+  padding-top: clamp(180px, 35vh, 360px);
+}
+
+#create-nombre-step .create-field > label {
+  font-size: 22px;
+  line-height: 1.3;
+}
+
 #create-nombre {
   display: block;
 
@@ -21,7 +31,7 @@
   color: var(--create-text);
 
   font-family: inherit;
-  font-size: 25px;
+  font-size: 32px;
   font-weight: 500;
   line-height: 1.3;
   letter-spacing: -0.02em;
@@ -45,3 +55,13 @@
 }
 
 
+@media (max-width: 600px) {
+  #create-nombre-step .create-field > label {
+    font-size: 22px;
+  }
+
+  #create-nombre {
+    min-height: 68px;
+    font-size: 29.5px;
+  }
+}
