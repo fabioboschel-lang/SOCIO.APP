@@ -8,6 +8,22 @@
 }
 
 /* =========================================================
+   TÍTULO Y SUBTÍTULO DEL PASO DE IMAGEN
+========================================================= */
+
+#create-imagen-step .create-field > label:not(.create-image-picker) {
+  width: 90%;
+  margin-left: 10%;
+  font-size: 21px;
+}
+
+#create-imagen-step .create-field-hint {
+  width: 90%;
+  margin-left: 10%;
+  font-size: 18px;
+}
+
+/* =========================================================
    SELECTOR DE IMAGEN
 ========================================================= */
 
