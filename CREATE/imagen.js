@@ -37,7 +37,7 @@ export const imagenhtml = `
     >
 
     <small class="create-field-hint">
-      Esta imagen representará tu evento en su página. No hace falta que sea un flyer. Formatos: JPG, PNG o WebP.
+      Esta imagen representará tu evento en su página. No hace falta que sea un flyer.
     </small>
 
   </div>
