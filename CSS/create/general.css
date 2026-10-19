@@ -1,0 +1,969 @@
+/* CREATE — estilos generales, navegación, campos compartidos y progreso */
+
+
+/* =========================================================
+   CREATE
+   Experiencia de creación de evento
+========================================================= */
+
+
+
+/* =========================================================
+   VARIABLES
+========================================================= */
+
+.create-view {
+  --create-bg: #08080d;
+  --create-surface: #111118;
+  --create-surface-2: #161620;
+  --create-surface-3: #1b1b27;
+
+  --create-border: rgba(255, 255, 255, 0.09);
+  --create-border-strong: rgba(255, 255, 255, 0.14);
+
+  --create-text: #ffffff;
+  --create-text-secondary: #b2b2bf;
+  --create-text-muted: #777784;
+
+  --create-primary: #7c3aed;
+  --create-primary-hover: #6d28d9;
+  --create-primary-soft: rgba(124, 58, 237, 0.13);
+  --create-primary-border: rgba(139, 92, 246, 0.45);
+
+  --create-danger: #f87171;
+  --create-danger-soft: rgba(248, 113, 113, 0.10);
+
+  width: 100%;
+  min-height: 100vh;
+  min-height: 100dvh;
+
+  box-sizing: border-box;
+
+  /*
+    IMPORTANTE:
+    El contenido puede superar el viewport.
+    No usar overflow:hidden aquí porque impediría
+    el scroll vertical de la pantalla.
+  */
+  overflow-x: hidden;
+  overflow-y: visible;
+
+  padding:
+    28px 20px
+    calc(190px + env(safe-area-inset-bottom));
+
+  background: var(--create-bg);
+  color: var(--create-text);
+
+  font-family: inherit;
+
+  -webkit-tap-highlight-color: transparent;
+  color-scheme: dark;
+}
+
+.create-view *,
+.create-view *::before,
+.create-view *::after {
+  box-sizing: border-box;
+}
+
+
+
+/* =========================================================
+   HEADER
+========================================================= */
+
+.create-header {
+  width: 100%;
+  max-width: 560px;
+
+  margin: 0 auto 30px;
+}
+
+.create-header h1 {
+  margin: 0 0 8px;
+
+  color: var(--create-text);
+
+  font-size: 28px;
+  font-weight: 700;
+  line-height: 1.18;
+  letter-spacing: -0.02em;
+}
+
+.create-header p {
+  margin: 0;
+
+  color: var(--create-text-secondary);
+
+  font-size: 14px;
+  line-height: 1.55;
+}
+
+.create-header h1:empty,
+.create-header p:empty {
+  display: none;
+}
+
+.create-header:has(h1:empty):has(p:empty) {
+  margin-bottom: 0;
+}
+
+
+
+/* =========================================================
+   FLECHA VOLVER
+========================================================= */
+
+.create-back {
+  position: fixed;
+
+  top: calc(14px + env(safe-area-inset-top));
+  left: 16px;
+
+  z-index: 200;
+
+  display: flex;
+  align-items: center;
+  justify-content: center;
+
+  width: 44px;
+  height: 44px;
+
+  padding: 0;
+
+  border: 1px solid transparent;
+  border-radius: 50%;
+
+  background: transparent;
+  color: #ffffff;
+
+  font-family: inherit;
+  font-size: 28px;
+  font-weight: 400;
+  line-height: 1;
+
+  cursor: pointer;
+
+  touch-action: manipulation;
+
+  transition:
+    background 160ms ease,
+    border-color 160ms ease,
+    transform 120ms ease;
+}
+
+.create-back:hover {
+  background: rgba(255, 255, 255, 0.055);
+  border-color: rgba(255, 255, 255, 0.06);
+}
+
+.create-back:active {
+  transform: scale(0.92);
+}
+
+.create-back:focus-visible {
+  outline: 2px solid #a78bfa;
+  outline-offset: 3px;
+}
+
+.create-back:disabled {
+  opacity: 0.45;
+  cursor: not-allowed;
+}
+
+
+
+/* =========================================================
+   FORMULARIO
+========================================================= */
+
+#create-form {
+  width: 100%;
+  max-width: 560px;
+
+  margin: 0 auto;
+
+  /*
+    El formulario debe poder crecer con el contenido.
+    No height:100vh.
+    No overflow:hidden.
+  */
+  min-height: 0;
+
+  padding-bottom: 30px;
+}
+
+#create-steps {
+  width: 100%;
+
+  /*
+    Permite que los pasos determinen naturalmente
+    la altura total de la página.
+  */
+  min-height: 0;
+}
+
+
+
+/* =========================================================
+   PANTALLAS
+========================================================= */
+
+.create-step {
+  width: 100%;
+  min-height: 230px;
+
+  animation: createStepIn 220ms cubic-bezier(.22, .8, .28, 1);
+}
+
+.create-step[hidden] {
+  display: none !important;
+}
+
+@keyframes createStepIn {
+  from {
+    opacity: 0;
+    transform: translateY(7px);
+  }
+
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+
+
+/* =========================================================
+   PASO UBICACIÓN + FECHA
+========================================================= */
+
+#create-ubicacion-fecha-step {
+  position: relative;
+
+  /*
+    Ya no forzamos una altura basada en el viewport.
+    El contenido determina la altura real.
+  */
+  min-height: 230px;
+
+  padding-bottom: 30px;
+}
+
+
+
+/* =========================================================
+   CAMPOS GENERALES
+========================================================= */
+
+.create-field {
+  display: flex;
+  flex-direction: column;
+
+  width: 100%;
+
+  gap: 10px;
+}
+
+.create-field > label:not(.create-image-picker) {
+  display: block;
+
+  color: #eeeeF3;
+
+  font-size: 14px;
+  font-weight: 600;
+  line-height: 1.4;
+
+  letter-spacing: -0.005em;
+}
+
+.create-field input[type="text"],
+.create-field input[type="number"],
+.create-field input[type="datetime-local"],
+.create-field textarea {
+  display: block;
+
+  width: 100%;
+  min-height: 54px;
+
+  padding: 14px 16px;
+
+  border: 1px solid var(--create-border-strong);
+  border-radius: 14px;
+
+  outline: none;
+
+  background: var(--create-surface);
+  color: var(--create-text);
+
+  font-family: inherit;
+  font-size: 16px;
+  font-weight: 450;
+  line-height: 1.45;
+
+  transition:
+    border-color 160ms ease,
+    background 160ms ease,
+    box-shadow 160ms ease,
+    transform 120ms ease;
+}
+
+.create-field input[type="text"]:hover,
+.create-field input[type="number"]:hover,
+.create-field input[type="datetime-local"]:hover,
+.create-field textarea:hover {
+  border-color: rgba(255, 255, 255, 0.16);
+}
+
+.create-field input[type="text"]:focus,
+.create-field input[type="number"]:focus,
+.create-field input[type="datetime-local"]:focus,
+.create-field textarea:focus {
+  border-color: var(--create-primary);
+
+  background: #15151e;
+
+  box-shadow:
+    0 0 0 3px var(--create-primary-soft);
+}
+
+.create-field input::placeholder,
+.create-field textarea::placeholder {
+  color: #646471;
+  opacity: 1;
+}
+
+.create-field textarea {
+  min-height: 170px;
+
+  resize: vertical;
+}
+
+.create-field input[type="datetime-local"] {
+  color-scheme: dark;
+}
+
+.create-field-hint {
+  display: block;
+
+  margin-top: -2px;
+
+  color: var(--create-text-muted);
+
+  font-size: 12px;
+  font-weight: 450;
+  line-height: 1.5;
+}
+
+
+
+/* =========================================================
+   INPUT NUMBER
+========================================================= */
+
+.create-view input[type="number"] {
+  appearance: textfield;
+  -moz-appearance: textfield;
+}
+
+.create-view input[type="number"]::-webkit-inner-spin-button,
+.create-view input[type="number"]::-webkit-outer-spin-button {
+  margin: 0;
+
+  -webkit-appearance: none;
+}
+
+
+
+/* =========================================================
+   BOTONES INFERIORES
+========================================================= */
+
+.create-actions {
+  position: fixed;
+
+  left: 0;
+  right: 0;
+  bottom: calc(8px + env(safe-area-inset-bottom));
+
+  z-index: 150;
+
+  display: flex;
+  align-items: center;
+
+  width: 100%;
+
+  padding:
+    10px 20px
+    calc(10px + env(safe-area-inset-bottom));
+
+  background:
+    linear-gradient(
+      to top,
+      rgba(8, 8, 13, 0.98) 35%,
+      rgba(8, 8, 13, 0.90) 72%,
+      rgba(8, 8, 13, 0)
+    );
+
+  pointer-events: none;
+}
+
+.create-actions .create-btn {
+  pointer-events: auto;
+}
+
+
+
+/* =========================================================
+   BOTÓN
+========================================================= */
+
+.create-btn {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+
+  width: 100%;
+  min-height: 54px;
+
+  padding: 0 22px;
+
+  border: 1px solid transparent;
+  border-radius: 14px;
+
+  font-family: inherit;
+  font-size: 14px;
+  font-weight: 650;
+  line-height: 1;
+
+  cursor: pointer;
+
+  touch-action: manipulation;
+
+  transition:
+    background 160ms ease,
+    border-color 160ms ease,
+    box-shadow 160ms ease,
+    transform 120ms ease,
+    opacity 160ms ease;
+}
+
+.create-btn:active:not(:disabled) {
+  transform: scale(0.985);
+}
+
+.create-btn:focus-visible {
+  outline: 2px solid #a78bfa;
+  outline-offset: 3px;
+}
+
+.create-btn:disabled {
+  opacity: 0.52;
+  cursor: not-allowed;
+}
+
+
+
+/* =========================================================
+   PRIMARIO
+========================================================= */
+
+.create-btn-primary {
+  background: var(--create-primary);
+  color: #ffffff;
+
+  box-shadow:
+    0 7px 24px rgba(0, 0, 0, 0.22);
+}
+
+.create-btn-primary:hover:not(:disabled) {
+  background: var(--create-primary-hover);
+
+  box-shadow:
+    0 9px 28px rgba(0, 0, 0, 0.26);
+}
+
+
+
+/* =========================================================
+   SECUNDARIO
+========================================================= */
+
+.create-btn-secondary {
+  min-width: 110px;
+
+  border-color: rgba(255, 255, 255, 0.10);
+
+  background: #17171f;
+  color: #d1d1dc;
+}
+
+.create-btn-secondary:hover:not(:disabled) {
+  border-color: rgba(255, 255, 255, 0.17);
+
+  background: #1d1d27;
+}
+
+.create-btn[hidden] {
+  display: none !important;
+}
+
+
+/* =========================================================
+   PROGRESO
+   Se mantiene fijo.
+========================================================= */
+
+.create-progress {
+  position: fixed;
+
+  left: 20px;
+  right: 20px;
+  bottom: calc(82px + env(safe-area-inset-bottom));
+
+  z-index: 140;
+
+  width: auto;
+  max-width: 560px;
+
+  margin: 0 auto;
+
+  pointer-events: none;
+}
+
+.create-progress-info {
+  display: flex;
+  align-items: center;
+  justify-content: flex-end;
+
+  width: 100%;
+
+  margin-bottom: 9px;
+
+  color: var(--create-text-muted);
+
+  font-size: 12px;
+  font-weight: 550;
+  line-height: 1;
+}
+
+#create-step-number {
+  white-space: nowrap;
+}
+
+.create-progress-track {
+  width: 100%;
+  height: 4px;
+
+  overflow: hidden;
+
+  border-radius: 999px;
+
+  background: rgba(255, 255, 255, 0.10);
+}
+
+.create-progress-bar {
+  width: 20%;
+  height: 100%;
+
+  border-radius: inherit;
+
+  background: var(--create-primary);
+
+  box-shadow:
+    0 0 10px rgba(124, 58, 237, 0.28);
+
+  transition:
+    width 260ms cubic-bezier(.22, .8, .28, 1);
+}
+
+
+
+/* =========================================================
+   ERRORES
+========================================================= */
+
+.create-error {
+  margin: 20px 0 0;
+
+  padding: 12px 14px;
+
+  border: 1px solid rgba(248, 113, 113, 0.24);
+  border-radius: 12px;
+
+  background: rgba(127, 29, 29, 0.12);
+  color: #fca5a5;
+
+  font-size: 13px;
+  line-height: 1.5;
+
+  box-shadow:
+    0 8px 24px rgba(0, 0, 0, 0.12);
+}
+
+.create-error[hidden] {
+  display: none !important;
+}
+
+
+/* =========================================================
+   SELECTOR DE FECHA
+   IMPORTANTE:
+   Ya NO es fixed.
+   Forma parte del contenido y puede desplazarse.
+========================================================= */
+
+#create-ubicacion-fecha-step .create-fecha-picker {
+  position: relative;
+
+  display: grid;
+  grid-template-columns: 1fr 1fr 1.45fr;
+
+  width: 100%;
+  max-width: 560px;
+
+  height: 78px;
+
+  margin: 18px auto 0;
+
+  overflow: hidden;
+
+  border: 1px solid rgba(255, 255, 255, 0.11);
+  border-radius: 16px;
+
+  background:
+    linear-gradient(
+      180deg,
+      rgba(255, 255, 255, 0.025),
+      rgba(255, 255, 255, 0)
+    ),
+    rgba(18, 18, 26, 0.97);
+
+  box-shadow:
+    0 12px 35px rgba(0, 0, 0, 0.28);
+
+  backdrop-filter: blur(14px);
+  -webkit-backdrop-filter: blur(14px);
+}
+
+
+
+/* =========================================================
+   SCROLL / INTERACCIÓN
+========================================================= */
+
+.create-view input,
+.create-view textarea,
+.create-view button,
+.create-view label {
+  -webkit-user-select: auto;
+}
+
+.create-view button,
+.create-view label {
+  -webkit-touch-callout: none;
+}
+
+
+/*
+  No bloquear el scroll de la página desde el contenedor.
+*/
+html,
+body {
+  overflow-x: hidden;
+}
+
+body {
+  overflow-y: auto;
+}
+
+
+
+/* =========================================================
+   MOBILE
+========================================================= */
+
+@media (max-width: 600px) {
+
+  .create-view {
+    padding:
+      22px 18px
+      calc(190px + env(safe-area-inset-bottom));
+  }
+
+
+  /* -----------------------------
+     HEADER
+  ----------------------------- */
+
+  .create-header {
+    margin-bottom: 26px;
+  }
+
+  .create-header h1 {
+    font-size: 25px;
+  }
+
+
+  /* -----------------------------
+     STEPS
+  ----------------------------- */
+
+  .create-step {
+    min-height: 210px;
+  }
+
+  #create-ubicacion-fecha-step {
+    min-height: 210px;
+
+    padding-bottom: 30px;
+  }
+
+
+  /* -----------------------------
+     CAMPOS
+  ----------------------------- */
+
+  .create-field {
+    gap: 9px;
+  }
+
+  .create-field input[type="text"],
+  .create-field input[type="number"],
+  .create-field textarea {
+    min-height: 52px;
+  }
+
+
+  /* -----------------------------
+     NOMBRE
+  ----------------------------- */
+
+  #create-nombre {
+    min-height: 58px;
+
+    font-size: 23px;
+  }
+
+
+  /* -----------------------------
+     IMAGEN
+  ----------------------------- */
+
+  .create-image-picker {
+    min-height: 190px;
+
+    border-radius: 16px;
+  }
+
+
+  /* -----------------------------
+     TICKETS
+  ----------------------------- */
+
+  .create-ticket-types {
+    margin-top: 34px;
+    padding-top: 26px;
+  }
+
+  .create-ticket-types-header {
+    margin-bottom: 17px;
+  }
+
+  .create-ticket-types-header h2 {
+    font-size: 18px;
+  }
+
+  .create-ticket-card {
+    padding: 16px;
+
+    border-radius: 16px;
+
+    scroll-margin-top: 70px;
+    scroll-margin-bottom: 190px;
+  }
+
+  .create-ticket-fields {
+    gap: 20px;
+  }
+
+
+  /* -----------------------------
+     CAPACIDAD
+  ----------------------------- */
+
+  #create-capacidad {
+    min-height: 60px;
+
+    font-size: 20px;
+  }
+
+
+  /* -----------------------------
+     LIMITE
+  ----------------------------- */
+
+  .create-ticket-limit-option {
+    min-height: 48px;
+
+    font-size: 12.5px;
+  }
+
+
+  /* -----------------------------
+     FECHA
+  ----------------------------- */
+
+  #create-ubicacion-fecha-step .create-fecha-picker {
+    position: relative;
+
+    left: auto;
+    right: auto;
+    bottom: auto;
+
+    width: 100%;
+
+    height: 72px;
+
+    margin-top: 16px;
+
+    border-radius: 14px;
+
+    grid-template-columns: 1fr 1fr 1.45fr;
+  }
+
+  .create-fecha-display {
+    padding: 0 6px;
+
+    font-size: 17px;
+  }
+
+
+  /* -----------------------------
+     BACK
+  ----------------------------- */
+
+  .create-back {
+    top: calc(11px + env(safe-area-inset-top));
+    left: 12px;
+  }
+
+
+  /* -----------------------------
+     ACTIONS
+  ----------------------------- */
+
+  .create-actions {
+    bottom: env(safe-area-inset-bottom);
+
+    padding:
+      8px 18px
+      calc(8px + env(safe-area-inset-bottom));
+  }
+
+  .create-btn {
+    min-height: 52px;
+
+    border-radius: 13px;
+  }
+
+
+  /* -----------------------------
+     PROGRESO
+  ----------------------------- */
+
+  .create-progress {
+    left: 18px;
+    right: 18px;
+
+    bottom:
+      calc(75px + env(safe-area-inset-bottom));
+  }
+
+  .create-progress-info {
+    margin-bottom: 8px;
+
+    font-size: 11.5px;
+  }
+
+  .create-progress-track {
+    height: 4px;
+  }
+
+}
+
+
+
+/* =========================================================
+   MOBILE PEQUEÑO
+========================================================= */
+
+@media (max-width: 360px) {
+
+  .create-view {
+    padding-left: 15px;
+    padding-right: 15px;
+
+    padding-bottom:
+      calc(190px + env(safe-area-inset-bottom));
+  }
+
+  .create-back {
+    left: 9px;
+  }
+
+  .create-ticket-card {
+    padding: 14px;
+  }
+
+  .create-ticket-limit-options {
+    grid-template-columns: 1fr;
+  }
+
+  .create-ticket-limit-option {
+    min-height: 44px;
+  }
+
+  #create-ubicacion-fecha-step .create-fecha-picker {
+    left: auto;
+    right: auto;
+
+    grid-template-columns: 1fr 1fr 1.35fr;
+  }
+
+  .create-fecha-display {
+    font-size: 16px;
+  }
+
+}
+
+
+
+/* =========================================================
+   REDUCIR ANIMACIONES
+========================================================= */
+
+@media (prefers-reduced-motion: reduce) {
+
+  .create-step,
+  .create-ticket-limit-input,
+  .create-fecha-display.is-changing-next,
+  .create-fecha-display.is-changing-prev {
+    animation: none;
+  }
+
+  .create-progress-bar,
+  .create-btn,
+  .create-back,
+  .create-field input,
+  .create-field textarea,
+  .create-image-picker,
+  .create-price-input,
+  .create-ticket-card,
+  .create-ticket-limit-option,
+  .create-add-ticket,
+  .create-ticket-remove {
+    transition: none;
+  }
+}
