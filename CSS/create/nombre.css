@@ -4,7 +4,7 @@
 
 /* Posiciona la pregunta un poco por encima del centro vertical. */
 #create-nombre-step > .create-field {
-  padding-top: clamp(144px, 28vh, 288px);
+  padding-top: clamp(129.6px, 25.2vh, 259.2px);
 }
 
 #create-nombre-step .create-field > label {
