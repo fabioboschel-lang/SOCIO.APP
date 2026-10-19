@@ -457,21 +457,6 @@ export function Create(app) {
     );
 
 
-    /* ========================================
-       FOCO AUTOMÁTICO EN EL NOMBRE
-    ======================================== */
-
-    if (currentStep === 0) {
-
-      const nombreInput =
-        app.querySelector("#create-nombre");
-
-      nombreInput?.focus({
-        preventScroll: true
-      });
-    }
-
-
     const current =
       currentStep + 1;
 
