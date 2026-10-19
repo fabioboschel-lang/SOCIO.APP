@@ -97,40 +97,41 @@ export function Sesion(app) {
   // La interfaz ya fue renderizada en el DOM.
   registrarEvento("session_view");
 
-  document
-    .getElementById("googleBtn")
-    .addEventListener(
-      "click",
-      async () => {
+  const googleBtn = document.getElementById("googleBtn");
+  let redireccionEnCurso = false;
 
-        // Se registra antes de iniciar OAuth y abandonar esta página.
-        await registrarEvento("session_start_click");
+  googleBtn.addEventListener("click", async () => {
+    // Bloqueo síncrono: los clics siguientes no se registran ni lanzan otro OAuth.
+    if (redireccionEnCurso) return;
 
-        const { data, error } =
-          await supabase.auth.signInWithOAuth({
+    redireccionEnCurso = true;
+    googleBtn.disabled = true;
 
-            provider: "google",
+    // Se cuenta una única acción de inicio de redirección, no cada toque físico.
+    await registrarEvento("session_start_click");
 
-            options: {
-              redirectTo:
-                "https://passflow.space"
-            }
-
-          });
-
-        console.log(data);
-
-        if (error) {
-
-          console.error(error);
-
-          alert(
-            "No se pudo iniciar sesión."
-          );
-
+    try {
+      const { data, error } = await supabase.auth.signInWithOAuth({
+        provider: "google",
+        options: {
+          redirectTo: "https://passflow.space"
         }
+      });
 
+      console.log(data);
+
+      if (error) {
+        console.error(error);
+        alert("No se pudo iniciar sesión.");
+        redireccionEnCurso = false;
+        googleBtn.disabled = false;
       }
-    );
+    } catch (error) {
+      console.error(error);
+      alert("No se pudo iniciar sesión.");
+      redireccionEnCurso = false;
+      googleBtn.disabled = false;
+    }
+  });
 
 }
