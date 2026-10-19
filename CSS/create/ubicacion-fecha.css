@@ -3,13 +3,14 @@
 ========================================================= */
 
 /*
-  El paso ocupa prácticamente la altura disponible.
-  Los dos campos se posicionan como unidades completas:
-  ubicación desde arriba y fecha desde abajo.
+  El paso se dimensiona respecto del viewport real.
+  Ubicación queda en la zona superior-media y fecha
+  en la zona inferior, justo encima del progreso.
 */
 
 #create-ubicacion-fecha-step {
-  min-height: calc(100dvh - 212px);
+  position: relative;
+  min-height: calc(100dvh - 178px);
 }
 
 #create-ubicacion-fecha-step > .create-field {
@@ -20,29 +21,28 @@
 }
 
 #create-ubicacion-fecha-step > .create-field:first-child {
-  top: 12px;
+  top: 58px;
 }
 
 #create-ubicacion-fecha-step > .create-field:last-child {
-  bottom: -90px;
+  bottom: 0;
 }
 
 #create-ubicacion-fecha-step .create-field-hint {
   margin-bottom: 0;
 }
 
-
 @media (max-width: 600px) {
   #create-ubicacion-fecha-step {
-    min-height: calc(100dvh - 212px);
+    min-height: calc(100dvh - 152px);
   }
 
   #create-ubicacion-fecha-step > .create-field:first-child {
-    top: 12px;
+    top: 64px;
   }
 
   #create-ubicacion-fecha-step > .create-field:last-child {
-    bottom: -90px;
+    bottom: 0;
   }
 }
 
