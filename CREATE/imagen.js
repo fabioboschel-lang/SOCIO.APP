@@ -7,7 +7,7 @@ export const imagenhtml = `
   <div class="create-field">
 
     <label for="create-imagen">
-      Elegí una imagen
+      Elegí la imagen de tu evento
     </label>
 
     <label
@@ -37,7 +37,7 @@ export const imagenhtml = `
     >
 
     <small class="create-field-hint">
-      Seleccioná una imagen en formato JPG, PNG o WebP.
+      Esta imagen representará tu evento en su página. No hace falta que sea un flyer. Formatos: JPG, PNG o WebP.
     </small>
 
   </div>
