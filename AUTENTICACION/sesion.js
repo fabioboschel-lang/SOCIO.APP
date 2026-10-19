@@ -1,5 +1,5 @@
 import { supabase } from "../supabase.js";
-import { registrarEvento } from "../interaccionometro.js";
+import { registrarEvento } from "../analytics.js";
 
 export function Sesion(app) {
 
@@ -104,7 +104,7 @@ export function Sesion(app) {
       async () => {
 
         // Se registra antes de iniciar OAuth y abandonar esta página.
-        registrarEvento("session_start_click");
+        await registrarEvento("session_start_click");
 
         const { data, error } =
           await supabase.auth.signInWithOAuth({
