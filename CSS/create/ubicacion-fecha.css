@@ -1,4 +1,53 @@
 /* =========================================================
+   DISTRIBUCIÓN VERTICAL: UBICACIÓN ARRIBA / FECHA ABAJO
+========================================================= */
+
+/*
+  El paso ocupa prácticamente la altura disponible.
+  Los dos campos se posicionan como unidades completas:
+  ubicación desde arriba y fecha desde abajo.
+*/
+
+#create-ubicacion-fecha-step {
+  min-height: calc(100dvh - 212px);
+}
+
+#create-ubicacion-fecha-step > .create-field {
+  position: absolute;
+  left: 0;
+  right: 0;
+  width: 100%;
+}
+
+#create-ubicacion-fecha-step > .create-field:first-child {
+  top: 12px;
+}
+
+#create-ubicacion-fecha-step > .create-field:last-child {
+  bottom: -90px;
+}
+
+#create-ubicacion-fecha-step .create-field-hint {
+  margin-bottom: 0;
+}
+
+
+@media (max-width: 600px) {
+  #create-ubicacion-fecha-step {
+    min-height: calc(100dvh - 212px);
+  }
+
+  #create-ubicacion-fecha-step > .create-field:first-child {
+    top: 12px;
+  }
+
+  #create-ubicacion-fecha-step > .create-field:last-child {
+    bottom: -90px;
+  }
+}
+
+
+/* =========================================================
    LABEL DE UBICACIÓN / FECHA
 ========================================================= */
 
