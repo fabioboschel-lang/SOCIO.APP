@@ -1,0 +1,111 @@
+/* =========================================================
+   SELECTOR DE IMAGEN
+========================================================= */
+
+.create-field input[type="file"] {
+  position: absolute;
+
+  width: 1px;
+  height: 1px;
+
+  padding: 0;
+  margin: -1px;
+
+  overflow: hidden;
+  clip: rect(0, 0, 0, 0);
+  clip-path: inset(50%);
+
+  white-space: nowrap;
+  border: 0;
+}
+
+.create-image-picker {
+  position: relative;
+
+  display: flex;
+  align-items: center;
+  justify-content: center;
+
+  width: 100%;
+  min-height: 220px;
+  aspect-ratio: 16 / 9;
+
+  overflow: hidden;
+
+  border: 1px dashed rgba(255, 255, 255, 0.17);
+  border-radius: 18px;
+
+  background:
+    radial-gradient(
+      circle at center,
+      rgba(124, 58, 237, 0.08),
+      transparent 58%
+    ),
+    #111118;
+
+  cursor: pointer;
+
+  transition:
+    border-color 180ms ease,
+    background 180ms ease,
+    transform 120ms ease;
+}
+
+.create-image-picker:hover {
+  border-color: var(--create-primary-border);
+
+  background:
+    radial-gradient(
+      circle at center,
+      rgba(124, 58, 237, 0.12),
+      transparent 58%
+    ),
+    #15131e;
+}
+
+.create-image-picker:active {
+  transform: scale(0.992);
+}
+
+.create-image-placeholder {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+
+  width: 100%;
+  min-height: 100%;
+
+  padding: 28px;
+
+  color: #b69af5;
+
+  font-size: 14px;
+  font-weight: 600;
+  line-height: 1.45;
+
+  text-align: center;
+}
+
+.create-image-preview {
+  display: block;
+
+  width: 100%;
+  height: 100%;
+  max-height: none;
+
+  object-fit: cover;
+
+  background: #09090e;
+}
+
+.create-image-preview[hidden],
+.create-image-placeholder[hidden] {
+  display: none !important;
+}
+
+.create-field input[type="file"]:focus-visible + .create-file-focus {
+  outline: 2px solid #a78bfa;
+  outline-offset: 4px;
+}
+
+
