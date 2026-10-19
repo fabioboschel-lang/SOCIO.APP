@@ -9,6 +9,14 @@ export const VERSIONES_ANALYTICS = {
   session: "v1"
 };
 
+/*
+ * Destino de los datos:
+ * - "activo": métricas reales de la web principal.
+ * - "test": métricas aisladas en analytics_counters_test.
+ * Cambiar únicamente este valor para alternar el destino.
+ */
+export const MODO_ANALYTICS = "activo";
+
 const EVENTOS_PERMITIDOS = new Set([
   "session_view",
   "session_start_click"
@@ -53,7 +61,7 @@ export async function registrarEvento(nombre, opciones = {}) {
 
   const storage = obtenerStorageSesion();
   const claveDeduplicacion =
-    `passflow_analytics_once_${interfaz}_${version}_${nombre}`;
+    `passflow_analytics_once_${MODO_ANALYTICS}_${interfaz}_${version}_${nombre}`;
 
   if (deduplicarPorSesion && storage) {
     try {
@@ -70,7 +78,8 @@ export async function registrarEvento(nombre, opciones = {}) {
       p_interface_name: interfaz,
       p_interface_version: version,
       p_event_name: nombre,
-      p_amount: 1
+      p_amount: 1,
+      p_mode: MODO_ANALYTICS
     });
 
     if (error) {
