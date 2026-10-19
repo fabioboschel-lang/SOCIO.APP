@@ -6,7 +6,7 @@ import { supabase } from "./supabase.js";
  * antes de publicar la nueva versión de la interfaz.
  */
 export const VERSIONES_ANALYTICS = {
-  session: "v1"
+  session: "v19"
 };
 
 const EVENTOS_PERMITIDOS = new Set([
