@@ -1,0 +1,534 @@
+/* =========================================================
+   PRECIO
+========================================================= */
+
+.create-ticket-config {
+  width: 100%;
+
+  /*
+    Importante para que el paso de precio pueda crecer
+    libremente y generar scroll vertical.
+  */
+  min-height: 0;
+}
+
+
+
+/* =========================================================
+   CAPACIDAD GLOBAL
+========================================================= */
+
+#create-capacidad {
+  min-height: 64px;
+
+  padding: 15px 17px;
+
+  border-color: rgba(124, 58, 237, 0.22);
+
+  background:
+    linear-gradient(
+      180deg,
+      rgba(124, 58, 237, 0.055),
+      rgba(124, 58, 237, 0.015)
+    ),
+    var(--create-surface);
+
+  font-size: 21px;
+  font-weight: 650;
+  letter-spacing: -0.02em;
+}
+
+#create-capacidad:focus {
+  border-color: var(--create-primary);
+
+  box-shadow:
+    0 0 0 3px rgba(124, 58, 237, 0.14),
+    0 8px 28px rgba(0, 0, 0, 0.18);
+}
+
+
+
+/* =========================================================
+   TIPOS DE ENTRADA
+========================================================= */
+
+.create-ticket-types {
+  width: 100%;
+
+  margin-top: 38px;
+  padding-top: 30px;
+
+  border-top: 1px solid rgba(255, 255, 255, 0.075);
+}
+
+.create-ticket-types-header {
+  margin-bottom: 20px;
+}
+
+.create-ticket-types-header h2 {
+  margin: 0 0 6px;
+
+  color: var(--create-text);
+
+  font-size: 19px;
+  font-weight: 700;
+  line-height: 1.25;
+  letter-spacing: -0.015em;
+}
+
+.create-ticket-types-header p {
+  margin: 0;
+
+  color: var(--create-text-muted);
+
+  font-size: 13px;
+  line-height: 1.5;
+}
+
+
+
+/* =========================================================
+   LISTA
+========================================================= */
+
+.create-ticket-list {
+  display: flex;
+  flex-direction: column;
+
+  width: 100%;
+
+  gap: 14px;
+
+  /*
+    La lista crece naturalmente.
+    No se limita su altura.
+  */
+  min-height: 0;
+}
+
+
+
+/* =========================================================
+   TARJETA DE ENTRADA
+========================================================= */
+
+.create-ticket-card {
+  position: relative;
+
+  width: 100%;
+
+  padding: 18px;
+
+  border: 1px solid var(--create-border);
+  border-radius: 18px;
+
+  background:
+    linear-gradient(
+      180deg,
+      rgba(255, 255, 255, 0.018),
+      rgba(255, 255, 255, 0)
+    ),
+    var(--create-surface);
+
+  box-shadow:
+    0 10px 30px rgba(0, 0, 0, 0.12);
+
+  /*
+    Permite que al enfocar un campo el navegador
+    pueda desplazarlo por encima de los controles fijos.
+  */
+  scroll-margin-top: 80px;
+  scroll-margin-bottom: 190px;
+
+  transition:
+    border-color 180ms ease,
+    background 180ms ease,
+    box-shadow 180ms ease;
+}
+
+.create-ticket-card:focus-within {
+  border-color: rgba(124, 58, 237, 0.30);
+
+  box-shadow:
+    0 12px 34px rgba(0, 0, 0, 0.16);
+}
+
+
+
+/* =========================================================
+   HEADER TARJETA
+========================================================= */
+
+.create-ticket-card-header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+
+  min-height: 32px;
+
+  margin-bottom: 18px;
+
+  gap: 12px;
+}
+
+.create-ticket-number {
+  display: inline-flex;
+  align-items: center;
+
+  min-height: 28px;
+  padding: 0 10px;
+
+  border-radius: 999px;
+
+  background: rgba(124, 58, 237, 0.11);
+  color: #c5b5f5;
+
+  font-size: 12px;
+  font-weight: 650;
+  letter-spacing: 0.01em;
+}
+
+
+
+/* =========================================================
+   ELIMINAR ENTRADA
+========================================================= */
+
+.create-ticket-remove {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+
+  flex: 0 0 auto;
+
+  width: 36px;
+  height: 36px;
+
+  padding: 0;
+
+  border: 1px solid rgba(255, 255, 255, 0.07);
+  border-radius: 10px;
+
+  background: transparent;
+  color: #777784;
+
+  font-family: inherit;
+  font-size: 22px;
+  font-weight: 400;
+  line-height: 1;
+
+  cursor: pointer;
+
+  touch-action: manipulation;
+
+  transition:
+    background 160ms ease,
+    border-color 160ms ease,
+    color 160ms ease,
+    transform 120ms ease;
+}
+
+.create-ticket-remove:hover {
+  border-color: rgba(248, 113, 113, 0.20);
+
+  background: var(--create-danger-soft);
+  color: var(--create-danger);
+}
+
+.create-ticket-remove:active {
+  transform: scale(0.92);
+}
+
+.create-ticket-remove:focus-visible {
+  outline: 2px solid var(--create-danger);
+  outline-offset: 2px;
+}
+
+.create-ticket-remove[hidden] {
+  display: none !important;
+}
+
+
+
+/* =========================================================
+   CAMPOS DE LA TARJETA
+========================================================= */
+
+.create-ticket-fields {
+  display: flex;
+  flex-direction: column;
+
+  width: 100%;
+
+  gap: 22px;
+}
+
+.create-ticket-fields .create-field {
+  gap: 9px;
+}
+
+
+
+/* =========================================================
+   PRECIO DE ENTRADA
+========================================================= */
+
+.create-price-input {
+  display: flex;
+  align-items: center;
+
+  width: 100%;
+  min-height: 56px;
+
+  padding: 0 16px;
+
+  border: 1px solid var(--create-border-strong);
+  border-radius: 14px;
+
+  background: var(--create-surface-2);
+
+  transition:
+    border-color 160ms ease,
+    background 160ms ease,
+    box-shadow 160ms ease;
+}
+
+.create-price-input:hover {
+  border-color: rgba(255, 255, 255, 0.16);
+}
+
+.create-price-input:focus-within {
+  border-color: var(--create-primary);
+
+  background: #181720;
+
+  box-shadow:
+    0 0 0 3px var(--create-primary-soft);
+}
+
+.create-price-input > span {
+  flex: 0 0 auto;
+
+  margin-right: 9px;
+
+  color: #a78bfa;
+
+  font-size: 18px;
+  font-weight: 650;
+  line-height: 1;
+}
+
+.create-price-input input[type="number"] {
+  flex: 1;
+
+  width: 100%;
+  min-width: 0;
+  min-height: 52px;
+
+  padding: 12px 0;
+
+  border: none;
+  border-radius: 0;
+
+  outline: none;
+  box-shadow: none;
+
+  background: transparent;
+  color: var(--create-text);
+
+  font-size: 18px;
+  font-weight: 650;
+  letter-spacing: -0.01em;
+}
+
+.create-price-input input[type="number"]:hover,
+.create-price-input input[type="number"]:focus {
+  border: none;
+  outline: none;
+  box-shadow: none;
+
+  background: transparent;
+}
+
+
+
+/* =========================================================
+   LÍMITE DE VENTA
+========================================================= */
+
+.create-ticket-limit-field {
+  gap: 10px;
+}
+
+.create-ticket-limit-options {
+  display: grid;
+
+  grid-template-columns: 1fr 1fr;
+
+  width: 100%;
+
+  padding: 4px;
+
+  border: 1px solid rgba(255, 255, 255, 0.075);
+  border-radius: 14px;
+
+  background: #0d0d13;
+
+  gap: 4px;
+}
+
+.create-ticket-limit-option {
+  position: relative;
+
+  display: flex;
+  align-items: center;
+  justify-content: center;
+
+  min-height: 46px;
+
+  padding: 0 10px;
+
+  border: 1px solid transparent;
+  border-radius: 10px;
+
+  color: #8d8d9a;
+
+  font-size: 13px;
+  font-weight: 600;
+  line-height: 1.2;
+
+  text-align: center;
+
+  cursor: pointer;
+
+  touch-action: manipulation;
+
+  transition:
+    color 160ms ease,
+    background 160ms ease,
+    border-color 160ms ease,
+    box-shadow 160ms ease;
+}
+
+.create-ticket-limit-option input {
+  position: absolute;
+
+  width: 1px;
+  height: 1px;
+
+  opacity: 0;
+  pointer-events: none;
+}
+
+.create-ticket-limit-option:hover {
+  color: #c7c7d1;
+}
+
+.create-ticket-limit-option:has(input:checked) {
+  border-color: rgba(139, 92, 246, 0.22);
+
+  background: rgba(124, 58, 237, 0.13);
+  color: #e5defb;
+
+  box-shadow:
+    0 2px 10px rgba(0, 0, 0, 0.12);
+}
+
+.create-ticket-limit-option:has(input:focus-visible) {
+  outline: 2px solid #a78bfa;
+  outline-offset: 1px;
+}
+
+
+
+/* =========================================================
+   INPUT DE LÍMITE
+========================================================= */
+
+.create-ticket-limit-input {
+  display: block;
+
+  width: 100%;
+
+  margin-top: 1px;
+
+  animation: createLimitIn 160ms ease;
+}
+
+.create-ticket-limit-input[hidden] {
+  display: none !important;
+}
+
+.create-ticket-limit-input input {
+  width: 100%;
+  min-height: 52px;
+}
+
+@keyframes createLimitIn {
+  from {
+    opacity: 0;
+    transform: translateY(-4px);
+  }
+
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+
+
+/* =========================================================
+   AGREGAR TIPO
+========================================================= */
+
+.create-add-ticket {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+
+  width: 100%;
+  min-height: 52px;
+
+  margin-top: 14px;
+  padding: 0 16px;
+
+  border: 1px dashed rgba(139, 92, 246, 0.35);
+  border-radius: 14px;
+
+  background: rgba(124, 58, 237, 0.045);
+  color: #b9a4ef;
+
+  font-family: inherit;
+  font-size: 14px;
+  font-weight: 650;
+  line-height: 1;
+
+  cursor: pointer;
+
+  touch-action: manipulation;
+
+  transition:
+    background 160ms ease,
+    border-color 160ms ease,
+    color 160ms ease,
+    transform 120ms ease;
+}
+
+.create-add-ticket:hover {
+  border-color: rgba(139, 92, 246, 0.60);
+
+  background: rgba(124, 58, 237, 0.09);
+  color: #d2c5f8;
+}
+
+.create-add-ticket:active {
+  transform: scale(0.985);
+}
+
+.create-add-ticket:focus-visible {
+  outline: 2px solid #a78bfa;
+  outline-offset: 3px;
+}
+
+
