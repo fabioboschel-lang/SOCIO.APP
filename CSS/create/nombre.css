@@ -1,0 +1,47 @@
+/* =========================================================
+   NOMBRE DEL EVENTO
+========================================================= */
+
+#create-nombre {
+  display: block;
+
+  width: 100%;
+  min-height: 58px;
+  height: auto;
+
+  padding: 2px 0;
+
+  border: none;
+  border-radius: 0;
+
+  outline: none;
+  box-shadow: none;
+
+  background: transparent;
+  color: var(--create-text);
+
+  font-family: inherit;
+  font-size: 25px;
+  font-weight: 500;
+  line-height: 1.3;
+  letter-spacing: -0.02em;
+
+  resize: none;
+  overflow: hidden;
+}
+
+#create-nombre::placeholder {
+  color: #5f5f6c;
+  opacity: 1;
+}
+
+#create-nombre:hover,
+#create-nombre:focus {
+  border: none;
+  outline: none;
+  box-shadow: none;
+
+  background: transparent;
+}
+
+
