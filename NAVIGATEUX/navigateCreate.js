@@ -55,7 +55,7 @@ export function NavigateCreate(navigate) {
     "click",
     () => {
 
-      navigate("create");
+      navigate("m2m");
 
     }
   );
