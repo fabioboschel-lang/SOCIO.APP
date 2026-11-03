@@ -31,7 +31,7 @@ async function iniciarApp() {
 
   if (!userId) {
 
-    navigate("create");
+    navigate("sesion");
 
     return;
 
@@ -88,7 +88,7 @@ async function iniciarApp() {
      TIENE EVENTO
      ========================= */
 
-  navigate("create");
+  navigate("home");
 
 }
 
