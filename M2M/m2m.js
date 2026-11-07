@@ -22,7 +22,7 @@ import {
 function obtenerEventoID() {
 
   const hash = window.location.hash;
-  const partes = hash.replace(/^#\\/?/, "").split("/");
+  const partes = hash.replace(/^#\/?/, "").split("/");
 
   if (partes[0] !== "evento" || !partes[1]) {
     return null;
@@ -141,7 +141,7 @@ try {
 
 await cargarSocioStyle();  
 
-await cargarEvento();
+await cargarEvento(userId);
 
 } catch (error) {
 
@@ -166,7 +166,7 @@ CARGAR EVENTO
 */
 
 
-async function cargarEvento() {
+async function cargarEvento(userId) {
 
 const loading =
 document.getElementById(
