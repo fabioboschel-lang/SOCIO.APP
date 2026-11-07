@@ -26,7 +26,7 @@ VISTA DEL EVENTO
 */
 
 
-export async function Evento(app, userId = null) {
+export async function Evento(app) {
 
 app.innerHTML = `
 
