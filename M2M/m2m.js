@@ -1,25 +1,9 @@
 
-import {
-  authInicializada
-} from "./Usuariossupabase.js";
-
-import {
-  autenticacion
-} from "./autenticacion/autenticacionhtml.js";
-
-import {
-  inicializarGoogle
-} from "./autenticacion/google.js";
-
 import { cargarDatos } from "./cargardatos.js";
 
 import { inicializarCompra } from "./BDC/LOGICbdc.js";
 
-import { obtenerUsuarioID } from "./usuarioID.js";
-
 import { supabase } from "./supabase.js";
-
-import { obtenerEventoID } from "./eventoID.js";
 
 import { HTMLbdc } from "./BDC/HTMLbdc.js";
 
@@ -33,6 +17,21 @@ import {
 } from "./BDC/ticketsDB.js";
 
 
+
+
+function obtenerEventoID() {
+
+  const hash = window.location.hash;
+  const partes = hash.replace(/^#\\/?/, "").split("/");
+
+  if (partes[0] !== "evento" || !partes[1]) {
+    return null;
+  }
+
+  return partes[1];
+
+}
+
 /*
 
 ============================================================
@@ -43,7 +42,7 @@ VISTA DEL EVENTO
 */
 
 
-export async function Evento(app) {
+export async function Evento(app, userId = null) {
 
 app.innerHTML = `
 
@@ -100,11 +99,7 @@ app.innerHTML = `
     ></div>  
 
 
-    ${HTMLbdc}  
-
-    ${autenticacion}
-
-  </section>  
+    ${HTMLbdc}</section>  
 
 
   <div  
@@ -184,14 +179,7 @@ document.getElementById(
 );
 
 
-await authInicializada;
-
-
-const userId = obtenerUsuarioID();
-
-
-const eventId =
-obtenerEventoID();
+const eventId = obtenerEventoID();
 
 if (!eventId) {
 
@@ -211,9 +199,6 @@ const tickets =
 cargarDatos(evento);
 
 inicializarCompra(  evento, eventId, userId );
-
-inicializarGoogle();
-
 
 /*
 
