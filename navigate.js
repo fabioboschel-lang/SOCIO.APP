@@ -1,6 +1,6 @@
 import { Sesion } from "./AUTENTICACION/sesion.js";
 import { Home } from "./home.js";
-import { Create } from "./CREATE/create.js";
+import { m2m } from "./M2M/m2m.js";
 import { MercadoPago } from "./mercadopago.js";
 
 
@@ -14,7 +14,7 @@ const routes = {
 
   home: Home,
 
-  create: Create,
+  m2m: m2m,
 
   mercadopago: MercadoPago
 
