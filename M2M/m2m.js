@@ -26,7 +26,7 @@ VISTA DEL EVENTO
 */
 
 
-export async function Evento(app) {
+export async function m2m(app) {
 
 app.innerHTML = `
 
