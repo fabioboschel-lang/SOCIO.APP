@@ -166,21 +166,11 @@ document.getElementById(
 );
 
 
-const eventId = obtenerEventoID();
-
-if (!eventId) {
-
-mostrarError();
-
-return;
-
-}
-
 const evento =
-await obtenerEvento(eventId);
+await obtenerEvento(userId);
   
 const tickets =
-  await obtenerTickets(eventId);
+  await obtenerTickets(userId);
 
   
 cargarDatos(evento);
