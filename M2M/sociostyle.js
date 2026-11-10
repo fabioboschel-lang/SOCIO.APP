@@ -1,4 +1,4 @@
-import {obtenerUsuarioLocal} from "../usuarioId.js;
+import {obtenerUsuarioLocal} from "../usuarioID.js";
 
 import { supabase } from "../supabase.js";
 
@@ -126,7 +126,7 @@ const socioId = obtenerUsuarioLocal()
         tipografia
       `)
       .eq(
-        "socioid"
+        "socioid",
         socioId
       )
       .maybeSingle();
@@ -160,7 +160,7 @@ const socioId = obtenerUsuarioLocal()
 
     console.error(
       "No existe configuración sociostyle para el evento:",
-      eventId
+      socioId
     );
 
     return;
