@@ -1,4 +1,4 @@
-import { obtenerUsuarioLocal } from "./usuarioID.js"; 
+import { obtenerUsuarioLocal } from "../usuarioID.js"; 
 
 import { cargarDatos } from "./cargardatos.js";
 
