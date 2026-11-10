@@ -1,6 +1,6 @@
 import { supabase } from "../supabase.js";
 
-export async function obtenerEvento(id) {
+export async function obtenerEvento(socioId) {
 
   const {
     data: evento,
@@ -17,8 +17,8 @@ export async function obtenerEvento(id) {
         "ID usuario"
       `)
       .eq(
-        "id",
-        id
+        "ID usuario",
+        socioId
       )
       .maybeSingle();
 
