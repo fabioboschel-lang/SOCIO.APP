@@ -2,6 +2,7 @@ import { Sesion } from "./AUTENTICACION/sesion.js";
 import { Home } from "./home.js";
 import { m2m } from "./M2M/m2m.js";
 import { MercadoPago } from "./mercadopago.js";
+import { Create } from "./CREATE/create.js";
 
 
 const app =
@@ -16,7 +17,9 @@ const routes = {
 
   m2m: m2m,
 
-  mercadopago: MercadoPago
+  mercadopago: MercadoPago,
+
+  create: Create
 
 };
 
