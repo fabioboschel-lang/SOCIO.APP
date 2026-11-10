@@ -1,9 +1,10 @@
+import { obtenerUsuarioLocal } from "./usuarioID.js"; 
 
 import { cargarDatos } from "./cargardatos.js";
 
 import { inicializarCompra } from "./BDC/LOGICbdc.js";
 
-import { supabase } from "./supabase.js";
+import { supabase } from "../supabase.js";
 
 import { HTMLbdc } from "./BDC/HTMLbdc.js";
 
@@ -28,6 +29,8 @@ VISTA DEL EVENTO
 
 export async function m2m(app) {
 
+const userId = obtenerUsuarioLocal();
+  
 app.innerHTML = `
 
 <main>  
