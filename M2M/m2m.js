@@ -1,4 +1,4 @@
-import { obtenerUsuarioLocal } from "../usuarioID.js"; 
+import { obtenerUsuarioLocal } from "../socioID.js"; 
 
 import { cargarDatos } from "./cargardatos.js";
 
@@ -29,7 +29,7 @@ VISTA DEL EVENTO
 
 export async function m2m(app) {
 
-const userId = obtenerUsuarioLocal();
+const socioId = obtenerUsuarioLocal();
   
 app.innerHTML = `
 
@@ -128,7 +128,7 @@ try {
 
 await cargarSocioStyle();  
 
-await cargarEvento(userId);
+await cargarEvento(socioId);
 
 } catch (error) {
 
@@ -167,10 +167,10 @@ document.getElementById(
 
 
 const evento =
-await obtenerEvento(userId);
+await obtenerEvento(socioId);
   
 const tickets =
-  await obtenerTickets(userId);
+  await obtenerTickets(socioId);
 
   
 cargarDatos(evento);
