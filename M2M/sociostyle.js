@@ -1,4 +1,4 @@
-import {obtenerUsuarioLocal} from "../usuarioID.js";
+import {obtenerUsuarioLocal} from "../socioID.js";
 
 import { supabase } from "../supabase.js";
 
