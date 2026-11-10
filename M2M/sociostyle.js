@@ -1,45 +1,13 @@
-import { supabase } from "./supabase.js";
+import {obtenerUsuarioLocal} from "../usuarioId.js;
+
+import { supabase } from "../supabase.js";
 
 import { planillas }
   from "./planillas/index.js";
 
 
 
-/*
- * ============================================================
- * OBTENER ID DEL EVENTO DESDE LA URL
- * ============================================================
- */
 
-function obtenerEventId() {
-
-  const hash =
-    window.location.hash;
-
-
-  const partes =
-    hash
-      .replace(/^#\/?/, "")
-      .split("/");
-
-
-  if (
-    partes[0] !== "evento" ||
-    !partes[1]
-  ) {
-
-    console.error(
-      "No se pudo obtener el eventid desde la URL."
-    );
-
-    return null;
-
-  }
-
-
-  return partes[1];
-
-}
 
 
 
@@ -131,22 +99,12 @@ function ejecutarPlanilla(numero) {
  * ============================================================
  */
 
+
+
 export async function cargarSocioStyle() {
 
-  /*
-   * OBTENER EVENTID
-   */
-
-  const eventId =
-    obtenerEventId();
-
-
-  if (!eventId) {
-
-    return;
-
-  }
-
+  
+const socioId = obtenerUsuarioLocal()
 
 
   /*
@@ -162,14 +120,14 @@ export async function cargarSocioStyle() {
     await supabase
       .from("sociostyle")
       .select(`
-        eventid,
+        socioid,
         "color de fondo",
         planilla,
         tipografia
       `)
       .eq(
-        "eventid",
-        eventId
+        "socioid"
+        socioId
       )
       .maybeSingle();
 
