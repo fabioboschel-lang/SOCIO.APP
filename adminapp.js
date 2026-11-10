@@ -9,7 +9,7 @@ import {
 
 import {
   obtenerUsuarioLocal
-} from "./usuarioID.js";
+} from "./socioID.js";
 
 
 /* =========================
