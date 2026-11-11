@@ -38,7 +38,7 @@ OBTENER TICKETS
 */
 
 
-export async function obtenerTickets(eventoID) {
+export async function obtenerTickets(socioId) {
 
   const {
     data: tickets,
@@ -47,9 +47,9 @@ export async function obtenerTickets(eventoID) {
     await supabase
       .from("ticketsdate")
       .select(`
-        id,
+        
 
-        evento_id,
+        socioid,
 
         tipo1,
         tipo2,
@@ -68,8 +68,8 @@ export async function obtenerTickets(eventoID) {
         valor7
       `)
       .eq(
-        "evento_id",
-        eventoID
+        "socioid",
+        socioId
       )
       .maybeSingle();
 
