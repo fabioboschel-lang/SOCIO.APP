@@ -153,7 +153,7 @@ CARGAR EVENTO
 */
 
 
-async function cargarEvento(userId) {
+async function cargarEvento(socioId) {
 
 const loading =
 document.getElementById(
