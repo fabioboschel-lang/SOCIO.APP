@@ -1,238 +1,124 @@
-import { obtenerUsuarioLocal } from "../socioID.js"; 
-
+import { obtenerUsuarioLocal } from "../socioID.js";
 import { cargarDatos } from "./cargardatos.js";
-
 import { inicializarCompra } from "./BDC/LOGICbdc.js";
-
 import { supabase } from "../supabase.js";
-
-import { HTMLbdc } from "./BDC/HTMLbdc.js";
-
 import { obtenerEvento } from "./eventosDB.js";
-
 import { cargarSocioStyle } from "./sociostyle.js";
-
-import {
-  obtenerTickets,
-  obtenerCantidadesSeleccionadas
-} from "./BDC/ticketsDB.js";
+import { obtenerTickets, obtenerCantidadesSeleccionadas } from "./BDC/ticketsDB.js";
+import { visualizacionHTML } from "./visualización.js";
+import { edicionHTML } from "./edicion.js";
+import { alternadorHTML } from "./alternadorHTML.js";
+import { inicializarAlternador } from "./alternador.js";
 
 /*
-
 ============================================================
-
 VISTA DEL EVENTO
-
 ============================================================
 */
-
 
 export async function m2m(app) {
+  const socioId = obtenerUsuarioLocal();
 
-const socioId = obtenerUsuarioLocal();
-  
-app.innerHTML = `
+  cargarEstilosM2M();
 
-<main>  
+  app.innerHTML = `
+    ${visualizacionHTML}
+    ${edicionHTML}
+    ${alternadorHTML}
+  `;
 
-  <div  
-    id="eventoLoading"  
-    class="evento-loading"  
-  >  
-    Cargando X...  
-  </div>  
+  inicializarAlternador();
 
+  /*
+  ==========================================================
+  CARGAR ESTILO Y EVENTO
+  ==========================================================
+  Primero se obtiene y aplica sociostyle.
+  Después se carga y presenta el evento.
+  ==========================================================
+  */
 
-  <section  
-    id="eventoContainer"  
-    class="evento-container"  
-    style="display: none;"  
-  >  
-
-    <div  
-      class="evento-image-container"  
-    >  
-
-      <img  
-        id="eventoImagen"  
-        class="evento-image"  
-        alt="Imagen del evento"  
-      >  
-
-    </div>  
-
-
-    <h1  
-      id="eventoNombre"  
-      class="evento-name"  
-    ></h1>  
-
-
-    <p  
-      id="eventoDescripcion"  
-      class="evento-description"  
-    ></p>  
-
-
-    <div  
-      id="eventoFecha"  
-      class="evento-data"  
-    ></div>  
-
-
-    <div  
-      id="eventoValor"  
-      class="evento-price"  
-    ></div>  
-
-
-    ${HTMLbdc}</section>  
-
-
-  <div  
-    id="eventoError"  
-    class="evento-error"  
-    style="display: none;"  
-  >  
-    No se pudo encontrar este evento.  
-  </div>  
-
-</main>
-
-`;
-
-
-
-
-
+  try {
+    await cargarSocioStyle();
+    await cargarEvento(socioId);
+  } catch (error) {
+    console.error("Error inicializando evento:", error);
+    mostrarError();
+  }
+}
 
 /*
-
-==========================================================
-
-CARGAR ESTILO Y EVENTO
-
-==========================================================
-
-Primero se obtiene y aplica sociostyle.
-
-Después se carga y presenta el evento.
-
-De esta manera la interfaz no se muestra antes
-
-de que su configuración visual haya sido aplicada.
+============================================================
+CARGAR ESTILOS DE M2M
+============================================================
+Los estilos se agregan una sola vez y sólo se cargan al entrar
+en esta interfaz. Se usan URLs relativas al módulo actual.
+============================================================
 */
 
+function cargarEstilosM2M() {
+  const estilos = [
+    { id: "alternador", ruta: "./CSS/alternador.css" },
+    { id: "edicion", ruta: "./CSS/edicion.css" }
+  ];
 
-try {
+  estilos.forEach(({ id, ruta }) => {
+    if (document.querySelector(`link[data-m2m-style="${id}"]`)) {
+      return;
+    }
 
-await cargarSocioStyle();  
-
-await cargarEvento(socioId);
-
-} catch (error) {
-
-console.error(  
-  "Error inicializando evento:",  
-  error  
-);  
-
-mostrarError();
-
-}
-
+    const link = document.createElement("link");
+    link.rel = "stylesheet";
+    link.href = new URL(ruta, import.meta.url).href;
+    link.dataset.m2mStyle = id;
+    document.head.appendChild(link);
+  });
 }
 
 /*
-
 ============================================================
-
 CARGAR EVENTO
-
 ============================================================
 */
-
 
 async function cargarEvento(socioId) {
+  const loading = document.getElementById("eventoLoading");
+  const container = document.getElementById("eventoContainer");
 
-const loading =
-document.getElementById(
-"eventoLoading"
-);
+  const evento = await obtenerEvento(socioId);
+  const tickets = await obtenerTickets(socioId);
 
-const container =
-document.getElementById(
-"eventoContainer"
-);
+  cargarDatos(evento);
+  inicializarCompra(evento, eventId, userId);
 
+  /*
+  ==========================================================
+  MOSTRAR EVENTO
+  ==========================================================
+  El estilo de sociostyle ya fue aplicado antes de llegar
+  a este punto.
+  ==========================================================
+  */
 
-const evento =
-await obtenerEvento(socioId);
-  
-const tickets =
-  await obtenerTickets(socioId);
-
-  
-cargarDatos(evento);
-
-inicializarCompra(  evento, eventId, userId );
-
-/*
-
-==========================================================
-
-MOSTRAR EVENTO
-
-==========================================================
-
-El estilo de sociostyle ya fue aplicado antes de llegar
-
-a este punto.
-*/
-
-
-loading.style.display =
-"none";
-
-container.style.display =
-"block";
-
+  loading.style.display = "none";
+  container.style.display = "block";
 }
 
 /*
-
 ============================================================
-
 MOSTRAR ERROR
-
 ============================================================
 */
-
 
 function mostrarError() {
+  const loading = document.getElementById("eventoLoading");
+  const errorElement = document.getElementById("eventoError");
 
-const loading =
-document.getElementById(
-"eventoLoading"
-);
+  if (loading) {
+    loading.style.display = "none";
+  }
 
-const errorElement =
-document.getElementById(
-"eventoError"
-);
-
-if (loading) {
-
-loading.style.display =  
-  "none";
-
-}
-
-if (errorElement) {
-
-errorElement.style.display =  
-  "block";
-
-}
-
+  if (errorElement) {
+    errorElement.style.display = "block";
+  }
 }
