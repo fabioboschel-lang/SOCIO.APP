@@ -142,5 +142,6 @@ export async function cargarSocioStyle() {
 
   } catch (error) {
     console.error("Excepción inesperada cargando o aplicando sociostyle:", { socioId, error });
+    throw error;
   }
 }
