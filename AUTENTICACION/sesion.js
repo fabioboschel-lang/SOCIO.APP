@@ -14,7 +14,7 @@ export function Sesion(app) {
 </div>
 
 <div class="session-description">
-  Ticketera especializada en <br> boliches y discotecas
+  Ticketera especializada en <br> biches y discotecas
 </div>
 
 <div class="session-benefits">
