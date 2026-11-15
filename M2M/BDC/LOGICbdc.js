@@ -52,6 +52,7 @@ export function inicializarCompra(  evento, eventId, userId ) {
 comprarBtn.addEventListener(
   "click",
   async () => {
+    try {
 
     /*
     ======================================================
@@ -270,6 +271,9 @@ if (
 
 }
 
+    } catch (error) {
+      console.error("Error procesando la acción de compra:", error);
+    }
   }
 );
 
