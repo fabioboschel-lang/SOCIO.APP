@@ -1,0 +1,43 @@
+name: Pruebas automatizadas
+
+on:
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+jobs:
+  pruebas:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Descargar repositorio
+        uses: actions/checkout@v4
+
+      - name: Configurar Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: 22
+
+      - name: Instalar dependencias
+        working-directory: pruebas automatizadas
+        run: npm install
+
+      - name: Instalar Chromium
+        working-directory: pruebas automatizadas
+        run: npx playwright install --with-deps chromium
+
+      - name: Ejecutar pruebas
+        working-directory: pruebas automatizadas
+        run: npm test
+
+      - name: Guardar informe y evidencias
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: informe-pruebas-playwright
+          path: |
+            pruebas automatizadas/playwright-report/
+            pruebas automatizadas/test-results/
+          if-no-files-found: ignore
+          retention-days: 7
