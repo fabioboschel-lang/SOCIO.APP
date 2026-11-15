@@ -78,7 +78,7 @@ export async function obtenerTickets(socioId) {
         .maybeSingle());
   } catch (requestError) {
     console.error("Excepción consultando tickets en Supabase:", { socioId, error: requestError });
-    return null;
+    throw requestError;
   }
 
 
