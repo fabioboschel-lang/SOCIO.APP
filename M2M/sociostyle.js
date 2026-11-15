@@ -102,127 +102,45 @@ function ejecutarPlanilla(numero) {
 
 
 export async function cargarSocioStyle() {
+  let socioId = null;
 
-  
-const socioId = obtenerUsuarioLocal()
+  try {
+    socioId = obtenerUsuarioLocal();
 
-
-  /*
-   * ==========================================================
-   * CONSULTAR CONFIGURACIÓN
-   * ==========================================================
-   */
-
-  const {
-    data: estilo,
-    error
-  } =
-    await supabase
-      .from("sociostyle")
-      .select(`
-        socioid,
-        "color de fondo",
-        planilla,
-        tipografia
-      `)
-      .eq(
-        "socioid",
-        socioId
-      )
-      .maybeSingle();
-
-
-
-  /*
-   * ERROR
-   */
-
-  if (error) {
-
-    console.error(
-      "Error obteniendo sociostyle:",
+    const {
+      data: estilo,
       error
-    );
+    } =
+      await supabase
+        .from("sociostyle")
+        .select(`
+          socioid,
+          "color de fondo",
+          planilla,
+          tipografia
+        `)
+        .eq("socioid", socioId)
+        .maybeSingle();
 
-    return;
+    if (error) {
+      console.error("Error obteniendo sociostyle:", { socioId, error });
+      return;
+    }
 
+    if (!estilo) {
+      console.error("No existe configuración sociostyle para el evento:", socioId);
+      return;
+    }
+
+    const colorFondo = estilo["color de fondo"];
+    const tipografia = estilo.tipografia;
+    const numeroPlanilla = estilo.planilla;
+
+    aplicarColorFondo(colorFondo);
+    aplicarTipografia(tipografia);
+    ejecutarPlanilla(numeroPlanilla);
+
+  } catch (error) {
+    console.error("Excepción inesperada cargando o aplicando sociostyle:", { socioId, error });
   }
-
-
-
-  /*
-   * ==========================================================
-   * CONFIGURACIÓN NO ENCONTRADA
-   * ==========================================================
-   */
-
-  if (!estilo) {
-
-    console.error(
-      "No existe configuración sociostyle para el evento:",
-      socioId
-    );
-
-    return;
-
-  }
-
-
-
-  /*
-   * ==========================================================
-   * EXTRAER VALORES
-   * ==========================================================
-   */
-
-  const colorFondo =
-    estilo["color de fondo"];
-
-
-  const tipografia =
-    estilo.tipografia;
-
-
-  const numeroPlanilla =
-    estilo.planilla;
-
-
-
-  /*
-   * ==========================================================
-   * APLICAR COLOR
-   * ==========================================================
-   */
-
-  aplicarColorFondo(
-    colorFondo
-  );
-
-
-
-  /*
-   * ==========================================================
-   * APLICAR TIPOGRAFÍA
-   * ==========================================================
-   */
-
-  aplicarTipografia(
-    tipografia
-  );
-
-
-
-  /*
-   * ==========================================================
-   * APLICAR PLANILLA
-   * ==========================================================
-   */
-
-  ejecutarPlanilla(
-    numeroPlanilla
-  );
-
 }
-
-
-
