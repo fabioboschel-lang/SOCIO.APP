@@ -23,3 +23,67 @@
   font-weight: 600;
   cursor: pointer;
 }
+
+/* Selector de colores de la interfaz de visualización */
+#selectorColores {
+  display: flex;
+  flex-direction: column;
+  gap: 24px;
+  width: 100%;
+  box-sizing: border-box;
+  padding: 24px 16px 100px;
+}
+
+.selector-colores-grupo {
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+}
+
+.selector-colores-titulo {
+  margin: 0;
+  font-size: 16px;
+  font-weight: 600;
+}
+
+.selector-colores-opciones {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 12px;
+}
+
+.selector-color {
+  position: relative;
+  display: inline-flex;
+  width: 34px;
+  height: 34px;
+  cursor: pointer;
+}
+
+.selector-color input {
+  position: absolute;
+  width: 1px;
+  height: 1px;
+  opacity: 0;
+}
+
+.selector-color span {
+  display: block;
+  width: 30px;
+  height: 30px;
+  box-sizing: border-box;
+  border: 1px solid #9ca3af;
+  border-radius: 50%;
+  background: var(--color-opcion);
+}
+
+.selector-color input:checked + span {
+  outline: 3px solid #8b5cf6;
+  outline-offset: 3px;
+}
+
+.selector-color input:focus-visible + span {
+  outline: 3px solid #2563eb;
+  outline-offset: 4px;
+}
