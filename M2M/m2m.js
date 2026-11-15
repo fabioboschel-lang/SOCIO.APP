@@ -16,68 +16,65 @@ VISTA DEL EVENTO
 */
 
 export async function m2m(app) {
-  const socioId = obtenerUsuarioLocal();
-
-  app.innerHTML = `
-    ${visualizacionHTML}
-    ${edicionHTML}
-    ${alternadorHTML}
-  `;
-
-  inicializarAlternador();
-
-  /*
-  ==========================================================
-  CARGAR ESTILO Y EVENTO
-  ==========================================================
-  Primero se obtiene y aplica sociostyle.
-  Después se carga y presenta el evento.
-  ==========================================================
-  */
+  let etapa = "obtener usuario local";
 
   try {
+    const socioId = obtenerUsuarioLocal();
+
+    etapa = "renderizar estructura HTML";
+    app.innerHTML = `
+      ${visualizacionHTML}
+      ${edicionHTML}
+      ${alternadorHTML}
+    `;
+
+    etapa = "inicializar alternador";
+    inicializarAlternador();
+
+    etapa = "cargar sociostyle";
     await cargarSocioStyle();
+
+    etapa = "cargar evento";
     await cargarEvento(socioId);
+
   } catch (error) {
-    console.error("Error inicializando evento:", error);
+    console.error(`Error inicializando M2M durante: ${etapa}`, error);
     mostrarError();
   }
 }
 
-/*
-============================================================
-CARGAR EVENTO
-============================================================
-*/
-
 async function cargarEvento(socioId) {
-  const loading = document.getElementById("eventoLoading");
-  const container = document.getElementById("eventoContainer");
+  let etapa = "obtener referencias del HTML";
 
-  const evento = await obtenerEvento(socioId);
-  const tickets = await obtenerTickets(socioId);
+  try {
+    const loading = document.getElementById("eventoLoading");
+    const container = document.getElementById("eventoContainer");
 
-  cargarDatos(evento);
-  
+    if (!loading || !container) {
+      throw new Error("No se encontraron los elementos eventoLoading o eventoContainer.");
+    }
 
-  /*
-  ==========================================================
-  MOSTRAR EVENTO
-  ==========================================================
-  El estilo de sociostyle ya fue aplicado antes de llegar
-  a este punto.
-  ==========================================================
-  */
+    etapa = "consultar evento en Supabase";
+    const evento = await obtenerEvento(socioId);
 
-  loading.style.display = "none";
-  container.style.display = "block";
+    if (!evento) {
+      throw new Error(`No se recibió un evento para el socioId: ${socioId ?? "null"}.`);
+    }
+
+    etapa = "consultar tickets en Supabase";
+    const tickets = await obtenerTickets(socioId);
+
+    etapa = "cargar datos del evento en el HTML";
+    cargarDatos(evento);
+
+    loading.style.display = "none";
+    container.style.display = "block";
+
+  } catch (error) {
+    console.error(`Error cargando evento durante: ${etapa}`, error);
+    throw error;
+  }
 }
-
-/*
-============================================================
-MOSTRAR ERROR
-============================================================
-*/
 
 function mostrarError() {
   const loading = document.getElementById("eventoLoading");
@@ -89,5 +86,7 @@ function mostrarError() {
 
   if (errorElement) {
     errorElement.style.display = "block";
+  } else {
+    console.error("No se pudo mostrar el error: no existe el elemento eventoError.");
   }
 }
