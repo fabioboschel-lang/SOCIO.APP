@@ -40,11 +40,15 @@ OBTENER TICKETS
 
 export async function obtenerTickets(socioId) {
 
-  const {
-    data: tickets,
-    error
-  } =
-    await supabase
+  let tickets;
+  let error;
+
+  try {
+    ({
+      data: tickets,
+      error
+    } =
+      await supabase
       .from("ticketsdate")
       .select(`
         
@@ -71,7 +75,11 @@ export async function obtenerTickets(socioId) {
         "socioid",
         socioId
       )
-      .maybeSingle();
+        .maybeSingle());
+  } catch (requestError) {
+    console.error("Excepción consultando tickets en Supabase:", { socioId, error: requestError });
+    return null;
+  }
 
 
   /*
