@@ -1,6 +1,5 @@
 import { obtenerUsuarioLocal } from "../socioID.js";
 import { cargarDatos } from "./cargardatos.js";
-import { inicializarCompra } from "./BDC/LOGICbdc.js";
 import { supabase } from "../supabase.js";
 import { obtenerEvento } from "./eventosDB.js";
 import { cargarSocioStyle } from "./sociostyle.js";
@@ -59,7 +58,7 @@ async function cargarEvento(socioId) {
   const tickets = await obtenerTickets(socioId);
 
   cargarDatos(evento);
-  inicializarCompra(evento, eventId, userId);
+  
 
   /*
   ==========================================================
