@@ -19,8 +19,6 @@ VISTA DEL EVENTO
 export async function m2m(app) {
   const socioId = obtenerUsuarioLocal();
 
-  cargarEstilosM2M();
-
   app.innerHTML = `
     ${visualizacionHTML}
     ${edicionHTML}
@@ -45,34 +43,6 @@ export async function m2m(app) {
     console.error("Error inicializando evento:", error);
     mostrarError();
   }
-}
-
-/*
-============================================================
-CARGAR ESTILOS DE M2M
-============================================================
-Los estilos se agregan una sola vez y sólo se cargan al entrar
-en esta interfaz. Se usan URLs relativas al módulo actual.
-============================================================
-*/
-
-function cargarEstilosM2M() {
-  const estilos = [
-    { id: "alternador", ruta: "./CSS/alternador.css" },
-    { id: "edicion", ruta: "./CSS/edicion.css" }
-  ];
-
-  estilos.forEach(({ id, ruta }) => {
-    if (document.querySelector(`link[data-m2m-style="${id}"]`)) {
-      return;
-    }
-
-    const link = document.createElement("link");
-    link.rel = "stylesheet";
-    link.href = new URL(ruta, import.meta.url).href;
-    link.dataset.m2mStyle = id;
-    document.head.appendChild(link);
-  });
 }
 
 /*
