@@ -45,7 +45,7 @@ export function NavigateCreate(navigate) {
     </svg>
 
     <span>
-      Crear
+      Cre
     </span>
 
   `;
