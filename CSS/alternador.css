@@ -148,8 +148,3 @@
   }
 }
 
-
-/* El alternador no se utiliza cuando ambas vistas están abiertas. */
-#app.m2m-escritorio:has(> #visualizacionContainer) > #alternadorM2M {
-  display: none;
-}
