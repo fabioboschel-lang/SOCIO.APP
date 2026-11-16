@@ -15,6 +15,7 @@ export function inicializarAlternador() {
   }
 
   const DURACION_TRANSICION = 240;
+  let transicionando = false;
 
   function actualizarTexto() {
     const edicionVisible = edicion.style.display === "block";
@@ -36,6 +37,9 @@ export function inicializarAlternador() {
   }
 
   function alternarVistas() {
+    if (transicionando) return;
+
+    transicionando = true;
     const edicionVisible = edicion.style.display === "block";
     const vistaActual = edicionVisible ? edicion : visualizacion;
     const vistaNueva = edicionVisible ? visualizacion : edicion;
@@ -56,6 +60,7 @@ export function inicializarAlternador() {
     window.setTimeout(() => {
       vistaActual.style.display = "none";
       vistaActual.classList.remove("m2m-vista-saliendo");
+      transicionando = false;
     }, DURACION_TRANSICION);
   }
 
