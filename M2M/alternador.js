@@ -8,14 +8,17 @@ export function inicializarAlternador() {
   const boton = document.getElementById("alternadorM2M");
   const visualizacion = document.getElementById("visualizacionContainer");
   const edicion = document.getElementById("edicionContainer");
+  const app = document.getElementById("app");
 
-  if (!boton || !visualizacion || !edicion) {
+  if (!boton || !visualizacion || !edicion || !app) {
     console.error("No se pudo inicializar el alternador M2M.");
     return;
   }
 
   const DURACION_TRANSICION = 240;
+  const consultaEscritorio = window.matchMedia("(min-width: 1025px) and (pointer: fine)");
   let transicionando = false;
+  let temporizadorTransicion = null;
 
   function actualizarTexto() {
     const edicionVisible = edicion.style.display === "block";
@@ -36,8 +39,32 @@ export function inicializarAlternador() {
     boton.classList.add("cambiando");
   }
 
+  function aplicarModoDispositivo() {
+    if (temporizadorTransicion !== null) {
+      window.clearTimeout(temporizadorTransicion);
+      temporizadorTransicion = null;
+    }
+
+    transicionando = false;
+    visualizacion.classList.remove("m2m-vista-entrando", "m2m-vista-saliendo");
+    edicion.classList.remove("m2m-vista-entrando", "m2m-vista-saliendo");
+
+    if (consultaEscritorio.matches) {
+      app.classList.add("m2m-escritorio");
+      visualizacion.style.display = "block";
+      edicion.style.display = "block";
+      boton.classList.remove("cambiando");
+      return;
+    }
+
+    app.classList.remove("m2m-escritorio");
+    visualizacion.style.display = "block";
+    edicion.style.display = "none";
+    actualizarTexto();
+  }
+
   function alternarVistas() {
-    if (transicionando) return;
+    if (transicionando || consultaEscritorio.matches) return;
 
     transicionando = true;
     const edicionVisible = edicion.style.display === "block";
@@ -57,14 +84,21 @@ export function inicializarAlternador() {
       vistaNueva.classList.remove("m2m-vista-entrando");
     });
 
-    window.setTimeout(() => {
+    temporizadorTransicion = window.setTimeout(() => {
       vistaActual.style.display = "none";
       vistaActual.classList.remove("m2m-vista-saliendo");
       transicionando = false;
+      temporizadorTransicion = null;
     }, DURACION_TRANSICION);
   }
 
-  actualizarTexto();
+  aplicarModoDispositivo();
+
+  if (typeof consultaEscritorio.addEventListener === "function") {
+    consultaEscritorio.addEventListener("change", aplicarModoDispositivo);
+  } else {
+    consultaEscritorio.addListener(aplicarModoDispositivo);
+  }
 
   let pointerActivo = null;
   let inicioX = 0;
@@ -76,6 +110,7 @@ export function inicializarAlternador() {
   let seMovio = false;
 
   boton.addEventListener("pointerdown", (evento) => {
+    if (consultaEscritorio.matches) return;
     if (evento.button !== undefined && evento.button !== 0) return;
 
     const rect = boton.getBoundingClientRect();
