@@ -240,3 +240,25 @@ body {
   }
 
 }
+
+
+/* =========================
+   DISTRIBUCIÓN EN ESCRITORIO
+   ========================= */
+
+#app.m2m-escritorio:has(> #visualizacionContainer) {
+  display: grid;
+  grid-template-columns: minmax(0, 3fr) minmax(0, 7fr);
+  align-items: start;
+  width: 100%;
+}
+
+#app.m2m-escritorio > #visualizacionContainer,
+#app.m2m-escritorio > #edicionContainer {
+  width: 100%;
+  min-width: 0;
+}
+
+#app.m2m-escritorio > #visualizacionContainer .evento-container {
+  max-width: none;
+}
