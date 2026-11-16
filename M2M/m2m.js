@@ -2,7 +2,7 @@ import { obtenerUsuarioLocal } from "../socioID.js";
 import { cargarDatos } from "./cargardatos.js";
 import { supabase } from "../supabase.js";
 import { obtenerEvento } from "./eventosDB.js";
-import { cargarSocioStyle } from "./sociostyle.js";
+import { cargarSocioStyle, previsualizarColorFondo, previsualizarTipografia, previsualizarPlanilla } from "./sociostyle.js";
 import { obtenerTickets, obtenerCantidadesSeleccionadas } from "./BDC/ticketsDB.js";
 import { visualizacionHTML } from "./visualización.js";
 import { edicionHTML } from "./edicion.js";
@@ -27,6 +27,25 @@ export async function m2m(app) {
       ${edicionHTML}
       ${alternadorHTML}
     `;
+
+    etapa = "inicializar previsualización de personalización";
+    document.querySelectorAll('input[name="colorFondo"]').forEach((selector) => {
+      selector.addEventListener("change", () => {
+        previsualizarColorFondo(selector.value);
+      });
+    });
+
+    document.querySelectorAll('input[name="tipografia"]').forEach((selector) => {
+      selector.addEventListener("change", () => {
+        previsualizarTipografia(selector.value);
+      });
+    });
+
+    document.querySelectorAll('input[name="estetica"]').forEach((selector) => {
+      selector.addEventListener("change", () => {
+        previsualizarPlanilla(selector.value);
+      });
+    });
 
     etapa = "inicializar guardado de personalización";
     const guardarEdicion = document.getElementById("guardarEdicion");
