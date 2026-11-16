@@ -42,6 +42,14 @@ body:has(#app.m2m-escritorio) {
   overflow: hidden;
 }
 
+#app.m2m-escritorio > #edicionContainer #guardarEdicion {
+  position: absolute;
+  left: 50%;
+  width: calc(100% - 40px);
+  max-width: 480px;
+  transform: translateX(-50%);
+}
+
 #app.m2m-escritorio > #visualizacionContainer .evento-container {
   max-width: none;
 }
