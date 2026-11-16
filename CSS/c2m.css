@@ -31,6 +31,14 @@ body:has(#app.m2m-escritorio) {
   max-height: 100%;
 }
 
+#app.m2m-escritorio > #edicionContainer {
+  grid-column: 1;
+}
+
+#app.m2m-escritorio > #visualizacionContainer {
+  grid-column: 2;
+}
+
 #app.m2m-escritorio > #visualizacionContainer {
   overflow-x: hidden;
   overflow-y: auto;
