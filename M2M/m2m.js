@@ -44,8 +44,18 @@ export async function m2m(app) {
         return;
       }
 
-      if (!colorFondo || !tipografia) {
-        alert("Seleccioná un color de fondo y una tipografía antes de guardar.");
+      const actualizaciones = {};
+
+      if (colorFondo) {
+        actualizaciones["color de fondo"] = colorFondo;
+      }
+
+      if (tipografia) {
+        actualizaciones.tipografia = tipografia;
+      }
+
+      if (Object.keys(actualizaciones).length === 0) {
+        alert("Seleccioná al menos una opción antes de guardar.");
         return;
       }
 
@@ -54,10 +64,7 @@ export async function m2m(app) {
       try {
         const { data, error } = await supabase
           .from("sociostyle")
-          .update({
-            "color de fondo": colorFondo,
-            tipografia: tipografia
-          })
+          .update(actualizaciones)
           .eq("socioid", socioId)
           .select("socioid");
 
