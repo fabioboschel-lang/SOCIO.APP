@@ -6,7 +6,7 @@ DISTRIBUCIÓN Y COMPORTAMIENTO EXCLUSIVOS DE COMPUTADORAS
 
 #app.m2m-escritorio:has(> #visualizacionContainer) {
   display: grid;
-  grid-template-columns: minmax(0, 6fr) minmax(0, 4fr);
+  grid-template-columns: minmax(0, 4fr) minmax(0, 6fr);
   grid-template-rows: minmax(0, 1fr);
   align-items: stretch;
   width: 100%;
@@ -29,14 +29,6 @@ body:has(#app.m2m-escritorio) {
   min-width: 0;
   min-height: 0;
   max-height: 100%;
-}
-
-#app.m2m-escritorio > #edicionContainer {
-  grid-column: 1;
-}
-
-#app.m2m-escritorio > #visualizacionContainer {
-  grid-column: 2;
 }
 
 #app.m2m-escritorio > #visualizacionContainer {
