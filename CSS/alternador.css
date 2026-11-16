@@ -6,20 +6,22 @@
   display: flex;
   align-items: center;
   justify-content: center;
-  min-width: 112px;
-  min-height: 48px;
-  padding: 0 25px;
-  border: 1px solid #e7bd63;
-  border-radius: 15px;
-  background: linear-gradient(135deg, #102b55 0%, #17477c 100%);
-  color: #f5d58a;
+  width: 58px;
+  height: 58px;
+  min-width: 58px;
+  min-height: 58px;
+  padding: 0;
+  border: 2px solid #173f70;
+  border-radius: 50%;
+  background: linear-gradient(135deg, #ffe6a3 0%, #d9a83f 100%);
+  color: #102b55;
   box-shadow:
     0 5px 18px rgba(4, 15, 35, 0.32),
-    inset 0 1px 0 rgba(255, 255, 255, 0.16),
-    0 0 0 1px rgba(231, 189, 99, 0.12);
-  font-size: 15px;
-  font-weight: 700;
-  letter-spacing: 0.045em;
+    inset 0 1px 0 rgba(255, 255, 255, 0.42),
+    0 0 0 1px rgba(23, 63, 112, 0.16);
+  font-size: 13px;
+  font-weight: 800;
+  letter-spacing: 0.015em;
   line-height: 1;
   cursor: grab;
   touch-action: none;
@@ -42,7 +44,7 @@
   background: linear-gradient(
     110deg,
     transparent 20%,
-    rgba(255, 231, 176, 0.2) 48%,
+    rgba(255, 255, 255, 0.42) 48%,
     transparent 72%
   );
   transform: translateX(-130%);
@@ -51,11 +53,11 @@
 
 .alternador-m2m:hover {
   transform: translateY(-3px);
-  border-color: #ffe3a0;
+  border-color: #0b2749;
   box-shadow:
     0 9px 25px rgba(4, 15, 35, 0.38),
-    0 0 17px rgba(231, 189, 99, 0.28),
-    inset 0 1px 0 rgba(255, 255, 255, 0.2);
+    0 0 17px rgba(23, 63, 112, 0.3),
+    inset 0 1px 0 rgba(255, 255, 255, 0.5);
 }
 
 .alternador-m2m:hover::before {
@@ -67,13 +69,13 @@
 }
 
 .alternador-m2m:focus-visible {
-  outline: 3px solid rgba(245, 213, 138, 0.65);
+  outline: 3px solid rgba(23, 63, 112, 0.55);
   outline-offset: 4px;
 }
 
 .alternador-m2m-texto {
   display: inline-block;
-  text-shadow: 0 1px 7px rgba(245, 213, 138, 0.2);
+  text-shadow: 0 1px 5px rgba(16, 43, 85, 0.14);
 }
 
 .alternador-m2m.cambiando .alternador-m2m-texto {
@@ -85,7 +87,7 @@
   transform: scale(1.03);
   box-shadow:
     0 12px 28px rgba(4, 15, 35, 0.4),
-    0 0 20px rgba(231, 189, 99, 0.3);
+    0 0 20px rgba(23, 63, 112, 0.34);
   transition: box-shadow 160ms ease;
 }
 
