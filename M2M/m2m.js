@@ -28,6 +28,52 @@ export async function m2m(app) {
       ${alternadorHTML}
     `;
 
+    etapa = "inicializar guardado de color";
+    const guardarEdicion = document.getElementById("guardarEdicion");
+
+    if (!guardarEdicion) {
+      throw new Error("No se encontró el botón guardarEdicion.");
+    }
+
+    guardarEdicion.addEventListener("click", async () => {
+      const colorFondo = document.querySelector('input[name="colorFondo"]:checked')?.value;
+
+      if (!socioId) {
+        alert("No se pudo identificar el socio.");
+        return;
+      }
+
+      if (!colorFondo) {
+        alert("Seleccioná un color de fondo antes de guardar.");
+        return;
+      }
+
+      guardarEdicion.disabled = true;
+
+      try {
+        const { data, error } = await supabase
+          .from("sociostyle")
+          .update({ "color de fondo": colorFondo })
+          .eq("socioid", socioId)
+          .select("socioid");
+
+        if (error) {
+          throw error;
+        }
+
+        if (!data || data.length === 0) {
+          throw new Error("No se encontró una fila de sociostyle para este socio.");
+        }
+
+        alert("Color de fondo guardado correctamente.");
+      } catch (error) {
+        console.error("Error al guardar el color de fondo:", error);
+        alert("No se pudo guardar el color de fondo.");
+      } finally {
+        guardarEdicion.disabled = false;
+      }
+    });
+
     etapa = "inicializar alternador";
     inicializarAlternador();
 
