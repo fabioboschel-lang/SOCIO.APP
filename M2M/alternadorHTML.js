@@ -9,9 +9,9 @@ export const alternadorHTML = `
   id="alternadorM2M"
   class="alternador-m2m"
   type="button"
-  aria-label="Alternar entre visualización y edición"
-  title="Alternar vista"
+  aria-label="Editar personalización del evento"
+  title="Editar evento"
 >
-  ⇄
+  <span class="alternador-m2m-texto">Editar</span>
 </button>
 `;
