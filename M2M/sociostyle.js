@@ -20,8 +20,12 @@ import { planillas }
 
 function aplicarColorFondo(color) {
 
-  document.body.style.backgroundColor =
-    color;
+  const visualizacion =
+    document.getElementById("visualizacionContainer");
+
+  if (visualizacion) {
+    visualizacion.style.backgroundColor = color;
+  }
 
 }
 
