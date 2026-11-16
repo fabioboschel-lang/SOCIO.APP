@@ -14,12 +14,52 @@ export function inicializarAlternador() {
     return;
   }
 
+  const DURACION_TRANSICION = 240;
+
+  function actualizarTexto() {
+    const edicionVisible = edicion.style.display === "block";
+    const texto = boton.querySelector(".alternador-m2m-texto");
+
+    if (texto) {
+      texto.textContent = edicionVisible ? "Ver" : "Editar";
+    }
+
+    boton.setAttribute(
+      "aria-label",
+      edicionVisible ? "Ver visualización del evento" : "Editar personalización del evento"
+    );
+    boton.title = edicionVisible ? "Ver evento" : "Editar evento";
+
+    boton.classList.remove("cambiando");
+    void boton.offsetWidth;
+    boton.classList.add("cambiando");
+  }
+
   function alternarVistas() {
     const edicionVisible = edicion.style.display === "block";
+    const vistaActual = edicionVisible ? edicion : visualizacion;
+    const vistaNueva = edicionVisible ? visualizacion : edicion;
 
-    visualizacion.style.display = edicionVisible ? "block" : "none";
-    edicion.style.display = edicionVisible ? "none" : "block";
+    vistaNueva.style.display = "block";
+    vistaNueva.classList.remove("m2m-vista-saliendo");
+    vistaNueva.classList.add("m2m-vista-entrando");
+
+    vistaActual.classList.remove("m2m-vista-entrando");
+    vistaActual.classList.add("m2m-vista-saliendo");
+
+    actualizarTexto();
+
+    requestAnimationFrame(() => {
+      vistaNueva.classList.remove("m2m-vista-entrando");
+    });
+
+    window.setTimeout(() => {
+      vistaActual.style.display = "none";
+      vistaActual.classList.remove("m2m-vista-saliendo");
+    }, DURACION_TRANSICION);
   }
+
+  actualizarTexto();
 
   let pointerActivo = null;
   let inicioX = 0;
