@@ -87,3 +87,54 @@
   outline: 3px solid #2563eb;
   outline-offset: 4px;
 }
+
+
+/* Selector horizontal de tipografías */
+.selector-tipografias-opciones {
+  display: flex;
+  flex-wrap: nowrap;
+  align-items: center;
+  gap: 12px;
+  width: 100%;
+  overflow-x: auto;
+  overflow-y: hidden;
+  padding: 4px 2px 10px;
+  box-sizing: border-box;
+  -webkit-overflow-scrolling: touch;
+  scrollbar-width: thin;
+}
+
+.selector-tipografia {
+  position: relative;
+  display: inline-flex;
+  flex: 0 0 auto;
+  align-items: center;
+  justify-content: center;
+  min-height: 42px;
+  padding: 8px 14px;
+  border: 1px solid #9ca3af;
+  border-radius: 8px;
+  cursor: pointer;
+  white-space: nowrap;
+}
+
+.selector-tipografia input {
+  position: absolute;
+  width: 1px;
+  height: 1px;
+  opacity: 0;
+}
+
+.selector-tipografia input:checked + span {
+  color: #8b5cf6;
+  font-weight: 700;
+}
+
+.selector-tipografia:has(input:checked) {
+  border: 2px solid #8b5cf6;
+}
+
+.selector-tipografia input:focus-visible + span {
+  outline: 2px solid #2563eb;
+  outline-offset: 4px;
+}
