@@ -90,6 +90,24 @@ export const edicionHTML = `
           </label>
         </div>
       </div>
+
+      <div class="selector-colores-grupo">
+        <h2 class="selector-colores-titulo">Estética</h2>
+        <div class="selector-esteticas-opciones" role="group" aria-label="Seleccionar estética">
+          <label class="selector-estetica">
+            <input type="radio" name="estetica" value="clasica">
+            <span>Clásica</span>
+          </label>
+          <label class="selector-estetica">
+            <input type="radio" name="estetica" value="simple">
+            <span>Simple</span>
+          </label>
+          <label class="selector-estetica">
+            <input type="radio" name="estetica" value="moderna">
+            <span>Moderna</span>
+          </label>
+        </div>
+      </div>
     </section>
     <button id="guardarEdicion" type="button">
     Guardar
