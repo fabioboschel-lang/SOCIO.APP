@@ -28,7 +28,7 @@ export async function m2m(app) {
       ${alternadorHTML}
     `;
 
-    etapa = "inicializar guardado de color";
+    etapa = "inicializar guardado de personalización";
     const guardarEdicion = document.getElementById("guardarEdicion");
 
     if (!guardarEdicion) {
@@ -37,14 +37,15 @@ export async function m2m(app) {
 
     guardarEdicion.addEventListener("click", async () => {
       const colorFondo = document.querySelector('input[name="colorFondo"]:checked')?.value;
+      const tipografia = document.querySelector('input[name="tipografia"]:checked')?.value;
 
       if (!socioId) {
         alert("No se pudo identificar el socio.");
         return;
       }
 
-      if (!colorFondo) {
-        alert("Seleccioná un color de fondo antes de guardar.");
+      if (!colorFondo || !tipografia) {
+        alert("Seleccioná un color de fondo y una tipografía antes de guardar.");
         return;
       }
 
@@ -53,7 +54,10 @@ export async function m2m(app) {
       try {
         const { data, error } = await supabase
           .from("sociostyle")
-          .update({ "color de fondo": colorFondo })
+          .update({
+            "color de fondo": colorFondo,
+            tipografia: tipografia
+          })
           .eq("socioid", socioId)
           .select("socioid");
 
@@ -65,10 +69,10 @@ export async function m2m(app) {
           throw new Error("No se encontró una fila de sociostyle para este socio.");
         }
 
-        alert("Color de fondo guardado correctamente.");
+        alert("Personalización guardada correctamente.");
       } catch (error) {
-        console.error("Error al guardar el color de fondo:", error);
-        alert("No se pudo guardar el color de fondo.");
+        console.error("Error al guardar la personalización:", error);
+        alert("No se pudo guardar la personalización.");
       } finally {
         guardarEdicion.disabled = false;
       }
