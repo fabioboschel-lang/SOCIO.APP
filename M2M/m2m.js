@@ -38,6 +38,7 @@ export async function m2m(app) {
     guardarEdicion.addEventListener("click", async () => {
       const colorFondo = document.querySelector('input[name="colorFondo"]:checked')?.value;
       const tipografia = document.querySelector('input[name="tipografia"]:checked')?.value;
+      const estetica = document.querySelector('input[name="estetica"]:checked')?.value;
 
       if (!socioId) {
         alert("No se pudo identificar el socio.");
@@ -52,6 +53,10 @@ export async function m2m(app) {
 
       if (tipografia) {
         actualizaciones.tipografia = tipografia;
+      }
+
+      if (estetica) {
+        actualizaciones.planilla = estetica;
       }
 
       if (Object.keys(actualizaciones).length === 0) {
