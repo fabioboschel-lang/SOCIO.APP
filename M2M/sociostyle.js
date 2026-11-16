@@ -101,6 +101,19 @@ function ejecutarPlanilla(numero) {
 
 
 
+export function previsualizarColorFondo(color) {
+  aplicarColorFondo(color);
+}
+
+export function previsualizarTipografia(tipografia) {
+  aplicarTipografia(tipografia);
+}
+
+export function previsualizarPlanilla(numero) {
+  ejecutarPlanilla(numero);
+}
+
+
 /*
  * ============================================================
  * CARGAR SOCIOSTYLE
