@@ -1,0 +1,52 @@
+/*
+============================================================
+DISTRIBUCIÓN Y COMPORTAMIENTO EXCLUSIVOS DE COMPUTADORAS
+============================================================
+*/
+
+#app.m2m-escritorio:has(> #visualizacionContainer) {
+  display: grid;
+  grid-template-columns: minmax(0, 3fr) minmax(0, 7fr);
+  grid-template-rows: minmax(0, 1fr);
+  align-items: stretch;
+  width: 100%;
+  height: 100vh;
+  min-height: 100vh;
+  overflow: hidden;
+}
+
+html:has(#app.m2m-escritorio),
+body:has(#app.m2m-escritorio) {
+  height: 100%;
+  min-height: 0;
+  overflow: hidden;
+}
+
+#app.m2m-escritorio > #visualizacionContainer,
+#app.m2m-escritorio > #edicionContainer {
+  width: 100%;
+  height: 100%;
+  min-width: 0;
+  min-height: 0;
+  max-height: 100%;
+}
+
+#app.m2m-escritorio > #visualizacionContainer {
+  overflow-x: hidden;
+  overflow-y: auto;
+  overscroll-behavior-y: contain;
+  scrollbar-gutter: stable;
+}
+
+#app.m2m-escritorio > #edicionContainer {
+  overflow: hidden;
+}
+
+#app.m2m-escritorio > #visualizacionContainer .evento-container {
+  max-width: none;
+}
+
+/* El alternador no se utiliza cuando ambas vistas están abiertas. */
+#app.m2m-escritorio:has(> #visualizacionContainer) > #alternadorM2M {
+  display: none;
+}
