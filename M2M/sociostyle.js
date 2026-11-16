@@ -11,6 +11,7 @@ import { planillas }
 
 
 
+
 /*
  * ============================================================
  * APLICAR COLOR DE FONDO
@@ -66,10 +67,17 @@ function aplicarTipografia(tipografia) {
 
 function ejecutarPlanilla(numero) {
 
+  const equivalencias = {
+    clasica: 1,
+    simple: 2,
+    moderna: 3
+  };
+
+  const numeroPlanilla =
+    equivalencias[numero] ?? Number(numero);
+
   const funcionPlanilla =
-    planillas[
-      Number(numero)
-    ];
+    planillas[numeroPlanilla];
 
 
   if (
